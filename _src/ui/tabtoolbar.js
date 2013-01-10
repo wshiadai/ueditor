@@ -64,7 +64,7 @@
                 return tmp;
             }
             this.groupList.push(tmp);
-            this.tabbody.appendChild(tmp);
+            this.tabbody&&this.tabbody.appendChild(tmp);
             return tmp;
         },
         removeGroup:function(index){

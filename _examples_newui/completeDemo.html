@@ -59,7 +59,16 @@
 
    //实例化编辑器
     var ue = UE.getEditor('editor',{
-        focus:true
+        toolbars:[{
+            tab:"常用",
+            tools:[["bold","italic","strikethrough","underline"]],
+            active:true,
+            disable:true,
+            onclick:function(){
+                alert("click")
+            }
+        }]
+//        focus:true
 //        toolbars:[{
 //            tab:"常用",
 //            tools:[["bold","italic","strikethrough","underline"]],
