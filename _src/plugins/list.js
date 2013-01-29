@@ -34,7 +34,9 @@ UE.plugins['list'] = function () {
         'num1' : 'num-2-',
         'num2' : 'num-3-',
         'dash'  : 'dash',
-        'dot':'dot'
+        'dot':'dot',
+        'decimal':'exp-ol-',
+        'disc':'exp-ul'
     };
 
     me.setOpt( {
@@ -77,6 +79,8 @@ UE.plugins['list'] = function () {
             if(p == 'dash' || p == 'dot'){
                 customCss.push('li.list-' + customStyle[p] + '{background-image:url(' + liiconpath +customStyle[p]+'.gif)}');
                 customCss.push('ul.custom_'+p+'{list-style:none;}ul.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
+            }else if(p == 'decimal'){
+                customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/exp_item_num_under20.png)}');
             }else{
                 for(var i= 0;i<99;i++){
                     customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(' + liiconpath + 'list-'+customStyle[p] + i + '.gif)}')
