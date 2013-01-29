@@ -221,7 +221,9 @@ UE.I18N['zh-cn'] = {
         'floatLeft':"左浮动",
         'floatRight':"右浮动",
         'floatCenter':"居中",
-        'flashI18n':{} //留空默认中文
+        'flashI18n':{
+//            buttonURL:'button.png'
+        } //留空默认中文
     },
     'webapp':{
         tip1:"本功能由百度APP提供，如看到此页面，请各位站长首先申请百度APPKey!",
@@ -487,6 +489,7 @@ UE.I18N['zh-cn'] = {
         'flashError':"FLASH初始化失败，请检查FLASH插件是否正确安装！",
         'netError':"网络连接错误，请重试！",
         'copySuccess':"图片地址已经复制！",
-        'flashI18n':{} //留空默认中文
+        'flashI18n':{
+        } //留空默认中文
     }
 };

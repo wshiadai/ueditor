@@ -9,22 +9,13 @@ var video = {};
 
 (function(){
     video.init = function(){
-        switchTab("videoTab");
-        createAlignButton( ["videoFloat"] );
         addUrlChangeListener($G("videoUrl"));
         addOkListener();
-        addSearchListener();
-
         //编辑视频时初始化相关信息
         (function(){
             var img = editor.selection.getRange().getClosedNode(),url;
             if(img && img.className == "edui-faked-video"){
                 $G("videoUrl").value = url = img.getAttribute("_url");
-                $G("videoWidth").value = img.width;
-                $G("videoHeight").value = img.height;
-                var align = domUtils.getComputedStyle(img,"float"),
-                    parentAlign = domUtils.getComputedStyle(img.parentNode,"text-align");
-                updateAlignButton(parentAlign==="center"?"center":align);
             }
             createPreviewVideo(url);
         })();
@@ -35,15 +26,7 @@ var video = {};
     function addOkListener(){
         dialog.onok = function(){
             $G("preview").innerHTML = "";
-            var currentTab =  findFocus("tabHeads","tabSrc");
-            switch(currentTab){
-                case "video":
-                    return insertSingle();
-                    break;
-                case "videoSearch":
-                    return insertSearch("searchList");
-                    break;
-            }
+            insertSingle();
         };
         dialog.oncancel = function(){
             $G("preview").innerHTML = "";
@@ -59,79 +42,22 @@ var video = {};
         }
     }
 
-    /**
-     * 依据传入的align值更新按钮信息
-     * @param align
-     */
-    function updateAlignButton( align ) {
-        var aligns = $G( "videoFloat" ).children;
-        for ( var i = 0, ci; ci = aligns[i++]; ) {
-            if ( ci.getAttribute( "name" ) == align ) {
-                if ( ci.className !="focus" ) {
-                    ci.className = "focus";
-                }
-            } else {
-                if ( ci.className =="focus" ) {
-                    ci.className = "";
-                }
-            }
-        }
-    }
 
     /**
      * 将单个视频信息插入编辑器中
      */
     function insertSingle(){
-        var width = $G("videoWidth"),
-            height = $G("videoHeight"),
-            url=$G('videoUrl').value,
-            align = findFocus("videoFloat","name");
+        var url=$G('videoUrl').value,
+            align = "none";
         if(!url) return false;
-        if ( !checkNum( [width, height] ) ) return false;
         editor.execCommand('insertvideo', {
             url: convert_url(url),
-            width: width.value,
-            height: height.value,
+            width: 440,
+            height: 365,
             align: align
         });
     }
 
-    /**
-     * 将元素id下的所有代表视频的图片插入编辑器中
-     * @param id
-     */
-    function insertSearch(id){
-        var imgs = domUtils.getElementsByTagName($G(id),"img"),
-            videoObjs=[];
-        for(var i=0,img; img=imgs[i++];){
-            if(img.getAttribute("selected")){
-                videoObjs.push({
-                    url:img.getAttribute("ue_video_url"),
-                    width:420,
-                    height:280,
-                    align:"none"
-                });
-            }
-        }
-        editor.execCommand('insertvideo',videoObjs);
-    }
-
-    /**
-     * 找到id下具有focus类的节点并返回该节点下的某个属性
-     * @param id
-     * @param returnProperty
-     */
-    function findFocus( id, returnProperty ) {
-        var tabs = $G( id ).children,
-                property;
-        for ( var i = 0, ci; ci = tabs[i++]; ) {
-            if ( ci.className=="focus" ) {
-                property = ci.getAttribute( returnProperty );
-                break;
-            }
-        }
-        return property;
-    }
     function convert_url(s){
         return s.replace(/http:\/\/www\.tudou\.com\/programs\/view\/([\w\-]+)\/?/i,"http://www.tudou.com/v/$1")
             .replace(/http:\/\/www\.youtube\.com\/watch\?v=([\w\-]+)/i,"http://www.youtube.com/v/$1")
@@ -166,81 +92,6 @@ var video = {};
         return /(0|^[1-9]\d*$)/.test( value );
     }
 
-    /**
-     * tab切换
-     * @param tabParentId
-     * @param keepFocus   当此值为真时，切换按钮上会保留focus的样式
-     */
-    function switchTab( tabParentId,keepFocus ) {
-        var tabElements = $G( tabParentId ).children,
-                tabHeads = tabElements[0].children,
-                tabBodys = tabElements[1].children;
-        for ( var i = 0, length = tabHeads.length; i < length; i++ ) {
-            var head = tabHeads[i];
-            domUtils.on( head, "click", function () {
-                //head样式更改
-                for ( var k = 0, len = tabHeads.length; k < len; k++ ) {
-                    if(!keepFocus)tabHeads[k].className = "";
-                }
-                this.className = "focus";
-                //body显隐
-                var tabSrc = this.getAttribute( "tabSrc" );
-                for ( var j = 0, length = tabBodys.length; j < length; j++ ) {
-                    var body = tabBodys[j],
-                        id = body.getAttribute( "id" );
-
-                    if ( id == tabSrc ) {
-                        body.style.display = "";
-                        if(id=="videoSearch"){
-                            selectTxt($G("videoSearchTxt"));
-                        }
-                        if(id=="video"){
-                            selectTxt($G("videoUrl"));
-                        }
-
-                    } else {
-                        body.style.display = "none";
-                    }
-                }
-            } );
-        }
-    }
-    /**
-      * 创建图片浮动选择按钮
-      * @param ids
-      */
-     function createAlignButton( ids ) {
-         for ( var i = 0, ci; ci = ids[i++]; ) {
-             var floatContainer = $G( ci ),
-                     nameMaps = {"none":lang['default'], "left":lang.floatLeft, "right":lang.floatRight, "center":lang.block};
-             for ( var j in nameMaps ) {
-                 var div = document.createElement( "div" );
-                 div.setAttribute( "name", j );
-                 if ( j == "none" ) div.className="focus";
-                 div.style.cssText = "background:url(images/" + j + "_focus.jpg);";
-                 div.setAttribute( "title", nameMaps[j] );
-                 floatContainer.appendChild( div );
-             }
-             switchSelect( ci );
-         }
-     }
-
-    /**
-     * 选择切换
-     * @param selectParentId
-     */
-    function switchSelect( selectParentId ) {
-        var selects = $G( selectParentId ).children;
-        for ( var i = 0, ci; ci = selects[i++]; ) {
-            domUtils.on( ci, "click", function () {
-                for ( var j = 0, cj; cj = selects[j++]; ) {
-                    cj.className = "";
-                    cj.removeAttribute && cj.removeAttribute( "class" );
-                }
-                this.className = "focus";
-            } )
-        }
-    }
 
     /**
      * 监听url改变事件
@@ -282,8 +133,8 @@ var video = {};
         }
         $G("preview").innerHTML = '<embed type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"' +
         ' src="' + url + '"' +
-        ' width="' + 420  + '"' +
-        ' height="' + 280  + '"' +
+        ' width="' + 440  + '"' +
+        ' height="' +365  + '"' +
         ' wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true" ></embed>';
     }
 
@@ -366,37 +217,5 @@ var video = {};
             o.style.cssText = "filter:alpha(Opacity=50);-moz-opacity:0.5;opacity: 0.5;border:2px solid blue;";
         }
     }
-
-    /**
-     * 视频搜索相关注册事件
-     */
-    function addSearchListener(){
-        domUtils.on($G("videoSearchBtn"),"click",getMovie);
-        domUtils.on($G( "videoSearchTxt" ),"click",function () {
-            if ( this.value == lang.static.videoSearchTxt.value ) {
-                this.value = "";
-            }
-            this.setAttribute("hasClick","true");
-            selectTxt(this);
-        });
-        $G( "videoSearchTxt" ).onkeyup = function(){
-            this.setAttribute("hasClick","true");
-            this.onkeyup = null;
-        };
-        domUtils.on($G( "videoSearchReset" ),"click",function () {
-            var txt = $G( "videoSearchTxt" );
-            txt.value = "";
-            selectTxt(txt);
-            $G( "searchList" ).innerHTML = "";
-        });
-        domUtils.on($G( "videoType" ),"change", getMovie);
-        domUtils.on($G( "videoSearchTxt" ), "keyup", function ( evt ) {
-            if ( evt.keyCode == 13 ) {
-                getMovie();
-            }
-        } )
-    }
-
-
 
 })();

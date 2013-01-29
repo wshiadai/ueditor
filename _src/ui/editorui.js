@@ -63,7 +63,7 @@
         'blockquote', 'pasteplain', 'pagebreak',
         'selectall', 'print', 'preview', 'horizontal', 'removeformat', 'time', 'date', 'unlink',
         'insertparagraphbeforetable', 'insertrow', 'insertcol', 'mergeright', 'mergedown', 'deleterow',
-        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable'];
+        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable','autotypeset'];
 
     for (var i = 0, ci; ci = btnCmds[i++];) {
         ci = ci.toLowerCase();
@@ -739,20 +739,20 @@
         return ui;
     };
 
-    editorui.autotypeset = function (editor) {
-        var ui = new editorui.AutoTypeSetButton({
-            editor:editor,
-            title:editor.options.labelMap['autotypeset'] || editor.getLang("labelMap.autotypeset") || '',
-            className:'edui-for-autotypeset',
-            onbuttonclick:function () {
-                editor.execCommand('autotypeset')
-            }
-        });
-        editorui.buttons['autotypeset']=ui;
-        editor.addListener('selectionchange', function () {
-            ui.setDisabled(editor.queryCommandState('autotypeset') == -1);
-        });
-        return ui;
-    };
+//    editorui.autotypeset = function (editor) {
+//        var ui = new editorui.AutoTypeSetButton({
+//            editor:editor,
+//            title:editor.options.labelMap['autotypeset'] || editor.getLang("labelMap.autotypeset") || '',
+//            className:'edui-for-autotypeset',
+//            onbuttonclick:function () {
+//                editor.execCommand('autotypeset')
+//            }
+//        });
+//        editorui.buttons['autotypeset']=ui;
+//        editor.addListener('selectionchange', function () {
+//            ui.setDisabled(editor.queryCommandState('autotypeset') == -1);
+//        });
+//        return ui;
+//    };
 
 })();

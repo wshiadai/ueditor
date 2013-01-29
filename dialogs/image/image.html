@@ -8,84 +8,16 @@
     <link rel="stylesheet" href="image.css" type="text/css" />
 </head>
 <body>
-    <div class="wrapper">
+<div class="wrapper">
         <div id="imageTab">
             <div id="tabHeads" class="tabhead">
-                <span tabSrc="remote"><var id="lang_tab_remote"></var></span>
                 <span tabSrc="local" class="focus"><var id="lang_tab_local"></var></span>
-                <span tabSrc="imgManager"><var id="lang_tab_imgManager"></var></span>
-                <span tabSrc="imgSearch"><var id="lang_tab_imgSearch"></var></span>
             </div>
             <div id="tabBodys" class="tabbody">
-                <div id="remote" class="panel">
-                    <table cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td class="label"><label for="url"><var id="lang_input_url"></var></label></td>
-                            <td><input id="url" type="text"/></td>
-                        </tr>
-                        <tr>
-                            <td class="label"><label for="width"><var id="lang_input_width"></var></label></td>
-                            <td><input type="text" id="width"/> px</td>
-                        </tr>
-                        <tr>
-                            <td class="label"><label for="height"><var id="lang_input_height"></var></label></td>
-                            <td><input type="text" id="height"/> px</td>
-                        </tr>
-                        <tr>
-                            <td class="label"><label for="border"><var id="lang_input_border"></var></label></td>
-                            <td><input type="text" id="border"/> px</td>
-                        </tr>
-                        <tr>
-                            <td class="label"><label for="vhSpace"><var id="lang_input_vhspace"></var></label></td>
-                            <td><input type="text" id="vhSpace"/> px</td>
-                        </tr>
-                        <tr>
-                            <td class="label"><label for="title"><var id="lang_input_title"></var></label></td>
-                            <td><input type="text" id="title"/></td>
-                        </tr>
-                        <tr>
-                            <td class="label"><var id="lang_input_remoteAlign"></var></td>
-                            <td id="remoteFloat"></td>
-                        </tr>
-                    </table>
-
-                    <div id="preview"></div>
-                    <div class="lock"><input id="lock" type="checkbox" checked="checked"></div>
-                </div>
                 <div id="local" class="panel">
                     <div id="flashContainer"></div>
-                    <div><div id="upload" style="display: none" ></div><div id="duiqi"></div><div id="localFloat"></div></div>
-
-                    <div class="saveDir">
-                        <var id="lang_savePath" ></var>：<select id="savePath">
-                            <option value="1">upload</option>
-                            <option value="2">upload1</option>
-                        </select>
-                    </div>
+                    <div><div id="upload" style="display: none" ></div></div>
                 </div>
-                <div id="imgManager" class="panel">
-                    <div id="imageList"><var id="lang_imgLoading"></var></div>
-                </div>
-                <div id="imgSearch" class="panel">
-                    <table style="margin-top: 5px;">
-                        <tr>
-                            <td width="200"><input id="imgSearchTxt" type="text" /></td>
-                            <td width="65">
-                                <select id="imgType">
-                                    <!--具体内容值将由国际化组件动态填充-->
-                                    <option value="&s=4&z=0"></option>
-                                    <option value="&s=1&z=19"></option>
-                                    <option value="&s=2&z=0"></option>
-                                    <option value="&s=3&z=0"></option>
-                                </select>
-                            </td>
-                            <td width="80"><input id="imgSearchBtn" type="button"  /></td>
-                            <td width="80"><input id="imgSearchReset" type="button" /></td>
-                        </tr>
-                    </table>
-                    <div id="searchList"></div>
-                </div>
-                <iframe id="maskIframe" src="about:blank" scrolling="no" frameborder="no"></iframe>
             </div>
         </div>
     </div>
@@ -189,13 +121,8 @@
                  * 参数为json对象{"key1":"value1","key2":"value2"}，其中key即为向后台post提交的name，value即为值。
                  * 其中有一个特殊的保留key值为action，若设置，可以更改本次提交的处理地址
                  */
-                var postParams = {
-                    "dir":baidu.g("savePath").value
-                };
-                imageUploader.setPostParams(postParams);
                 flashObj.upload();
                 this.style.display = "none";
-                $G("savePath").parentNode.style.display = "none";
             };
 
         });
