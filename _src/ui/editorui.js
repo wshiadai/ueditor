@@ -63,7 +63,7 @@
         'blockquote', 'pasteplain', 'pagebreak',
         'selectall', 'print', 'preview', 'horizontal', 'removeformat', 'time', 'date', 'unlink',
         'insertparagraphbeforetable', 'insertrow', 'insertcol', 'mergeright', 'mergedown', 'deleterow',
-        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable','autotypeset'];
+        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable','autotypeset','insertorderedlist', 'insertunorderedlist'];
 
     for (var i = 0, ci; ci = btnCmds[i++];) {
         ci = ci.toLowerCase();
@@ -658,48 +658,48 @@
         })(ri)
     }
     //有序，无序列表
-    var lists = ['insertorderedlist', 'insertunorderedlist'];
-    for (var l = 0, cl; cl = lists[l++];) {
-        (function (cmd) {
-            editorui[cmd] = function (editor) {
-                var vals = editor.options[cmd],
-                    _onMenuClick = function () {
-                        editor.execCommand(cmd, this.value);
-                    }, items = [];
-                for (var i in vals) {
-                    items.push({
-                        label:vals[i] || editor.getLang()[cmd][i] || "",
-                        value:i,
-                        theme:editor.options.theme,
-                        onclick:_onMenuClick
-                    })
-                }
-                var ui = new editorui.MenuButton({
-                    editor:editor,
-                    className:'edui-for-' + cmd,
-                    title:editor.getLang("labelMap." + cmd) || '',
-                    'items':items,
-                    onbuttonclick:function () {
-                        var value = editor.queryCommandValue(cmd) || this.value;
-                        editor.execCommand(cmd, value);
-                    }
-                });
-                editorui.buttons[cmd]=ui;
-                editor.addListener('selectionchange', function () {
-                    var state = editor.queryCommandState(cmd);
-                    if (state == -1) {
-                        ui.setDisabled(true);
-                    } else {
-                        ui.setDisabled(false);
-                        var value = editor.queryCommandValue(cmd);
-                        ui.setValue(value);
-                        ui.setChecked(state)
-                    }
-                });
-                return ui;
-            };
-        })(cl)
-    }
+//    var lists = ['insertorderedlist', 'insertunorderedlist'];
+//    for (var l = 0, cl; cl = lists[l++];) {
+//        (function (cmd) {
+//            editorui[cmd] = function (editor) {
+//                var vals = editor.options[cmd],
+//                    _onMenuClick = function () {
+//                        editor.execCommand(cmd, this.value);
+//                    }, items = [];
+//                for (var i in vals) {
+//                    items.push({
+//                        label:vals[i] || editor.getLang()[cmd][i] || "",
+//                        value:i,
+//                        theme:editor.options.theme,
+//                        onclick:_onMenuClick
+//                    })
+//                }
+//                var ui = new editorui.MenuButton({
+//                    editor:editor,
+//                    className:'edui-for-' + cmd,
+//                    title:editor.getLang("labelMap." + cmd) || '',
+//                    'items':items,
+//                    onbuttonclick:function () {
+//                        var value = editor.queryCommandValue(cmd) || this.value;
+//                        editor.execCommand(cmd, value);
+//                    }
+//                });
+//                editorui.buttons[cmd]=ui;
+//                editor.addListener('selectionchange', function () {
+//                    var state = editor.queryCommandState(cmd);
+//                    if (state == -1) {
+//                        ui.setDisabled(true);
+//                    } else {
+//                        ui.setDisabled(false);
+//                        var value = editor.queryCommandValue(cmd);
+//                        ui.setValue(value);
+//                        ui.setChecked(state)
+//                    }
+//                });
+//                return ui;
+//            };
+//        })(cl)
+//    }
 
     editorui.fullscreen = function (editor, title) {
         title = editor.options.labelMap['fullscreen'] || editor.getLang("labelMap.fullscreen") || '';

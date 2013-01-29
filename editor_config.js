@@ -147,7 +147,7 @@
 
         //,emotionLocalization:false //是否开启表情本地化，默认关闭。若要开启请确保emotion文件夹下包含官网提供的images表情文件夹
 
-        //,pasteplain:false  //是否纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
+        ,pasteplain:true  //是否纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
 
         //,allHtmlEnabled:false //提交到后台的数据是否包含整个html字符串
         //iframeUrlMap

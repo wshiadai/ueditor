@@ -150,7 +150,7 @@ UE.plugins['autotypeset'] = function () {
             }
             if (isLine(ci, true) && ci.tagName != 'SPAN') {
                 if (opt.indent) {
-                    ci.innerHTML = "　　" + ci.innerHTML.replace(/(^[\\s\\t\\xa0\\u3000]+)|([\\u3000\\xa0\\s\\t]+\x24)|　/ig, "");
+                    ci.innerHTML = "　　" + ci.innerHTML.replace(/(^[\\s\\t\\xa0\\u3000]+)|([\\u3000\\xa0\\s\\t]+\x24)|　| /ig, "");
 //                    ci.style.textIndent = opt.indentValue;
                 }
                 if (opt.textAlign) {

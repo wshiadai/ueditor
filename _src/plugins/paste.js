@@ -302,6 +302,22 @@ w
             });
 
         });
+        me.addListener("beforepaste",function(type,opt){
+            //替换掉<p></p>,\r\n以及ie下的<p />为\n
+            var htmls = opt.html.replace((browser.ie||browser.gecko)?/<p \/>/g : /\r\n|<br \/>|<br>|<br\/>/g,"\n" ).replace(/<p><\/p>/g,"\n").split("\n" ),
+                    len = htmls.length;
+            if(len>1){ //解决单行内容复制后粘贴时自动换行的问题
+                for (var i= 0;i<len; i++) {
+                    var html = htmls[i].replace(/^\s+|\s+$/,"");
+                    htmls[i] = (html=="" && (!browser.ie || (browser.ie && browser.version<8)) )?"<p><br /></p>": (html.indexOf("<p>")!==-1||html.indexOf("</p>")!==-1)?html:"<p>"+ html +"</p>";
+                }
+                opt.html = htmls.join("");
+                if(browser.gecko){
+                    opt.html=opt.html.replace("<p></p>","<p><br /></p>");
+                }
+            }
+
+        })
 
     };
 
