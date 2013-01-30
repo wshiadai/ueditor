@@ -79,7 +79,8 @@ UE.plugins['list'] = function () {
             if(p == 'dash' || p == 'dot'){
                 customCss.push('li.list-' + customStyle[p] + '{background-image:url(' + liiconpath +customStyle[p]+'.gif)}');
                 customCss.push('ul.custom_'+p+'{list-style:none;}ul.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
-            }else if(p == 'decimal'){
+            }else if(p == 'disc'){
+                debugger
                 customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/exp_item_num_under20.png)}');
             }else{
                 for(var i= 0;i<99;i++){
@@ -116,6 +117,9 @@ UE.plugins['list'] = function () {
                     break;
                 case 'dot':
                     customCss.push('li.list-'+p+'-paddingleft{padding-left:20px}');
+                    break;
+                case 'decimal':
+                    customCss.push('li.list-'+p+'-paddingleft-1{padding-left:30px}');
             }
         }
         customCss.push('.list-paddingleft-1{padding-left:0}');
