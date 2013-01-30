@@ -221,7 +221,9 @@ function uParse(selector,opt){
                         'num1'  :   'num-2-',
                         'num2'  :   'num-3-',
                         'dash'  :   'dash',
-                        'dot'   :   'dot'
+                        'dot'   :   'dot',
+                        'decimal':'exp-ol-',
+                                'disc':'exp-ul'
                     };
                 _each(nodes,function(list){
                     if(list.className && /custom_/i.test(list.className)){
@@ -229,7 +231,13 @@ function uParse(selector,opt){
                         if(listStyle == 'dash' || listStyle == 'dot'){
                             pushItem(customCss,selector +' li.list-' + customStyle[listStyle] + '{background-image:url(' + defaultOption.liiconpath +customStyle[listStyle]+'.gif)}');
                             pushItem(customCss,selector +' ul.custom_'+listStyle+'{list-style:none;} '+ selector +' ul.custom_'+listStyle+' li{background-position:0 3px;background-repeat:no-repeat}');
-
+                        }else if(p == 'disc'){
+                            customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/unsortlist.png);background-repeat:no-repeat;background-position: 0 5px;}');
+                        }else if(p == 'decimal'){
+                            for(var i= 0;i<99;i++){
+                                customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(http://img.baidu.com/img/iknow/exp/edit/edit-num' +  i + '.png)}')
+                            }
+                            customCss.push('ol.custom_'+p+'{list-style:none;}ol.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
                         }else{
                             var index = 1;
                             _each(list.childNodes,function(li){
@@ -269,6 +277,12 @@ function uParse(selector,opt){
                                 break;
                             case 'dot':
                                 pushItem(customCss,selector + ' li.list-'+listStyle+'-paddingleft{padding-left:20px}');
+                                break;
+                            case 'decimal':
+                                customCss.push('li.list-'+p+'-paddingleft-1{padding:5px 0 5px 35px}');
+                                break;
+                            case 'disc':
+                                customCss.push('li.list-'+p+'-paddingleft{padding-left:15px}');
                         }
                     }
                 });
