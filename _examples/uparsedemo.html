@@ -19,9 +19,10 @@
             highlightCssUrl 代码高亮相关css的路径 如果展示有代码高亮，必须给定该属性
             liiconpath 自定义列表样式的图标路径，可以不给定，默认'http://bs.baidu.com/listicon/',
             listDefaultPaddingLeft : 自定义列表样式的左边宽度 默认'20',
+            customRule 可以传入你自己的处理规则函数，函数第一个参数是容器节点
          */
 
-        uParse('div',{
+        uParse('.content',{
             'highlightJsUrl':'../third-party/SyntaxHighlighter/shCore.js',
             'highlightCssUrl':'../third-party/SyntaxHighlighter/shCoreDefault.css'
         })
@@ -54,7 +55,7 @@
                     <br />
                 </p>
     </div>
-    <div class="content">
+    <div id="content" class="content">
         <table width="960">
             <caption>
                 sdf<br />
