@@ -80,8 +80,15 @@ UE.plugins['list'] = function () {
                 customCss.push('li.list-' + customStyle[p] + '{background-image:url(' + liiconpath +customStyle[p]+'.gif)}');
                 customCss.push('ul.custom_'+p+'{list-style:none;}ul.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
             }else if(p == 'disc'){
-                debugger
-                customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/exp_item_num_under20.png)}');
+                customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/unsortlist.png);background-repeat:no-repeat;background-position: 0 5px;}');
+            }else if(p == 'decimal'){
+                for(var i= 0;i<21;i++){
+                    customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/exp_item_num_under20.png);background-repeat:no-repeat;background-position: 0 5px;}')
+                }
+                for(var i= 21;i<99;i++){
+                    customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/exp_item_num_over20.png);background-repeat:no-repeat;background-position: 0 5px;}')
+                }
+                customCss.push('ol.custom_'+p+'{list-style:none;}ol.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
             }else{
                 for(var i= 0;i<99;i++){
                     customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(' + liiconpath + 'list-'+customStyle[p] + i + '.gif)}')
@@ -120,6 +127,9 @@ UE.plugins['list'] = function () {
                     break;
                 case 'decimal':
                     customCss.push('li.list-'+p+'-paddingleft-1{padding-left:30px}');
+                    break;
+                case 'disc':
+                    customCss.push('li.list-'+p+'-paddingleft{padding-left:15px}');
             }
         }
         customCss.push('.list-paddingleft-1{padding-left:0}');
