@@ -5,8 +5,9 @@
     height: 22px !important;
     width: 25px !important;
     /*background-image: url(../images/icons.png);*/
+    /*background-image: url(../images/icons.gif) \9;*/
     background-image: url(../images/exp-icon.png);
-    background-image: url(../images/icons.gif) \9;
+    background-image: url(../images/exp-icon.gif) \9;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-button-wrap {
@@ -21,15 +22,15 @@
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-checked .edui-button-wrap {
-    background-color: #ffe69f;
-    padding: 0;
-    border: 1px solid #dcac6c;
+    background-color: #EEF9ED;
+        padding: 0;
+        border: 1px solid #B8D1B7;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-active .edui-button-wrap {
-    background-color: #ffffff;
+    background-color: #EEF9ED;
     padding: 0;
-    border: 1px solid gray;
+    border: 1px solid #B8D1B7;
 }
 .edui-default .edui-toolbar .edui-state-disabled .edui-label {
     color: #ccc;

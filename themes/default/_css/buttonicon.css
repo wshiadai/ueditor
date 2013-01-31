@@ -5,6 +5,9 @@
 .edui-default .edui-for-undo .edui-state-hover .edui-icon {
     background-position: 2px -22px;
 }
+.edui-default .edui-for-undo .edui-state-checked .edui-icon {
+    background-position: 2px -44px;
+}
 
 .edui-default  .edui-for-redo .edui-icon {
     background-position: -33px 1px;
@@ -12,12 +15,17 @@
 .edui-default  .edui-for-redo .edui-state-hover .edui-icon {
     background-position: -33px -22px;
 }
-
+.edui-default  .edui-for-redo .edui-state-checked .edui-icon {
+    background-position: -33px -44px;
+}
 .edui-default  .edui-for-bold .edui-icon {
     background-position: -83px 1px;
 }
 .edui-default  .edui-for-bold .edui-state-hover .edui-icon {
     background-position: -83px -22px;
+}
+.edui-default  .edui-for-bold .edui-state-checked .edui-icon {
+    background-position: -83px -44px;
 }
 
 .edui-default  .edui-for-italic .edui-icon {
@@ -25,6 +33,9 @@
 }
 .edui-default  .edui-for-italic .edui-state-hover .edui-icon {
     background-position: -121px -22px;
+}
+.edui-default  .edui-for-italic .edui-state-checked .edui-icon {
+    background-position: -121px -44px;
 }
 .edui-default  .edui-for-underline .edui-icon {
     background-position: -140px 0;
@@ -64,6 +75,9 @@
 .edui-default  .edui-for-autotypeset  .edui-state-hover  .edui-icon {
     background-position: -453px -22px;
 }
+.edui-default  .edui-for-autotypeset  .edui-state-checked  .edui-icon {
+    background-position: -453px -44px;
+}
 
 .edui-default  .edui-for-justifyleft .edui-icon {
     background-position: -460px 0;
@@ -87,12 +101,18 @@
 .edui-default  .edui-for-insertorderedlist .edui-state-hover .edui-icon {
     background-position: -206px -22px;
 }
+.edui-default  .edui-for-insertorderedlist .edui-state-checked .edui-icon {
+    background-position: -206px -44px;
+}
 
 .edui-default  .edui-for-insertunorderedlist .edui-icon {
     background-position: -171px 1px;
 }
 .edui-default  .edui-for-insertunorderedlist .edui-state-hover .edui-icon {
     background-position: -171px -22px;
+}
+.edui-default  .edui-for-insertunorderedlist .edui-state-checked .edui-icon {
+    background-position: -171px -44px;
 }
 
 .edui-default  .edui-for-lineheight .edui-icon {
@@ -124,6 +144,9 @@
 }
 .edui-default  .edui-for-insertimage .edui-state-hover  .edui-icon {
     background-position: -378px -22px;
+}
+.edui-default  .edui-for-insertimage .edui-state-checked  .edui-icon {
+    background-position: -378px -44px;
 }
 
 .edui-default  .edui-for-insertframe .edui-icon {
@@ -171,6 +194,9 @@
 }
 .edui-default  .edui-for-insertvideo .edui-state-hover .edui-icon {
     background-position: -415px -22px;
+}
+.edui-default  .edui-for-insertvideo .edui-state-checked .edui-icon {
+    background-position: -415px -44px;
 }
 
 .edui-default  .edui-for-time .edui-icon {
