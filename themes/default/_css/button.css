@@ -2,9 +2,10 @@
 .edui-default .edui-toolbar .edui-button .edui-icon,
 .edui-default .edui-toolbar .edui-menubutton .edui-icon,
 .edui-default .edui-toolbar .edui-splitbutton .edui-icon {
-    height: 20px !important;
-    width: 20px !important;
-    background-image: url(../images/icons.png);
+    height: 22px !important;
+    width: 25px !important;
+    /*background-image: url(../images/icons.png);*/
+    background-image: url(../images/exp-icon.png);
     background-image: url(../images/icons.gif) \9;
 }
 
@@ -14,9 +15,9 @@
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-hover .edui-button-wrap {
-    background-color: #fff5d4;
+    background-color: #ffffff;
     padding: 0;
-    border: 1px solid #dcac6c;
+    border: 1px solid #E8E8E8;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-checked .edui-button-wrap {
