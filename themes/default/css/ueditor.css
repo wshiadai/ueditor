@@ -118,7 +118,7 @@ div.edui-box {
     cursor: default;
     -webkit-user-select: none;
     -moz-user-select: none;
-    padding: 1px;
+    padding: 1px  1px 5px 40px;
     overflow: hidden; /*全屏下单独一行不占位*/
     zoom: 1;
 }
@@ -127,11 +127,11 @@ div.edui-box {
 .edui-default .edui-toolbar .edui-splitbutton,
 .edui-default .edui-toolbar .edui-menubutton,
 .edui-default .edui-toolbar .edui-combox {
-    margin: 1px;
+    margin: 1px 4px;
 }
 /*UI工具栏、编辑区域、底部*/
 .edui-default .edui-editor {
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     background-color: white;
     position: relative;
     overflow: visible;
@@ -143,7 +143,6 @@ div.edui-box {
 }
 
 .edui-default .edui-editor-toolbarboxouter {
-    border-bottom: 1px solid #ccc;
     background: white url(../images/toolbar_bg.png) repeat-x bottom left;
 }
 
@@ -446,10 +445,12 @@ div.edui-box {
 .edui-default .edui-toolbar .edui-button .edui-icon,
 .edui-default .edui-toolbar .edui-menubutton .edui-icon,
 .edui-default .edui-toolbar .edui-splitbutton .edui-icon {
-    height: 20px !important;
-    width: 20px !important;
-    background-image: url(../images/icons.png);
-    background-image: url(../images/icons.gif) \9;
+    height: 29px !important;
+    width: 29px !important;
+    /*background-image: url(../images/icons.png);*/
+    /*background-image: url(../images/icons.gif) \9;*/
+    background-image: url(../images/exp-icon.png);
+    background-image: url(../images/exp-icon.gif) \9;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-button-wrap {
@@ -458,21 +459,21 @@ div.edui-box {
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-hover .edui-button-wrap {
-    background-color: #fff5d4;
+    background-color: #ffffff;
     padding: 0;
-    border: 1px solid #dcac6c;
+    border: 1px solid #E8E8E8;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-checked .edui-button-wrap {
-    background-color: #ffe69f;
-    padding: 0;
-    border: 1px solid #dcac6c;
+    background-color: #EEF9ED;
+        padding: 0;
+        border: 1px solid #B8D1B7;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-active .edui-button-wrap {
-    background-color: #ffffff;
+    background-color: #EEF9ED;
     padding: 0;
-    border: 1px solid gray;
+    border: 1px solid #B8D1B7;
 }
 .edui-default .edui-toolbar .edui-state-disabled .edui-label {
     color: #ccc;
@@ -483,21 +484,43 @@ div.edui-box {
 }
 /* toolbar icons */
 .edui-default .edui-for-undo .edui-icon {
-    background-position: -160px 0;
+    background-position: 4px 5px;
+}
+.edui-default .edui-for-undo .edui-state-hover .edui-icon {
+    background-position: 4px -27px;
+}
+.edui-default .edui-for-undo .edui-state-checked .edui-icon {
+    background-position: 4px -62px;
 }
 
 .edui-default  .edui-for-redo .edui-icon {
-    background-position: -100px 0;
+    background-position: -32px 5px;
 }
-
+.edui-default  .edui-for-redo .edui-state-hover .edui-icon {
+    background-position: -32px -27px;
+}
+.edui-default  .edui-for-redo .edui-state-checked .edui-icon {
+    background-position: -32px -62px;
+}
 .edui-default  .edui-for-bold .edui-icon {
-    background-position: 0 0;
+    background-position: -82px 4px;
+}
+.edui-default  .edui-for-bold .edui-state-hover .edui-icon {
+    background-position: -82px -28px;
+}
+.edui-default  .edui-for-bold .edui-state-checked .edui-icon {
+    background-position: -82px -62px;
 }
 
 .edui-default  .edui-for-italic .edui-icon {
-    background-position: -60px 0;
+    background-position: -119px 5px;
 }
-
+.edui-default  .edui-for-italic .edui-state-hover .edui-icon {
+    background-position: -119px -27px;
+}
+.edui-default  .edui-for-italic .edui-state-checked .edui-icon {
+    background-position: -119px -61px;
+}
 .edui-default  .edui-for-underline .edui-icon {
     background-position: -140px 0;
 }
@@ -531,7 +554,13 @@ div.edui-box {
 }
 
 .edui-default  .edui-for-autotypeset .edui-icon {
-    background-position: -640px -40px;
+    background-position: -450px 5px;
+}
+.edui-default  .edui-for-autotypeset  .edui-state-hover  .edui-icon {
+    background-position: -450px -27px;
+}
+.edui-default  .edui-for-autotypeset  .edui-state-checked  .edui-icon {
+    background-position: -450px -62px;
 }
 
 .edui-default  .edui-for-justifyleft .edui-icon {
@@ -551,11 +580,23 @@ div.edui-box {
 }
 
 .edui-default  .edui-for-insertorderedlist .edui-icon {
-    background-position: -80px 0;
+    background-position: -205px 4px;
+}
+.edui-default  .edui-for-insertorderedlist .edui-state-hover .edui-icon {
+    background-position: -205px -28px;
+}
+.edui-default  .edui-for-insertorderedlist .edui-state-checked .edui-icon {
+    background-position: -205px -62px;
 }
 
 .edui-default  .edui-for-insertunorderedlist .edui-icon {
-    background-position: -20px 0;
+    background-position: -168px 5px;
+}
+.edui-default  .edui-for-insertunorderedlist .edui-state-hover .edui-icon {
+    background-position: -168px -27px;
+}
+.edui-default  .edui-for-insertunorderedlist .edui-state-checked .edui-icon {
+    background-position: -168px -61px;
 }
 
 .edui-default  .edui-for-lineheight .edui-icon {
@@ -583,7 +624,13 @@ div.edui-box {
 }
 
 .edui-default  .edui-for-insertimage .edui-icon {
-    background-position: -380px 0;
+    background-position: -377px 5px;
+}
+.edui-default  .edui-for-insertimage .edui-state-hover  .edui-icon {
+    background-position: -377px -27px;
+}
+.edui-default  .edui-for-insertimage .edui-state-checked  .edui-icon {
+    background-position: -377px -62px;
 }
 
 .edui-default  .edui-for-insertframe .edui-icon {
@@ -627,7 +674,13 @@ div.edui-box {
 }
 
 .edui-default  .edui-for-insertvideo .edui-icon {
-    background-position: -320px -20px;
+    background-position: -413px 5px;
+}
+.edui-default  .edui-for-insertvideo .edui-state-hover .edui-icon {
+    background-position: -413px -27px;
+}
+.edui-default  .edui-for-insertvideo .edui-state-checked .edui-icon {
+    background-position: -413px -62px;
 }
 
 .edui-default  .edui-for-time .edui-icon {
@@ -1437,10 +1490,10 @@ div.edui-box {
 /*分隔线*/
 .edui-default .edui-toolbar .edui-separator {
     width: 2px;
-    height: 20px;
-    margin: 2px 4px 2px 3px;
-    background: url(../images/icons.png) -180px 0;
-    background: url(../images/icons.gif) -180px 0 \9;
+    height: 29px;
+    margin: 4px 4px 0px 3px;
+    background: url(../images/exp-icon.png) -490px 0;
+    background: url(../images/exp-icon.gif) -490px 0 \9;
 }
 
 /*颜色按钮 */

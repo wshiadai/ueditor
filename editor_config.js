@@ -79,7 +79,7 @@
         ,getMovieUrl:URL+"php/getMovie.php"                   //视频数据获取地址
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
-        ,toolbars:[[ 'undo', 'redo','bold', 'italic' ,'insertorderedlist', 'insertunorderedlist','insertimage', 'insertvideo','autotypeset']]
+        ,toolbars:[[ 'undo', 'redo','|','bold', 'italic' ,'|','insertorderedlist', 'insertunorderedlist','|','insertimage', 'insertvideo','autotypeset']]
 //        ,toolbars:[
 //            ['fullscreen', 'source', '|', 'undo', 'redo', '|',
 //                'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch','autotypeset','blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist','selectall', 'cleardoc', '|',
@@ -143,7 +143,7 @@
 
         //,imagePopup:true      //图片操作的浮层开关，默认打开
 
-        //,initialStyle:'body{font-size:18px}'   //编辑器内部样式,可以用来改变字体等
+        ,initialStyle:'body{margin:0;font-size:14px;padding:14px 55px;line-height:24px;}'   //编辑器内部样式,可以用来改变字体等
 
         //,emotionLocalization:false //是否开启表情本地化，默认关闭。若要开启请确保emotion文件夹下包含官网提供的images表情文件夹
 

@@ -1,6 +1,6 @@
 /*UI工具栏、编辑区域、底部*/
 .edui-default .edui-editor {
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     background-color: white;
     position: relative;
     overflow: visible;
@@ -12,7 +12,6 @@
 }
 
 .edui-default .edui-editor-toolbarboxouter {
-    border-bottom: 1px solid #ccc;
     background: white url(../images/toolbar_bg.png) repeat-x bottom left;
 }
 

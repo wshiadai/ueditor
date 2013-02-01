@@ -80,12 +80,12 @@ UE.plugins['list'] = function () {
                 customCss.push('li.list-' + customStyle[p] + '{background-image:url(' + liiconpath +customStyle[p]+'.gif)}');
                 customCss.push('ul.custom_'+p+'{list-style:none;}ul.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
             }else if(p == 'disc'){
-                customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/unsortlist.png);background-repeat:no-repeat;background-position: 0 5px;}');
+                customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/unsortlist.png);background-repeat:no-repeat;background-position: 0 8px;}');
             }else if(p == 'decimal'){
                 for(var i= 0;i<99;i++){
                     customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(http://img.baidu.com/img/iknow/exp/edit/edit-num' +  i + '.png)}')
                 }
-                customCss.push('ol.custom_'+p+'{list-style:none;}ol.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
+                customCss.push('ol.custom_'+p+'{list-style:none;}ol.custom_'+p+' li{background-position:0 6px;background-repeat:no-repeat}');
             }else{
                 for(var i= 0;i<99;i++){
                     customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(' + liiconpath + 'list-'+customStyle[p] + i + '.gif)}')
@@ -254,6 +254,9 @@ UE.plugins['list'] = function () {
     function setListStyle(list,style){
         if(customStyle[style]){
             list.className = 'custom_' + style;
+        }
+        if(style == "decimal" || style == "disc"){
+            style = "none";
         }
         try{
             domUtils.setStyle(list, 'list-style-type', style);

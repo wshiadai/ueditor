@@ -2,8 +2,8 @@
 .edui-default .edui-toolbar .edui-button .edui-icon,
 .edui-default .edui-toolbar .edui-menubutton .edui-icon,
 .edui-default .edui-toolbar .edui-splitbutton .edui-icon {
-    height: 22px !important;
-    width: 25px !important;
+    height: 29px !important;
+    width: 29px !important;
     /*background-image: url(../images/icons.png);*/
     /*background-image: url(../images/icons.gif) \9;*/
     background-image: url(../images/exp-icon.png);

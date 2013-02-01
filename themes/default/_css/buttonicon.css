@@ -1,41 +1,41 @@
 /* toolbar icons */
 .edui-default .edui-for-undo .edui-icon {
-    background-position: 2px 1px;
+    background-position: 4px 5px;
 }
 .edui-default .edui-for-undo .edui-state-hover .edui-icon {
-    background-position: 2px -22px;
+    background-position: 4px -27px;
 }
 .edui-default .edui-for-undo .edui-state-checked .edui-icon {
-    background-position: 2px -44px;
+    background-position: 4px -62px;
 }
 
 .edui-default  .edui-for-redo .edui-icon {
-    background-position: -33px 1px;
+    background-position: -32px 5px;
 }
 .edui-default  .edui-for-redo .edui-state-hover .edui-icon {
-    background-position: -33px -22px;
+    background-position: -32px -27px;
 }
 .edui-default  .edui-for-redo .edui-state-checked .edui-icon {
-    background-position: -33px -44px;
+    background-position: -32px -62px;
 }
 .edui-default  .edui-for-bold .edui-icon {
-    background-position: -83px 1px;
+    background-position: -82px 4px;
 }
 .edui-default  .edui-for-bold .edui-state-hover .edui-icon {
-    background-position: -83px -22px;
+    background-position: -82px -28px;
 }
 .edui-default  .edui-for-bold .edui-state-checked .edui-icon {
-    background-position: -83px -44px;
+    background-position: -82px -62px;
 }
 
 .edui-default  .edui-for-italic .edui-icon {
-    background-position: -121px 1px;
+    background-position: -119px 5px;
 }
 .edui-default  .edui-for-italic .edui-state-hover .edui-icon {
-    background-position: -121px -22px;
+    background-position: -119px -27px;
 }
 .edui-default  .edui-for-italic .edui-state-checked .edui-icon {
-    background-position: -121px -44px;
+    background-position: -119px -61px;
 }
 .edui-default  .edui-for-underline .edui-icon {
     background-position: -140px 0;
@@ -70,13 +70,13 @@
 }
 
 .edui-default  .edui-for-autotypeset .edui-icon {
-    background-position: -453px 1px;
+    background-position: -450px 5px;
 }
 .edui-default  .edui-for-autotypeset  .edui-state-hover  .edui-icon {
-    background-position: -453px -22px;
+    background-position: -450px -27px;
 }
 .edui-default  .edui-for-autotypeset  .edui-state-checked  .edui-icon {
-    background-position: -453px -44px;
+    background-position: -450px -62px;
 }
 
 .edui-default  .edui-for-justifyleft .edui-icon {
@@ -96,23 +96,23 @@
 }
 
 .edui-default  .edui-for-insertorderedlist .edui-icon {
-    background-position: -206px 1px;
+    background-position: -205px 4px;
 }
 .edui-default  .edui-for-insertorderedlist .edui-state-hover .edui-icon {
-    background-position: -206px -22px;
+    background-position: -205px -28px;
 }
 .edui-default  .edui-for-insertorderedlist .edui-state-checked .edui-icon {
-    background-position: -206px -44px;
+    background-position: -205px -62px;
 }
 
 .edui-default  .edui-for-insertunorderedlist .edui-icon {
-    background-position: -171px 1px;
+    background-position: -168px 5px;
 }
 .edui-default  .edui-for-insertunorderedlist .edui-state-hover .edui-icon {
-    background-position: -171px -22px;
+    background-position: -168px -27px;
 }
 .edui-default  .edui-for-insertunorderedlist .edui-state-checked .edui-icon {
-    background-position: -171px -44px;
+    background-position: -168px -61px;
 }
 
 .edui-default  .edui-for-lineheight .edui-icon {
@@ -140,13 +140,13 @@
 }
 
 .edui-default  .edui-for-insertimage .edui-icon {
-    background-position: -378px 1px;
+    background-position: -377px 5px;
 }
 .edui-default  .edui-for-insertimage .edui-state-hover  .edui-icon {
-    background-position: -378px -22px;
+    background-position: -377px -27px;
 }
 .edui-default  .edui-for-insertimage .edui-state-checked  .edui-icon {
-    background-position: -378px -44px;
+    background-position: -377px -62px;
 }
 
 .edui-default  .edui-for-insertframe .edui-icon {
@@ -190,13 +190,13 @@
 }
 
 .edui-default  .edui-for-insertvideo .edui-icon {
-    background-position: -415px 1px;
+    background-position: -413px 5px;
 }
 .edui-default  .edui-for-insertvideo .edui-state-hover .edui-icon {
-    background-position: -415px -22px;
+    background-position: -413px -27px;
 }
 .edui-default  .edui-for-insertvideo .edui-state-checked .edui-icon {
-    background-position: -415px -44px;
+    background-position: -413px -62px;
 }
 
 .edui-default  .edui-for-time .edui-icon {
