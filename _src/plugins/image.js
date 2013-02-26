@@ -48,7 +48,7 @@ UE.commands['imagefloat'] = {
 
                             range.selectNode(img).select();
                         }
-                        domUtils.setStyle(img, 'float', align == 'none' ? '' : align);
+                        domUtils.setStyle(pN, 'text-align', align == 'none' ? '' : align);
                         if(align == 'none'){
                             domUtils.removeAttributes(img,'align');
                         }

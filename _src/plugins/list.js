@@ -85,7 +85,7 @@ UE.plugins['list'] = function () {
                 for(var i= 0;i<99;i++){
                     customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(http://img.baidu.com/img/iknow/exp/edit/edit-num' +  i + '.png)}')
                 }
-                customCss.push('ol.custom_'+p+'{list-style:none;}ol.custom_'+p+' li{background-position:0 6px;background-repeat:no-repeat}');
+                customCss.push('ol.custom_'+p+'{list-style:none;}ol.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
             }else{
                 for(var i= 0;i<99;i++){
                     customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(' + liiconpath + 'list-'+customStyle[p] + i + '.gif)}')
