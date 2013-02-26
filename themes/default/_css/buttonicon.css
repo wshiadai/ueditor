@@ -37,6 +37,13 @@
 .edui-default  .edui-for-italic .edui-state-checked .edui-icon {
     background-position: -119px -61px;
 }
+<<<<<<< HEAD
+=======
+
+.edui-default  .edui-for-fontborder .edui-icon {
+    background-position:-160px -40px;
+}
+>>>>>>> dev-1.2.5
 .edui-default  .edui-for-underline .edui-icon {
     background-position: -140px 0;
 }

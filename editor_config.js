@@ -80,19 +80,6 @@
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
         ,toolbars:[[ 'undo', 'redo','|','bold', 'italic' ,'|','insertorderedlist', 'insertunorderedlist','|','insertimage', 'insertvideo','autotypeset']]
-//        ,toolbars:[
-//            ['fullscreen', 'source', '|', 'undo', 'redo', '|',
-//                'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch','autotypeset','blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist','selectall', 'cleardoc', '|',
-//                'rowspacingtop', 'rowspacingbottom','lineheight','|',
-//                'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
-//                'directionalityltr', 'directionalityrtl', 'indent', '|',
-//                'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|','touppercase','tolowercase','|',
-//                'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright','imagecenter', '|',
-//                'insertimage', 'emotion','scrawl', 'insertvideo','music','attachment', 'map', 'gmap', 'insertframe','highlightcode','webapp','pagebreak','template','background', '|',
-//                'horizontal', 'date', 'time', 'spechars','snapscreen', 'wordimage', '|',
-//                'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', '|',
-//                'print', 'preview', 'searchreplace','help']
-//        ]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
         ,labelMap:{
             'anchor':'', 'undo':''
@@ -137,7 +124,7 @@
 
         //,fullscreen : false //是否开启初始化时即全屏，默认关闭
 
-        //,readonly : false /编辑器初始化结束后,编辑区域是否是只读的，默认是false
+        //,readonly : false //编辑器初始化结束后,编辑区域是否是只读的，默认是false
 
         //,zIndex : 900     //编辑器层级的基数,默认是900
 
@@ -324,16 +311,6 @@
         //编辑器初始化完成后是否进入源码模式，默认为否。
         //,sourceEditorFirst:false
 
-        //serialize
-        // 配置编辑器的过滤规则
-        // serialize是个object,可以有属性blackList，whiteList属性，默认是{}
-        // 例子:
-//        , serialize : {
-//              //黑名单，编辑器会过滤掉一下标签
-//              blackList:{object:1, applet:1, input:1, meta:1, base:1, button:1, select:1, textarea:1, '#comment':1, 'map':1, 'area':1}
-//        }
-
-
         //autotypeset
         //  //自动排版参数
         //  ,autotypeset:{
@@ -350,6 +327,8 @@
         //      removeTagNames : {标签名字:1},
         //      indent : false,                 // 行首缩进
         //      indentValue : '2em'             //行首缩进的大小
-        //  }
+        //  },
+        //填写过滤规则
+        //filterRules : {}
     };
 })();

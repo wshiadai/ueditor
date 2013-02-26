@@ -296,8 +296,13 @@ function uParse(selector,opt){
                 customCss.push(selector +' .list-paddingleft-1{padding-left:0}');
                 customCss.push(selector +' .list-paddingleft-2{padding-left:'+defaultOption.listDefaultPaddingLeft+'px}');
                 customCss.push(selector +' .list-paddingleft-3{padding-left:'+defaultOption.listDefaultPaddingLeft*2+'px}');
+<<<<<<< HEAD
                 //å¦‚æœä¸ç»™å®½åº¦ä¼šåœ¨è‡ªå®šåº”æ ·å¼é‡Œå‡ºç°æ»šåŠ¨æ¡
                 cssRule('list', selector +' ol,'+selector +' ul{margin:0;pading:0;}li{clear:both;}'+customCss.join('\n'), document);
+=======
+                //Èç¹û²»¸ø¿í¶È»áÔÚ×Ô¶¨Ó¦ÑùÊ½Àï³öÏÖ¹ö¶¯Ìõ
+                cssRule('list', selector +' ol,'+selector +' ul{margin:0;padding:0;}li{clear:both;}'+customCss.join('\n'), document);
+>>>>>>> dev-1.2.5
             }
             //è§£æå†…å®¹
             var needParseTagName = {

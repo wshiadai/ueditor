@@ -66,7 +66,7 @@ var imageUploader = {},
         if (!url.value) return;
         if (!flagImg) return;   //粘贴地址后如果没有生成对应的预览图，可以认为本次粘贴地址失败
         imgObj.src = url.value;
-        imgObj.data_ue_src = url.value;
+        imgObj._src = url.value;
         imgObj.width = width.value;
         imgObj.height = height.value;
         imgObj.border = border.value;
@@ -91,7 +91,7 @@ var imageUploader = {},
             tmpObj.title = ci.title;
             tmpObj.floatStyle = align;
             //修正显示时候的地址数据,如果后台返回的是图片的绝对地址，那么此处无需修正
-            tmpObj.data_ue_src = tmpObj.src = editor.options.imagePath + ci.url;
+            tmpObj._src = tmpObj.src = editor.options.imagePath + ci.url;
             imgObjs.push(tmpObj);
         }
         insertImage(imgObjs);
@@ -99,6 +99,191 @@ var imageUploader = {},
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * 找到id下具有focus类的节点并返回该节点下的某个属性
+     * @param id
+     * @param returnProperty
+     */
+    function findFocus(id, returnProperty) {
+        var tabs = g(id).children,
+            property;
+        for (var i = 0, ci; ci = tabs[i++];) {
+            if (ci.className == "focus") {
+                property = ci.getAttribute(returnProperty);
+                break;
+            }
+        }
+        return property;
+    }
+
+    /**
+     * 绑定地址框改变事件
+     */
+    function addUrlChangeListener() {
+        var value = g("url").value;
+        if (browser.ie) {
+            g("url").onpropertychange = function () {
+                var v = this.value;
+                if (v != value) {
+                    createPreviewImage(v);
+                    value = v;
+                }
+            };
+        } else {
+            g("url").addEventListener("input", function () {
+                var v = this.value;
+                if (v != value) {
+                    createPreviewImage(v);
+                    value = v;
+                }
+            }, false);
+        }
+    }
+
+    /**
+     * 绑定图片等比缩放事件
+     * @param percent  缩放比例
+     */
+    function addSizeChangeListener(percent) {
+        var width = g("width"),
+            height = g("height"),
+            lock = g('lock');
+        width.onkeyup = function () {
+            if (!isNaN(this.value) && lock.checked) {
+                height.value = Math.round(this.value / percent) || this.value;
+            }
+        };
+        height.onkeyup = function () {
+            if (!isNaN(this.value) && lock.checked) {
+                width.value = Math.round(this.value * percent) || this.value;
+            }
+        }
+    }
+
+    /**
+     * 依据url中的地址创建一个预览图片并将对应的信息填入信息框和预览框
+     */
+    function createPreviewImage(url) {
+        if (!url) {
+            flagImg = null;
+            g("preview").innerHTML = "";
+            g("width").value = "";
+            g("height").value = "";
+            g("border").value = "";
+            g("vhSpace").value = "";
+            g("title").value = "";
+            $focus(g("url"));
+            return;
+        }
+        var img = document.createElement("img"),
+            preview = g("preview");
+
+        var imgTypeReg = /\.(png|gif|jpg|jpeg)$/gi, //格式过滤
+            urlFilter = "";                                     //地址过滤
+        if (!imgTypeReg.test(url) || url.indexOf(urlFilter) == -1) {
+            preview.innerHTML = "<span style='color: red'>" + lang.imageUrlError + "</span>";
+            flagImg = null;
+            return;
+        }
+        preview.innerHTML = lang.imageLoading;
+        img.onload = function () {
+            flagImg = this;
+            showImageInfo(this);
+            showPreviewImage(this,true);
+            this.onload = null;
+        };
+        img.onerror = function () {
+            preview.innerHTML = "<span style='color: red'>" + lang.imageLoadError + "</span>";
+            flagImg = null;
+            this.onerror = null;
+        };
+        img.src = url;
+    }
+
+    /**
+     * 显示图片对象的信息
+     * @param img
+     */
+    function showImageInfo(img) {
+        if (!img.getAttribute("src") || !img.src) return;
+        var wordImgFlag = img.getAttribute("word_img");
+        g("url").value = wordImgFlag ? wordImgFlag.replace("&amp;", "&") : (img.getAttribute('_src') || img.getAttribute("src", 2).replace("&amp;", "&"));
+        g("width").value = img.width || 0;
+        g("height").value = img.height || 0;
+        g("border").value = img.getAttribute("border") || 0;
+        g("vhSpace").value = img.getAttribute("vspace") || 0;
+        g("title").value = img.title || "";
+        var align = editor.queryCommandValue("imageFloat") || "none";
+        updateAlignButton(align);
+
+        //保存原始比例，用于等比缩放
+        var percent = (img.width / img.height).toFixed(2);
+        addSizeChangeListener(percent);
+    }
+
+    /**
+     * 将img显示在预览框，
+     * @param img
+     * @param needClone  是否需要克隆后显示
+     */
+    function showPreviewImage(img, needClone) {
+        var tmpWidth = img.width, tmpHeight = img.height;
+        var maxWidth = 262,maxHeight = 262,
+            target = scaling(tmpWidth,tmpHeight,maxWidth,maxHeight);
+        target.border = img.border||0;
+        target.src = img.src;
+        flagImg = true;
+        if ((target.width + 2 * target.border) > maxWidth) {
+            target.width = maxWidth - 2 * target.border;
+        }
+        if ((target.height + 2 * target.border) > maxWidth) {
+            target.height = maxWidth - 2 * target.border;
+        }
+        var preview = g("preview");
+        preview.innerHTML = '<img src="' + target.src + '" width="' + target.width + '" height="' + target.height + '" border="' + target.border + 'px solid #000" />';
+    }
+
+    /**
+     * 图片缩放
+     * @param img
+     * @param max
+     */
+    function scale(img, max, oWidth, oHeight) {
+        var width = 0, height = 0, percent, ow = img.width || oWidth, oh = img.height || oHeight;
+        if (ow > max || oh > max) {
+            if (ow >= oh) {
+                if (width = ow - max) {
+                    percent = (width / ow).toFixed(2);
+                    img.height = oh - oh * percent;
+                    img.width = max;
+                }
+            } else {
+                if (height = oh - max) {
+                    percent = (height / oh).toFixed(2);
+                    img.width = ow - ow * percent;
+                    img.height = max;
+                }
+            }
+        }
+    }
+
+    function scaling(width,height,maxWidth,maxHeight){
+        if(width<maxWidth && height<maxHeight) return {width:width,height:height};
+        var srcRatio = (width/height).toFixed(2),
+            tarRatio = (maxWidth/maxHeight).toFixed(2),
+            w,h;
+        if(srcRatio<tarRatio){
+            h = maxHeight;
+            w = h*srcRatio;
+        }else{
+            w = maxWidth;
+            h = w/srcRatio;
+        }
+        return {width:w.toFixed(0),height:h.toFixed(0)}
+    }
+    /**
+>>>>>>> dev-1.2.5
      * 创建flash实例
      * @param opt
      * @param callbacks
