@@ -13,6 +13,8 @@
 UE.commands['imagefloat'] = {
     execCommand:function (cmd, align) {
         var me = this,
+            //for经验，插入的图片只能居中
+            align = "center",
             range = me.selection.getRange();
         if (!range.collapsed) {
             var img = range.getClosedNode();
@@ -48,7 +50,7 @@ UE.commands['imagefloat'] = {
 
                             range.selectNode(img).select();
                         }
-                        domUtils.setStyle(pN, 'text-align', align == 'none' ? '' : align);
+                        domUtils.setStyle(img, 'float', align == 'none' ? '' : align);
                         if(align == 'none'){
                             domUtils.removeAttributes(img,'align');
                         }

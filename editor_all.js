@@ -6268,7 +6268,7 @@ UE.plugins['autotypeset'] = function () {
         removeClass:false, //去掉冗余的class
         removeEmptyline:true, //去掉空行
         textAlign:"left", //段落的排版方式，可以是 left,right,center,justify 去掉这个属性表示不执行排版
-        //imageBlockLine:'none', //图片的浮动方式，独占一行剧中,左右浮动，默认: center,left,right,none 去掉这个属性表示不执行排版
+        imageBlockLine:'center', //图片的浮动方式，独占一行剧中,左右浮动，默认: center,left,right,none 去掉这个属性表示不执行排版
         pasteFilter:true, //根据规则过滤没事粘贴进来的内容
         clearFontSize:true, //去掉所有的内嵌字号，使用编辑器默认的字号
         clearFontFamily:true, //去掉所有的内嵌字体，使用编辑器默认的字体
@@ -6276,7 +6276,7 @@ UE.plugins['autotypeset'] = function () {
         //可以去掉的标签
         removeTagNames:utils.extend({div:1}, dtd.$removeEmpty),
         indent:true, // 行首缩进
-        indentValue:''             //行首缩进的大小
+        indentValue:'2em'             //行首缩进的大小
     }});
     var me = this,
         opt = me.options.autotypeset,
@@ -6350,7 +6350,7 @@ UE.plugins['autotypeset'] = function () {
             cont.innerHTML = html.html;
         } else {
             cont = me.document.body;
-//            cont.innerHTML = CtoH(cont.innerHTML);
+            cont.innerHTML = CtoH(cont.innerHTML);
         }
         var nodes = domUtils.getElementsByTagName(cont, '*');
 
@@ -6403,8 +6403,8 @@ UE.plugins['autotypeset'] = function () {
             }
             if (isLine(ci, true) && ci.tagName != 'SPAN') {
                 if (opt.indent) {
-                    ci.innerHTML = "　　" + ci.innerHTML.replace(/(^[\\s\\t\\xa0\\u3000]+)|([\\u3000\\xa0\\s\\t]+\x24)|(　　)/ig, "");
-//                    ci.style.textIndent = opt.indentValue;
+//                    ci.innerHTML = "　　" + ci.innerHTML.replace(/(^[\\s\\t\\xa0\\u3000]+)|([\\u3000\\xa0\\s\\t]+\x24)|(　　)/ig, "");
+                    ci.style.textIndent = opt.indentValue;
                 }
                 if (opt.textAlign) {
                     ci.style.textAlign = opt.textAlign;
@@ -6540,6 +6540,8 @@ UE.plugins['autotypeset'] = function () {
 UE.commands['imagefloat'] = {
     execCommand:function (cmd, align) {
         var me = this,
+            //for经验，插入的图片只能居中
+            align = "center",
             range = me.selection.getRange();
         if (!range.collapsed) {
             var img = range.getClosedNode();
@@ -6575,7 +6577,7 @@ UE.commands['imagefloat'] = {
 
                             range.selectNode(img).select();
                         }
-                        domUtils.setStyle(pN, 'text-align', align == 'none' ? '' : align);
+                        domUtils.setStyle(img, 'float', align == 'none' ? '' : align);
                         if(align == 'none'){
                             domUtils.removeAttributes(img,'align');
                         }
@@ -12425,44 +12427,6 @@ baidu.editor.ui = {};
                     var html = '', str = "",
                         img = editor.selection.getRange().getClosedNode(),
                         dialogs = editor.ui._dialogs;
-                    if (img && img.tagName == 'IMG') {
-                        var dialogName = 'insertimageDialog';
-                        if (img.className.indexOf("edui-faked-video") != -1) {
-                            dialogName = "insertvideoDialog"
-                        }
-                        if (img.className.indexOf("edui-faked-webapp") != -1) {
-                            dialogName = "webappDialog"
-                        }
-                        if (img.src.indexOf("http://api.map.baidu.com") != -1) {
-                            dialogName = "mapDialog"
-                        }
-                        if (img.className.indexOf("edui-faked-music") != -1) {
-                            dialogName = "musicDialog"
-                        }
-                        if (img.src.indexOf("http://maps.google.com/maps/api/staticmap") != -1) {
-                            dialogName = "gmapDialog"
-                        }
-                        if (img.getAttribute("anchorname")) {
-                            dialogName = "anchorDialog";
-                            html = popup.formatHtml(
-                                '<nobr>' + editor.getLang("property") + ': <span onclick=$$._onImgEditButtonClick("anchorDialog") class="edui-clickable">' + editor.getLang("modify") + '</span>&nbsp;&nbsp;' +
-                                    '<span onclick=$$._onRemoveButtonClick(\'anchor\') class="edui-clickable">' + editor.getLang("delete") + '</span></nobr>');
-                        }
-                        if (img.getAttribute("word_img")) {
-                            //todo 放到dialog去做查询
-                            editor.word_img = [img.getAttribute("word_img")];
-                            dialogName = "wordimageDialog"
-                        }
-                        if (!dialogs[dialogName]) {
-                            return;
-                        }
-                        str = '<nobr>' + editor.getLang("property") + ': '+
-                            '<span onclick=$$._onImgSetFloat("none") class="edui-clickable">' + editor.getLang("default") + '</span>&nbsp;&nbsp;' +
-                            '<span onclick=$$._onImgSetFloat("left") class="edui-clickable">' + editor.getLang("justifyleft") + '</span>&nbsp;&nbsp;' +
-                            '<span onclick=$$._onImgSetFloat("right") class="edui-clickable">' + editor.getLang("justifyright") + '</span>&nbsp;&nbsp;' +
-                            '<span onclick=$$._onImgSetFloat("center") class="edui-clickable">' + editor.getLang("justifycenter") + '</span></nobr>';
-                        !html && (html = popup.formatHtml(str))
-                    }
                     if (editor.ui._dialogs.linkDialog) {
                         var link = editor.queryCommandValue('link');
                         var url;

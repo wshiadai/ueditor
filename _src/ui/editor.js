@@ -233,44 +233,6 @@
                     var html = '', str = "",
                         img = editor.selection.getRange().getClosedNode(),
                         dialogs = editor.ui._dialogs;
-                    if (img && img.tagName == 'IMG') {
-                        var dialogName = 'insertimageDialog';
-                        if (img.className.indexOf("edui-faked-video") != -1) {
-                            dialogName = "insertvideoDialog"
-                        }
-                        if (img.className.indexOf("edui-faked-webapp") != -1) {
-                            dialogName = "webappDialog"
-                        }
-                        if (img.src.indexOf("http://api.map.baidu.com") != -1) {
-                            dialogName = "mapDialog"
-                        }
-                        if (img.className.indexOf("edui-faked-music") != -1) {
-                            dialogName = "musicDialog"
-                        }
-                        if (img.src.indexOf("http://maps.google.com/maps/api/staticmap") != -1) {
-                            dialogName = "gmapDialog"
-                        }
-                        if (img.getAttribute("anchorname")) {
-                            dialogName = "anchorDialog";
-                            html = popup.formatHtml(
-                                '<nobr>' + editor.getLang("property") + ': <span onclick=$$._onImgEditButtonClick("anchorDialog") class="edui-clickable">' + editor.getLang("modify") + '</span>&nbsp;&nbsp;' +
-                                    '<span onclick=$$._onRemoveButtonClick(\'anchor\') class="edui-clickable">' + editor.getLang("delete") + '</span></nobr>');
-                        }
-                        if (img.getAttribute("word_img")) {
-                            //todo 放到dialog去做查询
-                            editor.word_img = [img.getAttribute("word_img")];
-                            dialogName = "wordimageDialog"
-                        }
-                        if (!dialogs[dialogName]) {
-                            return;
-                        }
-                        str = '<nobr>' + editor.getLang("property") + ': '+
-                            '<span onclick=$$._onImgSetFloat("none") class="edui-clickable">' + editor.getLang("default") + '</span>&nbsp;&nbsp;' +
-                            '<span onclick=$$._onImgSetFloat("left") class="edui-clickable">' + editor.getLang("justifyleft") + '</span>&nbsp;&nbsp;' +
-                            '<span onclick=$$._onImgSetFloat("right") class="edui-clickable">' + editor.getLang("justifyright") + '</span>&nbsp;&nbsp;' +
-                            '<span onclick=$$._onImgSetFloat("center") class="edui-clickable">' + editor.getLang("justifycenter") + '</span></nobr>';
-                        !html && (html = popup.formatHtml(str))
-                    }
                     if (editor.ui._dialogs.linkDialog) {
                         var link = editor.queryCommandValue('link');
                         var url;

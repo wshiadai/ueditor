@@ -15,7 +15,7 @@ UE.plugins['autotypeset'] = function () {
         removeClass:false, //去掉冗余的class
         removeEmptyline:true, //去掉空行
         textAlign:"left", //段落的排版方式，可以是 left,right,center,justify 去掉这个属性表示不执行排版
-        //imageBlockLine:'none', //图片的浮动方式，独占一行剧中,左右浮动，默认: center,left,right,none 去掉这个属性表示不执行排版
+        imageBlockLine:'center', //图片的浮动方式，独占一行剧中,左右浮动，默认: center,left,right,none 去掉这个属性表示不执行排版
         pasteFilter:true, //根据规则过滤没事粘贴进来的内容
         clearFontSize:true, //去掉所有的内嵌字号，使用编辑器默认的字号
         clearFontFamily:true, //去掉所有的内嵌字体，使用编辑器默认的字体
@@ -23,7 +23,7 @@ UE.plugins['autotypeset'] = function () {
         //可以去掉的标签
         removeTagNames:utils.extend({div:1}, dtd.$removeEmpty),
         indent:true, // 行首缩进
-        indentValue:''             //行首缩进的大小
+        indentValue:'2em'             //行首缩进的大小
     }});
     var me = this,
         opt = me.options.autotypeset,
@@ -97,7 +97,7 @@ UE.plugins['autotypeset'] = function () {
             cont.innerHTML = html.html;
         } else {
             cont = me.document.body;
-//            cont.innerHTML = CtoH(cont.innerHTML);
+            cont.innerHTML = CtoH(cont.innerHTML);
         }
         var nodes = domUtils.getElementsByTagName(cont, '*');
 
@@ -150,8 +150,8 @@ UE.plugins['autotypeset'] = function () {
             }
             if (isLine(ci, true) && ci.tagName != 'SPAN') {
                 if (opt.indent) {
-                    ci.innerHTML = "　　" + ci.innerHTML.replace(/(^[\\s\\t\\xa0\\u3000]+)|([\\u3000\\xa0\\s\\t]+\x24)|(　　)/ig, "");
-//                    ci.style.textIndent = opt.indentValue;
+//                    ci.innerHTML = "　　" + ci.innerHTML.replace(/(^[\\s\\t\\xa0\\u3000]+)|([\\u3000\\xa0\\s\\t]+\x24)|(　　)/ig, "");
+                    ci.style.textIndent = opt.indentValue;
                 }
                 if (opt.textAlign) {
                     ci.style.textAlign = opt.textAlign;

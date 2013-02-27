@@ -521,13 +521,10 @@ div.edui-box {
 .edui-default  .edui-for-italic .edui-state-checked .edui-icon {
     background-position: -119px -61px;
 }
-<<<<<<< HEAD
-=======
 
 .edui-default  .edui-for-fontborder .edui-icon {
     background-position:-160px -40px;
 }
->>>>>>> dev-1.2.5
 .edui-default  .edui-for-underline .edui-icon {
     background-position: -140px 0;
 }
@@ -560,14 +557,15 @@ div.edui-box {
     background-position: -580px -20px;
 }
 
-.edui-default  .edui-for-autotypeset .edui-icon {
-    background-position: -450px 5px;
+.edui-default  .edui-toolbar  .edui-for-autotypeset .edui-icon {
+    width:48px !important;
+    background-position: -505px 5px;
 }
 .edui-default  .edui-for-autotypeset  .edui-state-hover  .edui-icon {
-    background-position: -450px -27px;
+    background-position: -505px -27px;
 }
 .edui-default  .edui-for-autotypeset  .edui-state-checked  .edui-icon {
-    background-position: -450px -62px;
+    background-position: -505px -62px;
 }
 
 .edui-default  .edui-for-justifyleft .edui-icon {
