@@ -515,6 +515,7 @@
                     return str.join('');
                 });
             }
+            html = html.replace(/'/g,"&#39;");
 
             return  html;
         },
