@@ -4416,6 +4416,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                     return str.join('');
                 });
             }
+            html = html.replace(/'/g,"&#39;");
 
             return  html;
         },
@@ -6269,7 +6270,7 @@ UE.plugins['autotypeset'] = function () {
         removeEmptyline:true, //去掉空行
         textAlign:"left", //段落的排版方式，可以是 left,right,center,justify 去掉这个属性表示不执行排版
         imageBlockLine:'center', //图片的浮动方式，独占一行剧中,左右浮动，默认: center,left,right,none 去掉这个属性表示不执行排版
-        pasteFilter:true, //根据规则过滤没事粘贴进来的内容
+        pasteFilter:false, //根据规则过滤没事粘贴进来的内容
         clearFontSize:true, //去掉所有的内嵌字号，使用编辑器默认的字号
         clearFontFamily:true, //去掉所有的内嵌字体，使用编辑器默认的字体
         removeEmptyNode:true, // 去掉空节点
@@ -6673,7 +6674,7 @@ UE.commands['insertimage'] = {
             img = range.getClosedNode();
         if (img && /img/i.test(img.tagName) && img.className != "edui-faked-video" && !img.getAttribute("word_img")) {
             var first = opt.shift();
-            var floatStyle = first['floatStyle'];
+            var floatStyle = first['floatStyle'] = "center";
             delete first['floatStyle'];
 ////                img.style.border = (first.border||0) +"px solid #000";
 ////                img.style.margin = (first.margin||0) +"px";
@@ -6688,6 +6689,7 @@ UE.commands['insertimage'] = {
         } else {
             var html = [], str = '', ci;
             ci = opt[0];
+            ci['floatStyle'] = 'center';
             if (opt.length == 1) {
                 str = '<img src="' + ci.src + '" ' + (ci._src ? ' _src="' + ci._src + '" ' : '') +
                     (ci.width ? 'width="' + ci.width + '" ' : '') +
@@ -9800,11 +9802,12 @@ UE.plugins['video'] = function (){
 
     me.commands["insertvideo"] = {
         execCommand: function (cmd, videoObjs){
+
             videoObjs = utils.isArray(videoObjs)?videoObjs:[videoObjs];
             var html = [];
             for(var i=0,vi,len = videoObjs.length;i<len;i++){
                  vi = videoObjs[i];
-                 html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, vi.align||"none",false,true));
+                 html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, "center",false,true));
             }
             me.execCommand("inserthtml",html.join(""),true);
         },

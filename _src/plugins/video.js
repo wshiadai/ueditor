@@ -50,11 +50,12 @@ UE.plugins['video'] = function (){
 
     me.commands["insertvideo"] = {
         execCommand: function (cmd, videoObjs){
+
             videoObjs = utils.isArray(videoObjs)?videoObjs:[videoObjs];
             var html = [];
             for(var i=0,vi,len = videoObjs.length;i<len;i++){
                  vi = videoObjs[i];
-                 html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, vi.align||"none",false,true));
+                 html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, "center",false,true));
             }
             me.execCommand("inserthtml",html.join(""),true);
         },

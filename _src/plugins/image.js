@@ -142,7 +142,7 @@ UE.commands['insertimage'] = {
             img = range.getClosedNode();
         if (img && /img/i.test(img.tagName) && img.className != "edui-faked-video" && !img.getAttribute("word_img")) {
             var first = opt.shift();
-            var floatStyle = first['floatStyle'];
+            var floatStyle = first['floatStyle'] = "center";
             delete first['floatStyle'];
 ////                img.style.border = (first.border||0) +"px solid #000";
 ////                img.style.margin = (first.margin||0) +"px";
@@ -157,6 +157,7 @@ UE.commands['insertimage'] = {
         } else {
             var html = [], str = '', ci;
             ci = opt[0];
+            ci['floatStyle'] = 'center';
             if (opt.length == 1) {
                 str = '<img src="' + ci.src + '" ' + (ci._src ? ' _src="' + ci._src + '" ' : '') +
                     (ci.width ? 'width="' + ci.width + '" ' : '') +
@@ -177,6 +178,7 @@ UE.commands['insertimage'] = {
 
             } else {
                 for (var i = 0; ci = opt[i++];) {
+                    ci['floatStyle'] = 'center';
                     str = '<p ' + (ci['floatStyle'] == 'center' ? 'style="text-align: center" ' : '') + '><img src="' + ci.src + '" ' +
                         (ci.width ? 'width="' + ci.width + '" ' : '') + (ci._src ? ' _src="' + ci._src + '" ' : '') +
                         (ci.height ? ' height="' + ci.height + '" ' : '') +
