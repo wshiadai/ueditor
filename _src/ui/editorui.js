@@ -95,6 +95,36 @@
             };
         }(ci);
     }
+    editorui['uploadfile'] = function(cmd){
+        return function (editor) {
+            var ui = new editorui.Button({
+                className:'edui-for-' + cmd,
+                title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
+                onclick:function () {
+                    var div  = editor.document.createElement("div");
+                    div.className = "upfile";
+                    editor.ui.getDom().insertBefore(div,editor.ui.getDom("iframeholder"))
+
+                },
+                theme:editor.options.theme,
+                showText:false
+            });
+            editorui.buttons[cmd]=ui;
+            editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
+                var state = editor.queryCommandState(cmd);
+                if (state == -1) {
+                    ui.setDisabled(true);
+                    ui.setChecked(false);
+                } else {
+                    if (!uiReady) {
+                        ui.setDisabled(false);
+                        ui.setChecked(state);
+                    }
+                }
+            });
+            return ui;
+        };
+    }('uploadfile')
 
     //清除文档
     editorui.cleardoc = function (editor) {
