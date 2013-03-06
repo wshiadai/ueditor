@@ -5780,7 +5780,10 @@ var filterWord = UE.filterWord = function () {
 var htmlparser = UE.htmlparser = function (htmlstr) {
     var reg = new RegExp(domUtils.fillChar, 'g');
     //ie下取得的html可能会有\n存在，要去掉，在处理replace(/[\t\r\n]*/g,'');代码高量的\n不能去除
-    htmlstr = htmlstr.replace(reg, '').replace(/>[\t\r\n]*?</g, '><');
+    htmlstr = htmlstr.replace(reg, '')
+        .replace(/(?:^[ \t\r\n]*?<)/, '<')
+        .replace(/(?:>[ \t\r\n]*?$)/, '>')
+        .replace(/>(?:[ \t\r\n]*)/g, '>').replace(/(?:[ \t\r\n]*)</g, '<');
 
     var re_tag = /<(?:(?:\/([^>]+)>)|(?:!--([\S|\s]*?)-->)|(?:([^\s\/>]+)\s*((?:(?:"[^"]*")|(?:'[^']*')|[^"'<>])*)\/?>))/g,
         re_attr = /([\w\-:.]+)(?:(?:\s*=\s*(?:(?:"([^"]*)")|(?:'([^']*)')|([^\s>]+)))|(?=\s|$))/g;
@@ -5798,14 +5801,22 @@ var htmlparser = UE.htmlparser = function (htmlstr) {
             'dt':'dl',
             'dd':'dl',
             'option':'select'
+        },
+        needChild = {
+            'ol':'li',
+            'ul':'li'
         };
 
     function text(parent, data) {
-        parent.children.push(new uNode({
-            type:'text',
-            data:data,
-            parentNode:parent
-        }));
+        if(needChild[parent.tagName]){
+            var tmpNode = uNode.createElement(needChild[parent.tagName]);
+            parent.appendChild(tmpNode);
+            tmpNode.appendChild(uNode.createText(data));
+            parent = tmpNode;
+        }else{
+
+            parent.appendChild(uNode.createText(data));
+        }
     }
 
     function element(parent, tagName, htmlattr) {
@@ -5824,10 +5835,6 @@ var htmlparser = UE.htmlparser = function (htmlstr) {
                 parent = element(parent, utils.isArray(needParentTag) ? needParentTag[0] : needParentTag)
             }
         }
-//        //根据dtd判断是否当前节点可以放入新的节点
-//        while(dtd[parent.tagName] && !dtd[parent.tagName][tagName]){
-//            parent = parent.parentNode;
-//        }
 
         var elm = new uNode({
             parentNode:parent,
@@ -5840,7 +5847,7 @@ var htmlparser = UE.htmlparser = function (htmlstr) {
         if (htmlattr) {
             var attrs = {}, match;
             while (match = re_attr.exec(htmlattr)) {
-                attrs[match[1].toLowerCase()] = match[2]
+                attrs[match[1].toLowerCase()] = match[2] || match[3] || match[4]
             }
             elm.attrs = attrs;
         }
@@ -6391,6 +6398,10 @@ UE.plugins['autotypeset'] = function () {
                 //去掉空行，保留占位的空行
                 if (opt.removeEmptyline && domUtils.inDoc(ci, cont) && !remainTag[ci.parentNode.tagName.toLowerCase()]) {
                     if (domUtils.isBr(ci)) {
+                        var li = domUtils.findParentByTagName(ci,"li",true);
+                        if(li){
+                            continue;
+                        }
                         next = ci.nextSibling;
                         if (next && !domUtils.isBr(next)) {
                             continue;
@@ -6710,6 +6721,7 @@ UE.commands['insertimage'] = {
 
             } else {
                 for (var i = 0; ci = opt[i++];) {
+                    ci['floatStyle'] = 'center';
                     str = '<p ' + (ci['floatStyle'] == 'center' ? 'style="text-align: center" ' : '') + '><img src="' + ci.src + '" ' +
                         (ci.width ? 'width="' + ci.width + '" ' : '') + (ci._src ? ' _src="' + ci._src + '" ' : '') +
                         (ci.height ? ' height="' + ci.height + '" ' : '') +
@@ -12808,6 +12820,8 @@ baidu.editor.ui = {};
         editor.options.editor = editor;
         utils.loadFile(document, {
             href:editor.options.themePath + editor.options.theme + "/_css/ueditor.css",
+//            for经验
+//            href:editor.options.themePath + editor.options.theme + "/ueditor_simple.css",
             tag:"link",
             type:"text/css",
             rel:"stylesheet"

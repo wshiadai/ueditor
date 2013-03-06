@@ -14,6 +14,12 @@
 </div>
 <script type="text/javascript">
     var ed = UE.getEditor("editor");
+    ed.addListener("beforegetcontent",function(){
+        var links = domUtils.getElementsByTagName(this.document,"a");
+        for(var i= 0,link;link=links[i++];){
+            UE.dom.domUtils.remove(link,true)
+        }
+    })
 </script>
 </body>
 </html>

@@ -147,7 +147,7 @@ div.edui-box {
 }
 
 .edui-default .edui-editor-toolbarboxinner {
-    padding: 2px;
+    padding: 7px;
 }
 
 .edui-default .edui-editor-iframeholder {
@@ -454,26 +454,19 @@ div.edui-box {
 }
 
 .edui-default .edui-toolbar .edui-button .edui-button-wrap {
-    padding: 1px;
     position: relative;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-hover .edui-button-wrap {
-    background-color: #ffffff;
     padding: 0;
-    border: 1px solid #E8E8E8;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-checked .edui-button-wrap {
-    background-color: #EEF9ED;
         padding: 0;
-        border: 1px solid #B8D1B7;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-active .edui-button-wrap {
-    background-color: #EEF9ED;
     padding: 0;
-    border: 1px solid #B8D1B7;
 }
 .edui-default .edui-toolbar .edui-state-disabled .edui-label {
     color: #ccc;
@@ -487,39 +480,39 @@ div.edui-box {
     background-position: 4px 5px;
 }
 .edui-default .edui-for-undo .edui-state-hover .edui-icon {
-    background-position: 4px -27px;
+    background-position: 1px -30px;
 }
-.edui-default .edui-for-undo .edui-state-checked .edui-icon {
-    background-position: 4px -62px;
+.edui-default .edui-for-undo .edui-state-active .edui-icon,.edui-default .edui-for-undo .edui-state-checked .edui-icon {
+    background-position: 1px -64px;
 }
 
 .edui-default  .edui-for-redo .edui-icon {
     background-position: -32px 5px;
 }
 .edui-default  .edui-for-redo .edui-state-hover .edui-icon {
-    background-position: -32px -27px;
+    background-position: -35px -30px;
 }
-.edui-default  .edui-for-redo .edui-state-checked .edui-icon {
-    background-position: -32px -62px;
+.edui-default .edui-for-redo .edui-state-active .edui-icon,.edui-default .edui-for-redo .edui-state-checked .edui-icon{
+    background-position: -35px -64px;
 }
 .edui-default  .edui-for-bold .edui-icon {
     background-position: -82px 4px;
 }
 .edui-default  .edui-for-bold .edui-state-hover .edui-icon {
-    background-position: -82px -28px;
+    background-position: -85px -31px;
 }
 .edui-default  .edui-for-bold .edui-state-checked .edui-icon {
-    background-position: -82px -62px;
+    background-position: -85px -65px;
 }
 
 .edui-default  .edui-for-italic .edui-icon {
     background-position: -119px 5px;
 }
 .edui-default  .edui-for-italic .edui-state-hover .edui-icon {
-    background-position: -119px -27px;
+    background-position: -122px -30px;
 }
 .edui-default  .edui-for-italic .edui-state-checked .edui-icon {
-    background-position: -119px -61px;
+    background-position: -122px -64px;
 }
 
 .edui-default  .edui-for-fontborder .edui-icon {
@@ -558,14 +551,14 @@ div.edui-box {
 }
 
 .edui-default  .edui-toolbar  .edui-for-autotypeset .edui-icon {
-    width:48px !important;
-    background-position: -505px 6px;
+    width:59px !important;
+    background-position: -499px 6px;
 }
 .edui-default  .edui-for-autotypeset  .edui-state-hover  .edui-icon {
-    background-position: -505px -27px;
+    background-position: -504px -30px;
 }
-.edui-default  .edui-for-autotypeset  .edui-state-checked  .edui-icon {
-    background-position: -505px -62px;
+.edui-default .edui-for-autotypeset .edui-state-active .edui-icon,.edui-default  .edui-for-autotypeset  .edui-state-checked  .edui-icon {
+    background-position: -505px -64px;
 }
 
 .edui-default  .edui-for-justifyleft .edui-icon {
@@ -588,20 +581,20 @@ div.edui-box {
     background-position: -205px 4px;
 }
 .edui-default  .edui-for-insertorderedlist .edui-state-hover .edui-icon {
-    background-position: -205px -28px;
+    background-position: -208px -31px;
 }
 .edui-default  .edui-for-insertorderedlist .edui-state-checked .edui-icon {
-    background-position: -205px -62px;
+    background-position: -208px -65px;
 }
 
 .edui-default  .edui-for-insertunorderedlist .edui-icon {
     background-position: -168px 5px;
 }
 .edui-default  .edui-for-insertunorderedlist .edui-state-hover .edui-icon {
-    background-position: -168px -27px;
+    background-position: -171px -30px;
 }
 .edui-default  .edui-for-insertunorderedlist .edui-state-checked .edui-icon {
-    background-position: -168px -61px;
+    background-position: -171px -64px;
 }
 
 .edui-default  .edui-for-lineheight .edui-icon {
@@ -632,10 +625,10 @@ div.edui-box {
     background-position: -377px 5px;
 }
 .edui-default  .edui-for-insertimage .edui-state-hover  .edui-icon {
-    background-position: -377px -27px;
+    background-position: -380px -30px;
 }
-.edui-default  .edui-for-insertimage .edui-state-checked  .edui-icon {
-    background-position: -377px -62px;
+.edui-default .edui-for-insertimage .edui-state-active .edui-icon,.edui-default  .edui-for-insertimage .edui-state-checked  .edui-icon {
+    background-position: -380px -64px;
 }
 
 .edui-default  .edui-for-insertframe .edui-icon {
@@ -682,10 +675,10 @@ div.edui-box {
     background-position: -413px 5px;
 }
 .edui-default  .edui-for-insertvideo .edui-state-hover .edui-icon {
-    background-position: -413px -27px;
+    background-position: -416px -30px;
 }
-.edui-default  .edui-for-insertvideo .edui-state-checked .edui-icon {
-    background-position: -413px -62px;
+.edui-default .edui-for-insertvideo .edui-state-active .edui-icon,.edui-default  .edui-for-insertvideo .edui-state-checked .edui-icon {
+    background-position: -416px -64px;
 }
 
 .edui-default  .edui-for-time .edui-icon {

@@ -137,6 +137,10 @@ UE.plugins['autotypeset'] = function () {
                 //去掉空行，保留占位的空行
                 if (opt.removeEmptyline && domUtils.inDoc(ci, cont) && !remainTag[ci.parentNode.tagName.toLowerCase()]) {
                     if (domUtils.isBr(ci)) {
+                        var li = domUtils.findParentByTagName(ci,"li",true);
+                        if(li){
+                            continue;
+                        }
                         next = ci.nextSibling;
                         if (next && !domUtils.isBr(next)) {
                             continue;

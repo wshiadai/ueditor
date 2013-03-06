@@ -170,9 +170,6 @@ UE.commands['insertimage'] = {
                     (ci.vspace && ci.vspace != "0" ? ' vspace = "' + ci.vspace + '"' : '') + '/>';
                 if (ci['floatStyle'] == 'center') {
                     str = '<p style="text-align: center">' + str + '</p>';
-                }else{
-                    //for经验，img独占一行
-                    str = '<p>' + str + '</p>';
                 }
                 html.push(str);
 
