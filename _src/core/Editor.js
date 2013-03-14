@@ -758,7 +758,7 @@
                     var top = (document.body.scrollTop||document.documentElement.scrollTop) + uiutils.getClientRect(node).top-60;
                     window.scrollTo(0,top);
                     window.edSimShowStepPop(uiutils.getClientRect(node).top,state);
-                    me.selection.getRange().selectNode(node.firstChild).setCursor(true);
+                    me.selection.getRange().selectNode(node.firstChild?node.firstChild:node).setCursor(true);
                     flag = false;
                     break;
                 }
