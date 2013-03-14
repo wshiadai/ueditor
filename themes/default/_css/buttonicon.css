@@ -37,6 +37,15 @@
 .edui-default  .edui-for-italic .edui-state-checked .edui-icon {
     background-position: -122px -64px;
 }
+.edui-default .edui-for-heading1 .edui-icon {
+    background-position: -573px 5px;
+}
+.edui-default .edui-for-heading1 .edui-state-hover .edui-icon {
+    background-position: -576px -30px;
+}
+.edui-default .edui-for-heading1 .edui-state-active .edui-icon,.edui-default .edui-for-heading1 .edui-state-checked .edui-icon {
+    background-position: -576px -64px;
+}
 
 .edui-default  .edui-for-fontborder .edui-icon {
     background-position:-160px -40px;

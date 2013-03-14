@@ -740,6 +740,32 @@
             }
         },
 
+        expSubmit:function(){
+            var me = this,
+                hlist = domUtils.getElementsByTagName(me.document,"h2"),
+                state="",
+                flag = true,
+                uiutils = baidu.editor.ui.uiUtils;
+            for(var i = 0,node;node=hlist[i++];){
+                var txt= node.innerHTML.replace(domUtils.fillChar,"");
+                if(domUtils.isEmptyNode(node)){
+                    state = "标题为空";
+                }
+                if(txt.replace(/[^\x00-\xff]/g, 'ci').length>40){
+                    state = "标题要小于40个字符";
+                }
+                if(state){
+                    var top = window.document.body.scrollTop + uiutils.getClientRect(node).top-60;
+                    window.scrollTo(0,top);
+                    window.edSimShowStepPop(uiutils.getClientRect(node).top,state);
+                    me.selection.getRange().selectNode(node.firstChild).setCursor(true);
+                    flag = false;
+                    break;
+                }
+            }
+            return flag;
+        },
+
         /**
          * 让编辑器获得焦点，toEnd确定focus位置
          * @name focus

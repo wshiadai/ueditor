@@ -2328,6 +2328,151 @@ var domUtils = dom.domUtils = {
             }
         }
         return true;
+    },
+    findTagNamesInSelection : function(range, tags, filter ){
+        var as,
+            ps,
+            pe,
+            node,
+            start,
+            end,
+            common;
+
+        if(range.collapsed){
+            node = range.startContainer;
+            if ( node && (node = domUtils.findParentByTagName( node, tags, true )) ) {
+                return node;
+            }
+        }else{
+            range.shrinkBoundary();
+            start = range.startContainer.nodeType  == 3 || !range.startContainer.childNodes[range.startOffset] ? range.startContainer : range.startContainer.childNodes[range.startOffset];
+            end =  range.endContainer.nodeType == 3 || range.endOffset == 0 ? range.endContainer : range.endContainer.childNodes[range.endOffset-1];
+
+            common = domUtils.getCommonAncestor(start, end);
+
+            for( var j = 0, t; t = tags[j++]; ){
+                //找特定的tag
+                node = domUtils.findParentByTagName( common, t, true );
+                if ( !node && common.nodeType == 1){
+
+                    as = common.getElementsByTagName( t );
+
+                    for ( var i = 0,ci; ci = as[i++]; ) {
+                        if(start == ci || end  == ci){
+                            node = ci;
+                            if (filter){
+                                if(filter(node)) break;
+                                node = null;
+                            }else{
+                                break;
+                            }
+                        }
+                        ps = domUtils.getPosition( ci, start ),pe = domUtils.getPosition( ci,end);
+                        if ( (ps & domUtils.POSITION_FOLLOWING || ps & domUtils.POSITION_CONTAINS)
+                            &&
+                            (pe & domUtils.POSITION_PRECEDING || pe & domUtils.POSITION_CONTAINS)
+                            ) {
+                            node =  ci;
+                            if (filter){
+                                if(filter(node)) break;
+                                node = null;
+                            }else{
+                                break;
+                            }
+                        }
+                    }
+                }
+                if( node ){
+                    return node;
+                }
+            }
+        }
+        return null;
+    },
+    triggerLayout : function (elm){
+        if (elm.style.zoom == '1') {
+            elm.style.zoom = '100%';
+        } else {
+            elm.style.zoom = '1';
+        }
+    },
+    findStartElement : function (range, tester){
+        var node = range.startContainer;
+        if (node.hasChildNodes()) {
+            node = node.childNodes[range.startOffset] ||  node;
+        } else if (node.nodeType == 3){
+            if (range.startOffset == 0) {
+                node = node.previousSibling || node.parentNode;
+                while (node.nodeType == 3 && !node.nodeValue) {
+                    node = node.previousSibling || node.parentNode;
+                }
+            } else if (range.startOffset >= node.nodeValue.length) {
+                node = node.nextSibling || node.parentNode;
+                while (node.nodeType == 3 && !node.nodeValue) {
+                    node = node.nextSibling || node.parentNode;
+                }
+            }
+        }
+        if (node.nodeType != 1) {
+            node = node.parentNode;
+        }
+        while (node != null) {
+            if (matchSelector(node)) {
+                return node;
+            }
+            node = node.parentNode;
+        }
+        return null;
+        function matchSelector(node){
+            if (typeof tester == 'string') {
+                return node.nodeName == tester;
+            } else if (typeof tester == 'function') {
+                return tester(node);
+            } else {
+                return tester.test(node.nodeName);
+            }
+        }
+    },
+    clearReduent : function(node, tags) {
+
+        tags = tags ||[];
+        var nodes,
+            reg = new RegExp(domUtils.fillChar, 'g'),
+            _parent;
+        for (var t = 0,ti; ti = tags[t++];) {
+            nodes = node.getElementsByTagName(ti);
+
+            for (var i = 0,ci; ci = nodes[i++];) {
+                if (ci.parentNode && ci[browser.ie ? 'innerText' : 'textContent'].replace(reg, '').length == 0 && ci.children.length == 0) {
+
+                    _parent = ci.parentNode;
+
+                    domUtils.remove(ci);
+                    while (_parent.childNodes.length == 0 && new RegExp(tags.join('|'), 'i').test(_parent.tagName)) {
+                        ci = _parent;
+                        _parent = _parent.parentNode;
+                        domUtils.remove(ci);
+
+                    }
+
+                }
+            }
+        }
+    },
+    getChildCount : function (node, fn) {
+        var count = 0,first = node.firstChild;
+        fn = fn || function() {
+            return 1
+        };
+        while (first) {
+            if (fn(first))
+                count++;
+            first = first.nextSibling;
+        }
+        return count;
+    },
+    getPreviousDomNode : function(node, startFromChild, fn) {
+        return getDomNode(node, 'lastChild', 'previousSibling', startFromChild, fn);
     }
 };
 var fillCharReg = new RegExp(domUtils.fillChar, 'g');
@@ -5611,7 +5756,7 @@ var filterWord = UE.filterWord = function () {
             }
         },
         appendChild:function (node) {
-            if (this.type == 'element' && !dtd.$empty[this.tagName]) {
+            if (this.type == 'root' || (this.type == 'element' && !dtd.$empty[this.tagName])) {
                 if (!this.children) {
                     this.children = []
                 }
@@ -5839,7 +5984,7 @@ var htmlparser = UE.htmlparser = function (htmlstr) {
         var elm = new uNode({
             parentNode:parent,
             type:'element',
-            tagName:tagName,
+            tagName:tagName.toLowerCase(),
             //是自闭合的处理一下
             children:dtd.$empty[tagName] ? null : []
         });
@@ -5883,7 +6028,7 @@ var htmlparser = UE.htmlparser = function (htmlstr) {
             currentParent = element(currentParent, match[3], match[4]);
 
         } else if (match[1]) {
-            while(currentParent.type == 'element' && currentParent.tagName != match[1]){
+            while(currentParent.type == 'element' && currentParent.tagName != match[1].toLowerCase()){
                 currentParent = currentParent.parentNode;
             }
             //end tag
@@ -6178,8 +6323,14 @@ UE.commands['inserthtml'] = {
         //如果当前位置选中了fillchar要干掉，要不会产生空行
         if(range.inFillChar()){
             child = range.startContainer;
-            range.setStartBefore(child).collapse(true);
-            domUtils.remove(child);
+            if(domUtils.isFillChar(child)){
+                range.setStartBefore(child).collapse(true);
+                domUtils.remove(child);
+            }else if(domUtils.isFillChar(child,true)){
+                child.nodeValue = child.nodeValue.replace(fillCharReg,'');
+                range.startOffset--;
+                range.collapsed && range.collapse(true)
+            }
         }
         while ( child = div.firstChild ) {
             range.insertNode( child );
@@ -6300,7 +6451,7 @@ UE.plugins['autotypeset'] = function () {
             div:1,
             p:1,
             //trace:2183 这些也认为是行
-            blockquote:1, center:1, h1:1, h2:1, h3:1, h4:1, h5:1, h6:1,
+            blockquote:1, center:1, h1:1, h2:0, h3:1, h4:1, h5:1, h6:1,
             span:1
         },
         highlightCont;
@@ -6552,7 +6703,24 @@ UE.plugins['autotypeset'] = function () {
  * User: zhanyi
  * for image
  */
-
+function setIEMarginAuto(elem){
+    var parent,
+        _ele = elem;
+    while (parent=_ele.parentElement){
+        if (utils.indexOf(['td', 'th', 'caption', 'body'],parent.tagName.toLowerCase())!== -1 ){
+            break;
+        }
+        _ele = parent;
+    }
+    var curStyle = parent.currentStyle,
+        _width = parent.offsetWidth - parseInt(curStyle.marginLeft, 10) - parseInt(curStyle.marginRight, 10),
+        padding = parseInt(curStyle.paddingLeft, 10) + parseInt(curStyle.paddingRight, 10),
+        _left = Math.round((_width-elem.offsetWidth)/2);
+    _left -= padding;
+    if(_left){
+        elem.style.cssText = "float: none; display: block;  margin:0 auto 0 "+_left +"px;"
+    }
+}
 UE.commands['imagefloat'] = {
     execCommand:function (cmd, align) {
         var me = this,
@@ -6602,8 +6770,10 @@ UE.commands['imagefloat'] = {
                     case 'center':
                         if (me.queryCommandValue('imagefloat') != 'center') {
                             pN = img.parentNode;
-                            domUtils.setStyle(img, 'float', '');
-                            domUtils.removeAttributes(img,'align');
+
+                            img.style.cssText = "float: none; display: block; margin: 0px auto;";
+//                            domUtils.setStyle(img, 'float', '');
+//                            domUtils.removeAttributes(img,'align');
                             tmpNode = img;
                             while (pN && domUtils.getChildCount(pN, function (node) {
                                 return !domUtils.isBr(node) && !domUtils.isWhitespace(node);
@@ -6617,7 +6787,7 @@ UE.commands['imagefloat'] = {
                             pN.appendChild(tmpNode);
                             domUtils.setStyle(tmpNode, 'float', '');
 
-                            me.execCommand('insertHtml', '<p id="_img_parent_tmp" style="text-align:center">' + pN.innerHTML + '</p>');
+                            me.execCommand('insertHtml', '<p id="_img_parent_tmp">' + pN.innerHTML + '</p>');
 
                             tmpNode = me.document.getElementById('_img_parent_tmp');
                             tmpNode.removeAttribute('id');
@@ -6702,27 +6872,24 @@ UE.commands['insertimage'] = {
             ci = opt[0];
             ci['floatStyle'] = 'center';
             if (opt.length == 1) {
-                str = '<img src="' + ci.src + '" ' + (ci._src ? ' _src="' + ci._src + '" ' : '') +
+                str = '<img style="float: none; display: block; margin: 0px auto;" src="' + ci.src + '" ' + (ci._src ? ' _src="' + ci._src + '" ' : '') +
                     (ci.width ? 'width="' + ci.width + '" ' : '') +
                     (ci.height ? ' height="' + ci.height + '" ' : '') +
-                    (ci['floatStyle'] == 'left' || ci['floatStyle'] == 'right' ? ' style="float:' + ci['floatStyle'] + ';"' : '') +
+//                    (ci['floatStyle'] == 'left' || ci['floatStyle'] == 'right' ? ' style="float:' + ci['floatStyle'] + ';"' : '') +
                     (ci.title && ci.title != "" ? ' title="' + ci.title + '"' : '') +
                     (ci.border && ci.border != "0" ? ' border="' + ci.border + '"' : '') +
                     (ci.alt && ci.alt != "" ? ' alt="' + ci.alt + '"' : '') +
                     (ci.hspace && ci.hspace != "0" ? ' hspace = "' + ci.hspace + '"' : '') +
                     (ci.vspace && ci.vspace != "0" ? ' vspace = "' + ci.vspace + '"' : '') + '/>';
                 if (ci['floatStyle'] == 'center') {
-                    str = '<p style="text-align: center">' + str + '</p>';
-                }else{
-                    //for经验，img独占一行
-                    str = '<p>' + str + '</p>';
+                    str = '<p >' + str + '</p>';
                 }
                 html.push(str);
 
             } else {
                 for (var i = 0; ci = opt[i++];) {
                     ci['floatStyle'] = 'center';
-                    str = '<p ' + (ci['floatStyle'] == 'center' ? 'style="text-align: center" ' : '') + '><img src="' + ci.src + '" ' +
+                    str = '<p><img  style = "float: none; display: block; margin: 0px auto;" src="' + ci.src + '" ' +
                         (ci.width ? 'width="' + ci.width + '" ' : '') + (ci._src ? ' _src="' + ci._src + '" ' : '') +
                         (ci.height ? ' height="' + ci.height + '" ' : '') +
                         ' style="' + (ci['floatStyle'] && ci['floatStyle'] != 'center' ? 'float:' + ci['floatStyle'] + ';' : '') +
@@ -6733,6 +6900,16 @@ UE.commands['insertimage'] = {
             }
 
             me.execCommand('insertHtml', html.join(''));
+            if(browser.ie){
+                setTimeout(function(){
+                        var imgs = domUtils.getElementsByTagName(me.document,"img");
+                        utils.each(imgs,function(node){
+                            setIEMarginAuto(node);
+                        })
+                },200)
+            }
+
+
         }
     }
 };
@@ -7484,7 +7661,7 @@ UE.plugins['list'] = function () {
                 customCss.push('li.list-' + customStyle[p] + '{background-image:url(' + liiconpath +customStyle[p]+'.gif)}');
                 customCss.push('ul.custom_'+p+'{list-style:none;}ul.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
             }else if(p == 'disc'){
-                customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/unsortlist.png);background-repeat:no-repeat;background-position: 0 8px;}');
+                customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/unsortlist.png);background-repeat:no-repeat;background-position: 11px 8px;}');
             }else if(p == 'decimal'){
                 for(var i= 0;i<99;i++){
                     customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(http://img.baidu.com/img/iknow/exp/edit/edit-num' +  i + '.png)}')
@@ -7527,10 +7704,10 @@ UE.plugins['list'] = function () {
                     customCss.push('li.list-'+p+'-paddingleft{padding-left:20px}');
                     break;
                 case 'decimal':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding:9px 0 9px 35px}');
+                    customCss.push('li.list-'+p+'-paddingleft-1{padding:9px 0 9px 42px;+padding-bottom:1px;}');
                     break;
                 case 'disc':
-                    customCss.push('li.list-'+p+'-paddingleft{padding-left:15px}');
+                    customCss.push('li.list-'+p+'-paddingleft{padding-left:41px}');
             }
         }
         customCss.push('.list-paddingleft-1{padding-left:0}');
@@ -8323,6 +8500,15 @@ UE.plugins['list'] = function () {
 
             },
             queryCommandState:function (command) {
+                var range = this.selection.getRange(),ps;
+                if(range.collapsed){
+                    ps = domUtils.findParentByTagName(range.startContainer,"h2") || domUtils.findParentByTagName(range.endContainer,"h2");
+                }else{
+                    ps = domUtils.findParentByTagName(range.startContainer,"h2");
+                }
+                if(ps){
+                    return -1;
+                }
                 return domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
             },
             queryCommandValue:function (command) {
@@ -9903,12 +10089,319 @@ UE.plugins['basestyle'] = function(){
                     range.select();
                 },
                 queryCommandState : function() {
-                   return getObj(this,tagNames) ? 1 : 0;
+                    var range = me.selection.getRange();
+                    return getObj(this,["h2"])?-1:(getObj(this,tagNames) ? 1 : 0)
                 }
             };
         })( style, basestyles[style] );
     }
 };
+
+
+//var bk = require('base'),
+//    baidu = require('ueditor');
+
+//经验的标题
+
+var ueditor = baidu.editor || {},
+    domUtils = baidu.editor.dom.domUtils,
+    utils = baidu.editor.utils,
+    browser = baidu.editor.browser;
+
+UE.plugins['heading'] = function () {
+    var me = this;
+
+    me.addListener('keydown', function (type, evt) {
+        var keyCode = evt.keyCode || evt.which, h;
+        if (keyCode == 13) {
+            var range = me.selection.getRange();
+            if (range.collapsed && (h = domUtils.findParentByTagName(range.startContainer, ['h2', 'h3'], true) ) ) {
+                var p = me.document.createElement('p');
+                p.innerHTML = baidu.editor.browser.ie ? '' : '<br/>';
+                if(h.nextSibling){
+                    h.parentNode.insertBefore(p, h.nextSibling);
+                }else{
+                    h.parentNode.appendChild(p);
+                }
+                range.setStart(p, 0).setCursor();
+                evt.preventDefault ? evt.preventDefault() : (evt.returnValue = false)
+            }
+        }
+    });
+    me.addListener('keyup', function (type, evt) {
+        var keyCode = evt.keyCode || evt.which;
+        if (keyCode == 13) {
+            var range = me.selection.getRange(),
+                start = domUtils.isFillChar(range.startContainer) ? range.startContainer.parentNode : range.startContainer,
+                pre = start.previousSibling;
+            if (pre && pre.nodeType == 1 && (pre.tagName == 'H2' || pre.tagName == 'H3' ) && domUtils.isEmptyNode(pre)) {
+                domUtils.remove(pre)
+            }
+            evt.preventDefault ? evt.preventDefault() : (evt.returnValue = false)
+        }
+    });
+//    var tagMap = me.options.baike.headingTagMap||{'heading1':"h2"};
+    var tagMap = {'heading1':"h2"};
+//    var maxLength = me.options.headingMaxLength||100;
+    var maxLength = 100;
+
+    function showTextLimit(text) {
+        text = text.replace(/(^\s*)|(\s*$)/g, '').replace(new RegExp(domUtils.fillChar, 'g'), '');
+//        var isValidLen = baidu.string.getByteLength(text) <= maxLength;
+//        if (!isValidLen && !bk.editor.cmdPreview) {
+//            var dialog = Fe.Dialog.alert("目录最多" + maxLength + "个字节!", { title:"提示", locked:true});
+//            return 0;
+//        }
+        return 1;
+    }
+
+//    bk.editor.showTextLimit = showTextLimit;
+
+    UE.commands['heading1'] = UE.commands['heading2'] = {
+        execCommand:function (cmd) {
+            var tag = tagMap[cmd];
+            var oldH2Dtd = baidu.editor.dom.dtd[tag],
+                me = this;
+            baidu.editor.dom.dtd[tag] = {'#':1, 'SPAN':1, 'span':1};
+            var state = this.queryCommandState(cmd),
+                range = this.selection.getRange(),
+                bm = range.createBookmark(true),
+                h2 = domUtils.findTagNamesInSelection(range, ['h2']),
+                h3 = domUtils.findTagNamesInSelection(range, ['h3']);
+            //verify length
+            if (!range.collapsed) {
+                var text = this.selection.getText();
+                if (!showTextLimit(text)) {
+                    return false;
+                }
+
+            }
+
+            if (h2 && !(cmd == 'heading2' && state)) {
+                remove(range, 'h2')
+            }
+            if (h3 && !(cmd == 'heading1' && state)) {
+
+                remove(range, 'h3')
+            }
+
+            if (state) {
+                range.select();
+                return;
+            }
+
+
+            function remove(range, tag) {
+                range.enlarge(true);
+                var bookmark2 = range.createBookmark(true),
+                    filterFn = function (node) {
+                        return   node.nodeType == 1 && node.tagName.toLowerCase() == tag
+                    },
+                    current = domUtils.getNextDomNode(me.document.getElementById(bookmark2.start), false),
+                    end = me.document.getElementById(bookmark2.end);
+
+
+                while (current && !(domUtils.getPosition(current, end) & domUtils.POSITION_FOLLOWING)) {
+
+                    if (current.nodeType == 1 && current.tagName.toLowerCase() == tag) {
+                        var p = me.document.createElement('p');
+                        while (current.firstChild) {
+                            p.appendChild(current.firstChild)
+                        }
+                        current.parentNode.insertBefore(p, current);
+                        domUtils.remove(current);
+                        current = domUtils.getNextDomNode(p, false, filterFn);
+                    } else {
+                        current = domUtils.getNextDomNode(current, current.nodeType == 3 ? false : true, filterFn);
+                    }
+
+
+                }
+                range.moveToBookmark(bookmark2);
+                bookmark2 = null
+                bm && range.moveToBookmark(bm);
+                bm = null;
+            }
+
+
+            if (!range.collapsed) {
+//                if (!bm) {
+                    range.select();
+//                }
+                this.execCommand('removeformat');
+                range = this.selection.getRange()
+
+            }
+            if (range.collapsed) {
+                range.enlarge(true);
+                var startElem = domUtils.findStartElement(range, function (e) {
+                    return e.nodeName == 'P'
+                })
+//                var text = startElem[baidu.editor.browser.ie ? 'innerText' : 'textContent'];
+//                if (!showTextLimit(text)) {
+//                    return false;
+//                }
+            }
+//            if(range.collapsed){
+//                var fnode = me.document.createTextNode(domUtils.fillChar);
+//                range.insertNode(fnode);
+//                range.selectNode(fnode);
+//            }
+//            debugger
+            range.applyInlineStyle(tag);
+
+
+            bm && range.moveToBookmark(bm);
+
+
+            var node = range.startContainer,
+                collapsed = range.collapsed;
+//            if (node.nodeType == 1 && domUtils.isEmptyNode(node) && !domUtils.isBody(node)) {
+//                range.setStartAfter(node);
+//                domUtils.remove(node)
+//            }
+            if (!collapsed) {
+                node = range.endContainer;
+                if (node.nodeType == 1 && domUtils.isEmptyNode(node) && !domUtils.isBody(node)) {
+//                    range.setEndBefore(node);
+//                    domUtils.remove(node)
+                }
+            }
+
+
+            range.collapse(false);
+
+
+            bm = range.createBookmark(true);
+            var hs = domUtils.getElementsByTagName(this.document, tag),
+                start , end;
+            start = me.document.getElementById(bm.start);
+            if (bm.end) {
+                end = me.document.getElementById(bm.end);
+            }
+            for (var i = 0, hi; hi = hs[i++];) {
+                if (!domUtils.isBody(hi.parentNode) && hi.parentNode.tagName == 'P') {
+                    //百科的特殊性不用判断
+                    domUtils.breakParent(hi, hi.parentNode);
+                    var pre = hi.previousSibling,
+                        next = hi.nextSibling;
+                    if (pre && domUtils.isEmptyBlock(pre)) {
+                        if (!(start && start.parentNode === pre || end && end.parentNode === pre))
+                            domUtils.remove(pre)
+                    }
+                    if( pre && /^[\xa0\s\u3000]*$/.test(pre[browser.ie?'innerText':'textContent']) ){
+                        domUtils.remove(pre);
+                    }
+                    if (next && domUtils.isEmptyBlock(next)) {
+                        if (!(start && start.parentNode === next || end && end.parentNode === next))
+                            domUtils.remove(next)
+                    }
+
+                }
+
+                var first = hi.firstChild;
+                if (first && domUtils.isBookmarkNode(first)) {
+                    first = first.nextSibling;
+                }
+                while (first && first.nodeType == 3) {
+                    if (!first.data.replace(/[\xa0\s\u3000]*/, '').length) {
+                        var tmpNode = first.nextSibling;
+                        domUtils.remove(first);
+                        first = tmpNode;
+                    } else {
+                        first.data = first.data.replace(/^[\xa0\s\u3000]*/, '');
+                        break;
+                    }
+
+                }
+                var last = hi.lastChild;
+                if (last && domUtils.isBookmarkNode(last)) {
+                    last = last.previousSibling;
+                }
+                while (last && last.nodeType == 3) {
+                    if (!last.data.replace(/[\xa0\s\u3000]*/, '').length) {
+                        tmpNode = last.previousSibling;
+                        domUtils.remove(last);
+                        last = tmpNode;
+                    } else {
+                        last.data = last.data.replace(/[\xa0\s\u3000]*$/, '');
+                        break;
+                    }
+
+                }
+                if (domUtils.isEmptyBlock(hi)) {
+                    hi.innerHTML = domUtils.fillChar;
+                }
+
+            }
+            if (bm.start) {
+                start = me.document.getElementById(bm.start);
+                if (start && domUtils.getChildCount(start, function (node) {
+                    return !domUtils.isBr(node) && !domUtils.isWhitespace(node) && domUtils.isBookmarkNode(node);
+                }) == 1) {
+                    if (!domUtils.isBody(start.parentNode)) {
+                        domUtils.remove(start.parentNode, true)
+                    }
+                }
+            }
+            if (bm.end) {
+                end = me.document.getElementById(bm.end);
+                if (end && domUtils.getChildCount(end, function (node) {
+                    return !domUtils.isBr(node) && !domUtils.isWhitespace(node) && domUtils.isBookmarkNode(node);
+                }) == 1) {
+                    if (!domUtils.isBody(end.parentNode)) {
+                        domUtils.remove(end.parentNode, true)
+                    }
+                }
+            }
+            range.moveToBookmark(bm).select(true);
+            bm = null;
+
+            if (domUtils.isEmptyBlock(range.startContainer)) {
+                range.startContainer.innerHTML = domUtils.fillChar;
+            }
+
+            utils.each(domUtils.getElementsByTagName(me.document,'h2'),function(node){
+                utils.each(domUtils.getElementsByTagName(node,"span"),function(span){
+                    domUtils.remove(span);
+                })
+            })
+//            baidu.forEach(baidu.dom.query('h2 span,h3 span', editor.document), function (i) {
+//                baidu.dom.remove(i, editor.document);
+//            });
+            utils.each(domUtils.getElementsByTagName(me.document,'p'),function(node){
+                if (node && !node.childNodes.length) {
+                    node.parentNode.removeChild(node);
+                }
+            })
+//            baidu.forEach(editor.document.getElementsByTagName('p'), function (node) {
+//                if (node && !node.childNodes.length) {
+//                    node.parentNode.removeChild(node);
+//                }
+//            });
+            baidu.editor.dom.dtd[tag] = oldH2Dtd;
+        },
+        queryCommandState:function (cmd) {
+            var range = this.selection.getRange();
+            var range2 = range.cloneRange();
+            if (range.collapsed && range2.startContainer.nodeType == 3) {
+                range2.setStart(range2.startContainer.parentNode, 0);
+                range2.setEndAfter(range2.startContainer)
+            }
+            var rs = domUtils.findTagNamesInSelection(range2, ['li', 'img', 'iframe', 'sup', 'td', 'th', 'caption','em','i','strong','b']);
+            var first = range2.startContainer.firstChild || false;
+            var bc = domUtils.isBlockElm(range2.startContainer) ? range2.startContainer : range2.startContainer.parentNode
+            if (rs) {
+                return -1;
+            }
+            if (cmd == 'heading1' && me.selection.getStart().tagName == 'H2') {
+                return 1;
+            }
+            return 0;
+        }
+    }
+}
+
 
 
 var baidu = baidu || {};
@@ -11517,7 +12010,7 @@ baidu.editor.ui = {};
         'blockquote', 'pasteplain', 'pagebreak',
         'selectall', 'print', 'preview', 'horizontal', 'removeformat', 'time', 'date', 'unlink',
         'insertparagraphbeforetable', 'insertrow', 'insertcol', 'mergeright', 'mergedown', 'deleterow',
-        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable','autotypeset','insertorderedlist', 'insertunorderedlist'];
+        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable','autotypeset','insertorderedlist', 'insertunorderedlist','heading1'];
 
     for (var i = 0, ci; ci = btnCmds[i++];) {
         ci = ci.toLowerCase();

@@ -34,6 +34,7 @@
             'plugins/serialize.js',
             'plugins/video.js',
             'plugins/basestyle.js',
+            'plugins/heading.js',
             'ui/ui.js',
             'ui/uiutils.js',
             'ui/uibase.js',

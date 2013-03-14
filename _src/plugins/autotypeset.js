@@ -39,7 +39,7 @@ UE.plugins['autotypeset'] = function () {
             div:1,
             p:1,
             //trace:2183 这些也认为是行
-            blockquote:1, center:1, h1:1, h2:1, h3:1, h4:1, h5:1, h6:1,
+            blockquote:1, center:1, h1:1, h2:0, h3:1, h4:1, h5:1, h6:1,
             span:1
         },
         highlightCont;

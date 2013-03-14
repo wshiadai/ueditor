@@ -919,6 +919,15 @@ UE.plugins['list'] = function () {
 
             },
             queryCommandState:function (command) {
+                var range = this.selection.getRange(),ps;
+                if(range.collapsed){
+                    ps = domUtils.findParentByTagName(range.startContainer,"h2") || domUtils.findParentByTagName(range.endContainer,"h2");
+                }else{
+                    ps = domUtils.findParentByTagName(range.startContainer,"h2");
+                }
+                if(ps){
+                    return -1;
+                }
                 return domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
             },
             queryCommandValue:function (command) {

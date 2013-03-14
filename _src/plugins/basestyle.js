@@ -71,7 +71,8 @@ UE.plugins['basestyle'] = function(){
                     range.select();
                 },
                 queryCommandState : function() {
-                   return getObj(this,tagNames) ? 1 : 0;
+                    var range = me.selection.getRange();
+                    return getObj(this,["h2"])?-1:(getObj(this,tagNames) ? 1 : 0)
                 }
             };
         })( style, basestyles[style] );
