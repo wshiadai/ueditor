@@ -758,11 +758,10 @@
                     var top = (document.body.scrollTop||document.documentElement.scrollTop) + uiutils.getClientRect(node).top-60;
                     window.scrollTo(0,top);
                     window.edSimShowStepPop(uiutils.getClientRect(node).top,state);
-                    if(node.firstChild){
-                        me.selection.getRange().selectNode(node.firstChild).setCursor(true);
-                    }else{
-                        node.appendChild(me.document.createTextNode(domUtils.fillChar))
+                    if(!node.firstChild){
+                        node.innerHTML = domUtils.fillChar;
                     }
+                    me.selection.getRange().selectNode(node.firstChild).setCursor(true);
                     flag = false;
                     break;
                 }
