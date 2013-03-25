@@ -43,6 +43,7 @@
             'ui/autotypesetbutton.js',
             'ui/pastepicker.js',
             'ui/toolbar.js',
+            'ui/menu.js',
             'ui/dialog.js',
             'ui/menubutton.js',
             'ui/_editorui.js',
