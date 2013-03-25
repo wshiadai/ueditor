@@ -35,45 +35,10 @@
         'link':'~/dialogs/link/link.html',
         'insertvideo':'~/dialogs/video/video.html'
     };
-    //为工具栏添加按钮，以下都是统一的按钮触发命令，所以写在一起
-    var btnCmds = ['insertorderedlist', 'insertunorderedlist','autotypeset'];
-
-    for (var i = 0, ci; ci = btnCmds[i++];) {
-        ci = ci.toLowerCase();
-        editorui[ci] = function (cmd) {
-            return function (editor) {
-                var ui = new editorui.Button({
-                    className:'edui-for-' + cmd,
-                    title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
-                    onclick:function () {
-                        editor.execCommand(cmd);
-                    },
-                    theme:editor.options.theme,
-                    showText:false
-                });
-                editorui.buttons[cmd] = ui;
-                editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
-                    var state = editor.queryCommandState(cmd);
-                    if (state == -1) {
-                        ui.setDisabled(true);
-                        ui.setChecked(false);
-                    } else {
-                        if (!uiReady) {
-                            ui.setDisabled(false);
-                            ui.setChecked(state);
-                        }
-                    }
-                });
-                return ui;
-            };
-        }(ci);
-    }
-
     var dialogBtns = {
         noOk:[],
         ok:['link','insertvideo']
     };
-
     for (var p in dialogBtns) {
         (function (type, vals) {
             for (var i = 0, ci; ci = vals[i++];) {
@@ -169,94 +134,16 @@
         })(p, dialogBtns[p])
     }
 
-    editorui.autotypeset = function (editor) {
-        var ui = new editorui.AutoTypeSetButton({
-            editor:editor,
-            title:editor.options.labelMap['autotypeset'] || editor.getLang("labelMap.autotypeset") || '',
-            className:'edui-for-autotypeset',
-            onbuttonclick:function () {
-                editor.execCommand('autotypeset')
-            }
-        });
-        editorui.buttons['autotypeset'] = ui;
-        editor.addListener('selectionchange', function () {
-            ui.setDisabled(editor.queryCommandState('autotypeset') == -1);
-        });
-        return ui;
+
+    /*
+    * ----------------分界线----------------------
+    * for zhidao by xuheng
+    * */
+    var $ = function (id) {
+        return document.getElementById(id);
     };
-
-    //以下代码：for zhidao by xuheng
-    editorui.InsertPlace = function (editor) {
-        var iframeUrl = editor.options.iframeUrlMap["insertPlace"],
-            title = iframeUrl.title,
-            unTitle = iframeUrl.unTitle,
-            hoverTitle = iframeUrl.hoverTitle;
-        var ui = new editorui.Button({
-            className:'edui-for-insertplace insertplace',
-            title:hoverTitle,
-            label:title,
-            onclick:function () {
-                if (editor.options.isLoginForPlace) {
-                    editor.fireEvent("showPlaceDialog", "add");
-                }
-            },
-            showText:true
-        });
-        ui.addListener("renderReady", function () {
-            var dom = ui.getDom();
-            var label = $(dom.id + "_body").children[1];
-            if (!editor.options.isLoginForPlace) {
-                label.style.color = "#999";
-                ui.onclick = function () {
-                    editor.fireEvent("isLogout");
-                };
-            } else {
-                ui.onclick = function () {
-                    editor.fireEvent("showPlaceDialog", "add");
-                };
-                ui.removeClass(["editplace"]);
-                ui.addClass("insertplace");
-                label.innerHTML = title;
-            }
-            dom.onclick = function (e) {
-                e = e || window.event;
-                e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
-            };
-        });
-        editor.addListener("addPlace", function () {
-            var label = $(ui.getDom().id + "_body").children[1];
-            if (!editor.options.isLoginForPlace) {
-                label.style.color = "#999";
-                editor.fireEvent("isLogout");
-                return;
-            }
-            ui.onclick = function () {
-                editor.fireEvent("showPlaceDialog", "edit");
-            };
-            ui.removeClass(["insertplace"]);
-            ui.addClass("editplace");
-            label.innerHTML = unTitle;
-        });
-        editor.addListener('deletePlace', function () {
-            var label = $(ui.getDom().id + "_body").children[1];
-            if (!editor.options.isLoginForPlace) {
-                label.style.color = "#999";
-                editor.fireEvent("isLogout");
-                return;
-            }
-            ui.onclick = function () {
-                editor.fireEvent("showPlaceDialog", "add");
-            };
-            ui.removeClass(["editplace"]);
-            ui.addClass("insertplace");
-            label.innerHTML = title;
-        });
-
-        return ui;
-    };
-
-    editorui.InsertImage = function (editor) {
-        var iframeUrl = editor.options.iframeUrlMap["insertImage"],
+    editorui.insertimage = function (editor) {
+        var iframeUrl = editor.options.buttonConfig["insertimage"],
             title = iframeUrl['title'],
             hovertitle = iframeUrl['hoverTitle'],
             overflowMsg = iframeUrl['overflowMsg'],
@@ -462,4 +349,125 @@
         });
         return ui;
     };
+    editorui.insertmap = function (editor) {
+        var iframeUrl = editor.options.buttonConfig["insertmap"],
+            title = iframeUrl.title,
+            unTitle = iframeUrl.unTitle,
+            hoverTitle = iframeUrl.hoverTitle;
+        var ui = new editorui.Button({
+            className:'edui-for-insertmap insertmap',
+            title:hoverTitle,
+            label:title,
+            onclick:function () {
+                if (editor.options.isLogin) {
+                    ik.qb.neweditor.showMap(editor);
+                }
+            },
+            showText:true
+        });
+        ui.addListener("renderReady", function () {
+            if (!editor.options.isLogin) {
+                var dom = ui.getDom(),
+                    label = $(dom.id + "_body").children[1],
+                    icon = $(dom.id + "_body").children[0];
+                label.style.color = "#999";
+                dom.setAttribute("title", hoverTitle);
+                domUtils.removeClasses(icon, ["edui-icon"]);
+                domUtils.addClass(icon, "edui_disableIcon");
+            }
+        });
+
+        editor.addListener('selectionchange', function () {
+            var state = editor.queryCommandState("insertmap"),
+                dom = ui.getDom(),
+                label = $(dom.id + "_body").children[1];
+            if (!editor.options.isLogin) {
+                label.style.color = "#999";
+                ui.getDom().setAttribute("title", hoverTitle);
+
+                var icon = $(dom.id + "_body").children[0];
+                domUtils.removeClasses(icon, ["edui-icon"]);
+                domUtils.addClass(icon, "edui_disableIcon");
+                return;
+            }
+
+            if (state == -1) {
+                ui.onclick = function () {
+                    editor.execCommand("deletemap");
+                };
+                ui.removeClass(["insertmap"]);
+                ui.addClass("deletemap");
+                ui.getDom().setAttribute("title", unTitle);
+                label.innerHTML = unTitle;
+            } else {
+                ui.onclick = function () {
+                    ik.qb.neweditor.showMap(editor);
+                };
+                ui.removeClass(["deletemap"]);
+                ui.addClass("insertmap");
+                ui.getDom().setAttribute("title", hoverTitle);
+                label.innerHTML = title;
+            }
+        });
+        return ui;
+    };
+
+    var lists = ['insertorderedlist', 'insertunorderedlist', 'autotypeset'];
+    for (var l = 0, cl; cl = lists[l++];) {
+        (function (cmd) {
+            editorui[cmd] = function (editor) {
+                var iframeUrl = editor.options.buttonConfig[cmd],
+                    title = iframeUrl['title'],
+                    hoverTitle = iframeUrl.hoverTitle;
+                var ui = new editorui.Button({
+                    className:'edui-for-' + cmd + ' ' + cmd,
+                    title:hoverTitle,
+                    label:title || '',
+                    onclick:function () {
+                        editor.fireEvent("beforeexeccmd", cmd);
+                        if (editor.options.isLogin) {
+                            editor.execCommand(cmd);
+                        }
+                    },
+                    showText:true
+                });
+                ui.addListener("renderReady", function () {
+                    if (!editor.options.isLogin) {
+                        var dom = ui.getDom(),
+                            label = $(dom.id + "_body").children[1];
+                        label.style.color = "#999";
+                        dom.setAttribute("title", hoverTitle);
+                        var icon = $(dom.id + "_body").children[0];
+                        domUtils.removeClasses(icon, ["edui-icon"]);
+                        domUtils.addClass(icon, "edui_disableIcon");
+                    }
+                });
+
+                editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
+                    var state = editor.queryCommandState(cmd),
+                        dom = ui.getDom(),
+                        label = $(dom.id + "_body").children[1];
+                    if (!editor.options.isLogin) {
+                        label.style.color = "#999";
+                        dom.setAttribute("title", hoverTitle);
+
+                        var icon = $(dom.id + "_body").children[0];
+                        domUtils.removeClasses(icon, ["edui-icon"]);
+                        domUtils.addClass(icon, "edui_disableIcon");
+                        return;
+                    }
+                    if (state == -1) {
+                        ui.setDisabled(true);
+                        ui.setChecked(false);
+                    } else {
+                        if (!uiReady) {
+                            ui.setDisabled(false);
+                            ui.setChecked(state);
+                        }
+                    }
+                });
+                return ui;
+            };
+        })(cl);
+    }
 })();

@@ -360,9 +360,9 @@
         //      removeTagNames : {标签名字:1},
               indent : false,                 // 行首缩进
               indentValue : '2em'             //行首缩进的大小
-          },
+          }
         //填写过滤规则
-        filterRules : {
+        ,filterRules : {
             whiteList:{
                 'p': {'br':1,'BR':1,'img':1,'iframe':1,'$':{}},
                 'br':{'$':{}},
@@ -371,5 +371,40 @@
             },
             blackList:{style:1, link:1, object:1, applet:1, input:1, meta:1, base:1, button:1, select:1, textarea:1, '#comment':1, 'map':1, 'area':1}
         }
+
+        /*
+         * ----------------分界线----------------------
+         * for zhidao by xuheng
+         * */
+        ,buttonConfig:{
+            "insertmap": {
+                title:"地图",
+                unTitle:"删除地图",
+                hoverTitle:"登录后才能使功能"
+            },
+            "insertimage":{
+                title:"图片",
+                hoverTitle:"登录后才能使用工具栏功能",
+                overflowMsg:"您今日上传的图片数目已经超过限制！"
+            },
+            "insertunorderedlist": {
+                title:"符号",
+                hoverTitle:"登录后才能使功能"
+            },
+            "insertorderedlist": {
+                title:"编号",
+                hoverTitle:"登录后才能使功能"
+            },
+            "autotypeset":{
+                title:"排版",
+                hoverTitle:"登录后才能使功能"
+            },
+            "toggleEditor":{
+                title:"展开编辑器",
+                unTitle:"收起编辑器"
+            }
+        }
+        ,isLogin:true
+        ,isLoginForPlace:true
     };
 })();
