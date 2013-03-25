@@ -33,17 +33,10 @@
 
     var iframeUrlMap = {
         'link':'~/dialogs/link/link.html',
-        'map':'~/dialogs/map/map.html',
         'insertvideo':'~/dialogs/video/video.html'
     };
     //为工具栏添加按钮，以下都是统一的按钮触发命令，所以写在一起
-    var btnCmds = ['undo', 'redo', 'formatmatch',
-        'bold', 'italic', 'underline', 'fontborder', 'touppercase', 'tolowercase',
-        'strikethrough', 'subscript', 'superscript', 'source', 'indent', 'outdent',
-        'blockquote', 'pasteplain', 'pagebreak',
-        'selectall', 'print', 'preview', 'horizontal', 'removeformat', 'time', 'date', 'unlink',
-        'insertparagraphbeforetable', 'insertrow', 'insertcol', 'mergeright', 'mergedown', 'deleterow',
-        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable'];
+    var btnCmds = ['insertorderedlist', 'insertunorderedlist','autotypeset'];
 
     for (var i = 0, ci; ci = btnCmds[i++];) {
         ci = ci.toLowerCase();
@@ -76,10 +69,9 @@
         }(ci);
     }
 
-
     var dialogBtns = {
         noOk:[],
-        ok:['link','map', 'gmap','insertvideo']
+        ok:['link','insertvideo']
     };
 
     for (var p in dialogBtns) {
@@ -177,50 +169,6 @@
         })(p, dialogBtns[p])
     }
 
-    //有序，无序列表
-    var lists = ['insertorderedlist', 'insertunorderedlist'];
-    for (var l = 0, cl; cl = lists[l++];) {
-        (function (cmd) {
-            editorui[cmd] = function (editor) {
-                var vals = editor.options[cmd],
-                    _onMenuClick = function () {
-                        editor.execCommand(cmd, this.value);
-                    }, items = [];
-                for (var i in vals) {
-                    items.push({
-                        label:vals[i] || editor.getLang()[cmd][i] || "",
-                        value:i,
-                        theme:editor.options.theme,
-                        onclick:_onMenuClick
-                    })
-                }
-                var ui = new editorui.MenuButton({
-                    editor:editor,
-                    className:'edui-for-' + cmd,
-                    title:editor.getLang("labelMap." + cmd) || '',
-                    'items':items,
-                    onbuttonclick:function () {
-                        var value = editor.queryCommandValue(cmd) || this.value;
-                        editor.execCommand(cmd, value);
-                    }
-                });
-                editorui.buttons[cmd] = ui;
-                editor.addListener('selectionchange', function () {
-                    var state = editor.queryCommandState(cmd);
-                    if (state == -1) {
-                        ui.setDisabled(true);
-                    } else {
-                        ui.setDisabled(false);
-                        var value = editor.queryCommandValue(cmd);
-                        ui.setValue(value);
-                        ui.setChecked(state)
-                    }
-                });
-                return ui;
-            };
-        })(cl)
-    }
-
     editorui.autotypeset = function (editor) {
         var ui = new editorui.AutoTypeSetButton({
             editor:editor,
@@ -237,4 +185,72 @@
         return ui;
     };
 
+    editorui.InsertPlace = function (editor) {
+        var iframeUrl = editor.options.iframeUrlMap["insertPlace"],
+            title = iframeUrl.title,
+            unTitle = iframeUrl.unTitle,
+            hoverTitle = iframeUrl.hoverTitle;
+        var ui = new editorui.Button({
+            className:'edui-for-insertplace insertplace',
+            title:hoverTitle,
+            label:title,
+            onclick:function () {
+                if (editor.options.isLoginForPlace) {
+                    editor.fireEvent("showPlaceDialog", "add");
+                }
+            },
+            showText:true
+        });
+        ui.addListener("renderReady", function () {
+            var dom = ui.getDom();
+            var label = $(dom.id + "_body").children[1];
+            if (!editor.options.isLoginForPlace) {
+                label.style.color = "#999";
+                ui.onclick = function () {
+                    editor.fireEvent("isLogout");
+                };
+            } else {
+                ui.onclick = function () {
+                    editor.fireEvent("showPlaceDialog", "add");
+                };
+                ui.removeClass(["editplace"]);
+                ui.addClass("insertplace");
+                label.innerHTML = title;
+            }
+            dom.onclick = function (e) {
+                e = e || window.event;
+                e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+            };
+        });
+        editor.addListener("addPlace", function () {
+            var label = $(ui.getDom().id + "_body").children[1];
+            if (!editor.options.isLoginForPlace) {
+                label.style.color = "#999";
+                editor.fireEvent("isLogout");
+                return;
+            }
+            ui.onclick = function () {
+                editor.fireEvent("showPlaceDialog", "edit");
+            };
+            ui.removeClass(["insertplace"]);
+            ui.addClass("editplace");
+            label.innerHTML = unTitle;
+        });
+        editor.addListener('deletePlace', function () {
+            var label = $(ui.getDom().id + "_body").children[1];
+            if (!editor.options.isLoginForPlace) {
+                label.style.color = "#999";
+                editor.fireEvent("isLogout");
+                return;
+            }
+            ui.onclick = function () {
+                editor.fireEvent("showPlaceDialog", "add");
+            };
+            ui.removeClass(["editplace"]);
+            ui.addClass("insertplace");
+            label.innerHTML = title;
+        });
+
+        return ui;
+    };
 })();
