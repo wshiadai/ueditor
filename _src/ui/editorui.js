@@ -52,7 +52,6 @@
         'webapp':'~/dialogs/webapp/webapp.html',
         'snapscreen':'~/dialogs/snapscreen/snapscreen.html',
         'scrawl':'~/dialogs/scrawl/scrawl.html',
-        'formula':'~/dialogs/formula/formula.html',
         'music':'~/dialogs/music/music.html',
         'template':'~/dialogs/template/template.html',
         'background':'~/dialogs/background/background.html',
