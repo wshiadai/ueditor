@@ -111,30 +111,29 @@
 
         //,initialContent:'欢迎使用ueditor!'    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
 
-        //,initialFrameWidth:1000  //初始化编辑器宽度,默认1000
-        //,initialFrameHeight:320  //初始化编辑器高度,默认320
+        ,initialFrameWidth:626  //初始化编辑器宽度,默认1000
+        ,initialFrameHeight:190  //初始化编辑器高度,默认320
+        ,initialMaxFrameHeight:420 //自动长高最大高度
 
-        //,autoClearinitialContent:true //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
+        ,autoClearinitialContent:true //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
 
-        //,iframeCssUrl: URL + '/themes/iframe.css' //给编辑器内部引入一个css文件
+        ,iframeCssUrl: URL + '/themes/iframe.css' //给编辑器内部引入一个css文件
 
-        //,textarea:'editorValue' // 提交表单时，服务器获取编辑器提交内容的所用的参数，多实例时可以给容器name属性，会将name给定的值最为每个实例的键值，不用每次实例化的时候都设置这个值
+        ,textarea:'editorValue' // 提交表单时，服务器获取编辑器提交内容的所用的参数，多实例时可以给容器name属性，会将name给定的值最为每个实例的键值，不用每次实例化的时候都设置这个值
 
-        //,focus:false //初始化时，是否让编辑器获得焦点true或false
+        ,focus:false //初始化时，是否让编辑器获得焦点true或false
 
         //,autoClearEmptyNode : true //getContent时，是否删除空的inlineElement节点（包括嵌套的情况）
 
         //,fullscreen : false //是否开启初始化时即全屏，默认关闭
 
-        //,readonly : false //编辑器初始化结束后,编辑区域是否是只读的，默认是false
+        ,readonly : false //编辑器初始化结束后,编辑区域是否是只读的，默认是false
 
-        //,zIndex : 900     //编辑器层级的基数,默认是900
+        ,zIndex : 999     //编辑器层级的基数,默认是900
 
         //,imagePopup:true      //图片操作的浮层开关，默认打开
 
-        ,initialStyle:'body{font-size:16px}' +
-            '.back1{background:#eee;}' +
-            '.back2{background:#ddd}'   //编辑器内部样式,可以用来改变字体等
+        ,initialStyle:  'p{margin:5px 0;}'   //编辑器内部样式,可以用来改变字体等
 
         //,emotionLocalization:false //是否开启表情本地化，默认关闭。若要开启请确保emotion文件夹下包含官网提供的images表情文件夹
 
@@ -289,8 +288,8 @@
         // ,formulaJsUrl:URL + "third-party/mathquill/mathquill.min.js"
         //tab
         //点击tab键时移动的距离,tabSize倍数，tabNode什么字符做为单位
-        //,tabSize:4
-        //,tabNode:'&nbsp;'
+        ,tabSize:4
+        ,tabNode:'&nbsp;'
 
         //elementPathEnabled
         //是否启用元素路径，默认是显示
@@ -307,11 +306,11 @@
         //可以最多回退的次数,默认20
         //,maxUndoCount:20
         //当输入的字符数超过该值时，保存一次现场
-        //,maxInputCount:1
+        ,maxInputCount:20
 
         //autoHeightEnabled
         // 是否自动长高,默认true
-        //,autoHeightEnabled:true
+        ,autoHeightEnabled:true
 
         //scaleEnabled
         //是否可以拉伸长高,默认true(当开启时，自动长高失效)
@@ -347,8 +346,8 @@
 
         //autotypeset
         //  //自动排版参数
-        //  ,autotypeset:{
-        //      mergeEmptyline : true,         //合并空行
+          ,autotypeset:{
+              mergeEmptyline : true,         //合并空行
         //      removeClass : true,           //去掉冗余的class
         //      removeEmptyline : false,      //去掉空行
         //      textAlign : "left" ,           //段落的排版方式，可以是 left,right,center,justify 去掉这个属性表示不执行排版
@@ -359,10 +358,18 @@
         //      removeEmptyNode : false ,       // 去掉空节点
         //      //可以去掉的标签
         //      removeTagNames : {标签名字:1},
-        //      indent : false,                 // 行首缩进
-        //      indentValue : '2em'             //行首缩进的大小
-        //  },
+              indent : false,                 // 行首缩进
+              indentValue : '2em'             //行首缩进的大小
+          },
         //填写过滤规则
-        //filterRules : {}
+        filterRules : {
+            whiteList:{
+                'p': {'br':1,'BR':1,'img':1,'iframe':1,'$':{}},
+                'br':{'$':{}},
+                'img':{'$':{id:1,src:1,'data_ue_src':1,'width':1,'height':1,'alt':1,'title':1}},
+                'iframe':{'$':{'data-type':1,'map':1,src:1,'class':1,'frameborder':1}}
+            },
+            blackList:{style:1, link:1, object:1, applet:1, input:1, meta:1, base:1, button:1, select:1, textarea:1, '#comment':1, 'map':1, 'area':1}
+        }
     };
 })();
