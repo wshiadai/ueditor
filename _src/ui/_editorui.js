@@ -170,7 +170,6 @@
 
 
         ui.addListener("renderReady", function () {
-            //by xuheng
             domUtils.on(ui.getDom(), "mouseover", function (e) {
                 ui.addState("hover");
             });
