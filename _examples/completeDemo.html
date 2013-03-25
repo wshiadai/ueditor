@@ -1,328 +1,83 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>完整demo</title>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <script type="text/javascript" charset="utf-8" src="../editor_config.js"></script>
-    <!--使用版-->
-    <!--<script type="text/javascript" charset="utf-8" src="../editor_all.js"></script>-->
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
 
-    <!--开发版-->
-    <script type="text/javascript" charset="utf-8" src="editor_api.js">
     </script>
-    <style type="text/css">
-        .clear {
-            clear: both;
-        }
-    </style>
+    <script type="text/javascript" src="../tangram.js"></script>
+    <script type="text/javascript" src="../editor_config.js"></script>
+    <!--<script type="text/javascript" src="editor_all.js"></script>-->
+    <script type="text/javascript" src="editor_api.js"></script>
 </head>
 <body>
-<div>
-    <script id="editor" type="text/plain">这里可以书写，编辑器的初始内容</script>
-</div>
-
-
-<div class="clear"></div>
-<div id="btns">
-    <div>
-        <button onclick="getAllHtml()">获得整个html的内容</button>
-        <button onclick="getContent()">获得内容</button>
-        <button onclick="setContent()">写入内容</button>
-        <button onclick="setContent(true)">追加内容</button>
-        <button onclick="getContentTxt()">获得纯文本</button>
-        <button onclick="getPlainTxt()">获得带格式的纯文本</button>
-        <button onclick="hasContent()">判断是否有内容</button>
-        <button onclick="setFocus()">使编辑器获得焦点</button>
-    </div>
-    <div>
-        <button onclick="getText()">获得当前选中的文本</button>
-        <button onclick="insertHtml()">插入给定的内容</button>
-        <button id="enable" onclick="setEnabled()">可以编辑</button>
-        <button onclick="setDisabled()">不可编辑</button>
-        <button onclick=" UE.getEditor('editor').setHide()">隐藏编辑器</button>
-        <button onclick=" UE.getEditor('editor').setShow()">显示编辑器</button>
-    </div>
-
-</div>
-<div>
-    <button onclick="createEditor()"/>
-    创建编辑器</button>
-    <button onclick="deleteEditor()"/>
-    删除编辑器</button>
-</div>
-
-</body>
+<script type="text/plain" id="editor">
+</script>
 <script type="text/javascript">
-    //实例化编辑器
-    var ue = UE.getEditor('editor', {
-//        filterRules: function () {
-//            return{
-//                span:function(node){
-//                    if(/Wingdings/.test(node.getStyle('font-family'))){
-//                        return true;
-//                    }else{
-//                        node.parentNode.removeChild(node,true)
-//                    }
-//                },
-//                p: function(node){
-//                    node.setAttr();
-//                    if(!node.firstChild()){
-//                        node.innerHTML(UE.browser.ie ? '&nbsp;' : '<br>')
-//                    }
-//                },
-//                div: function (node) {
-//                    //检索百科的图片
-//                    var layout = node.getAttr('data-layout');
-//
-//                    if(/text_pic/.test(node.getAttr('class')) && layout){
-//                        var tmp,title,cssFloat;
-//                        if(tmp = node.getNodesByTagName('p')[0]){
-//                            title = tmp.lastChild() && tmp.lastChild().data;
-//                            if(/center/.test(layout)){
-//                                cssFloat = 'display:block;margin:0 auto'
-//                            }else if(/right/.test(layout)){
-//                                cssFloat = 'float:right'
-//                            }
-//                            tmp.parentNode.removeChild(tmp);
-//                            if(tmp = node.getNodesByTagName('img')[0]){
-//
-//                                tmp.setAttr({
-//                                    title:title,
-//                                    style:cssFloat,
-//                                    'data-layout':layout
-//                                })
-//                            }
-//                        }
-//                    }
-//                    var tmpNode, p = UE.uNode.createElement('p');
-//                    while (tmpNode = node.firstChild()) {
-//                        if (tmpNode.type == 'text' || !UE.dom.dtd.$block[tmpNode.tagName]) {
-//                            p.appendChild(tmpNode);
-//                        } else {
-//                            if (p.firstChild()) {
-//                                node.parentNode.insertBefore(p, node);
-//                                p = UE.uNode.createElement('p');
-//                            } else {
-//                                node.parentNode.insertBefore(tmpNode, node);
-//                            }
-//                        }
-//                    }
-//                    if (p.firstChild()) {
-//                        node.parentNode.insertBefore(p, node);
-//                    }
-//                    node.parentNode.removeChild(node);
-//                },
-//                br: {$: {}},
-//                a: function (node) {
-//                    if(!node.firstChild()){
-//                        node.parentNode.removeChild(node);
-//                        return;
-//                    }
-//                    node.setAttr();
-//                    node.setAttr('href', '#')
-//                },
-//                iframe: function (node) {
-//                    var val = node.getAttr('data-type');
-//                    if (!val || val != 'album') {
-//                        node.setAttr()
-//                    }
-//                },
-//                strong: {$: {}},
-//                b:function(node){
-//                    node.tagName = 'strong'
-//                },
-//                i:function(node){
-//                    node.tagName = 'em'
-//                },
-//                em: {$: {}},
-//                img: function (node) {
-//                    var src = node.getAttr('src'),
-//                            title = node.getAttr('title'),
-//                            style = node.getAttr('style'),
-//                            layout = node.getAttr('data-layout');
-//                    if(layout || /baidu/.test(src)){
-//                        node.setAttr();
-//                        node.setAttr({
-//                            src : src,
-//                            title : title,
-//                            style : style,
-//                            'data-layout' : layout
-//                        })
-//                    }else{
-//                        node.setAttr();
-//                        node.setAttr({'src':src})
-//                    }
-//                },
-//                ol: function (node) {
-//                    var className = node.getAttr('class');
-//                    if (!className || !/custom_/.test(className)) {
-//                        node.setAttr();
-//                        var parent = node.parentNode,level = 0;
-//
-//                        while(parent.type == 'element' && parent.tagName == 'ol'){
-//                            level++;
-//                            parent = parent.parentNode;
-//                        }
-//                        node.setAttr('class','custom_num' + (!level ? '':level))
-//                    }
-//                },
-//                ul: function (node) {
-//                    var className = node.getAttr('class');
-//                    if (!className || !/custom_/.test(className)) {
-//                        node.setAttr();
-//                        node.setAttr('class','custom_dot')
-//                    }
-//                },
-//
-//                dl:function(node){
-//                    node.tagName = 'ul';
-//                    node.setAttr()
-//                },
-//                dt:function(node){
-//                    node.tagName = 'li';
-//                    node.setAttr()
-//                },
-//                dd:function(node){
-//                    node.tagName = 'li';
-//                    node.setAttr()
-//                },
-//                li: function (node) {
-//                    var className = node.getAttr('class');
-//                    if (!className || !/list\-/.test(className)) {
-//                        node.setAttr()
-//                    }
-//                    var tmpNodes = node.getNodesByTagName('ol ul');
-//                    UE.utils.each(tmpNodes,function(n){
-//                        node.parentNode.insertAfter(n,node);
-//
-//                    })
-//
-//                },
-//                table: function (node) {
-//                    UE.utils.each(node.getNodesByTagName('table'), function (t) {
-//                        UE.utils.each(t.getNodesByTagName('tr'), function (tr) {
-//                            var p = UE.uNode.createElement('p'), child, html = [];
-//                            while (child = tr.firstChild()) {
-//                                html.push(child.innerHTML());
-//                                tr.removeChild(child);
-//                            }
-//                            p.innerHTML(html.join('&nbsp;&nbsp;'));
-//                            t.parentNode.insertBefore(p, t);
-//                        })
-//                        t.parentNode.removeChild(t)
-//                    });
-//                    var val = node.getAttr('width');
-//                    node.setAttr();
-//                    if (val) {
-//                        node.setAttr('width', val);
-//                    }
-//                },
-//                tbody: {$: {}},
-//                caption: {$: {}},
-//                th: {$: {}},
-//                td: {$: {valign: 1, align: 1,rowspan:1,colspan:1,width:1,height:1}},
-//                tr: {$: {}},
-//                h3: {$: {}},
-//                h2: {$: {}},
-//                '-': 'script style meta sup'
-//            }
-//        }()
+    //编辑器实例化
+    var editor = new baidu.editor.ui.Editor();
+    editor.render("editor");
+    //            debugger
+    //            editor.focus();
+
+    //            if("noLogin") {
+    //                editor.disableToolbar();
+    //            }
+
+
+    //获取从服务器返回的数据并格式化，赋初始值
+    //    var content = getDataFromServer();
+    //    editor.setContent(formatContent(content));
+
+    //上传成功的回调
+    editor.addListener("uploadSuccess",function(type,data){
+//                debugger
+        //包含服务器主动拒绝的情况
+    });
+    //上传失败的回调，返回错误提示
+    editor.addListener("networkError",function(){
+//                debugger
+        //网络、超时等错误
+    });
+    //logout
+    editor.addListener("isLogout",function(){
+//                debugger
+    });
+    //            editor.addListener("flashClicked",function(){
+    //                            console.log(1);
+    //                        });
+    //图片大小超出限制
+    editor.addListener("imageSizeError",function(type,data){
+//                debugger
+    });
+    //格式化函数
+    function formatContent(content){
+        var contArr = content.split("\n");
+        contArr.shift();
+        contArr.pop();
+        return "<p>"+contArr.join("</p><p>")+"</p>";
+    }
+    //内容已经更改
+    editor.addListener("editorHasFocused",function(){
     });
 
-    ue.addListener('ready', function () {
-        this.focus()
+    //单击按钮前
+    editor.addListener("beforeexeccmd",function(type,cmd){
     });
 
+    //服务器端输出格式
+    //1、成功保存
+    // '<script type="text/javascript">parent.baidu.editor.success({"index":"'.$index.'","url":"'.$url.'"})<\/script>';
+    //2、拒绝保存
+    //<script type="text/javascript">parent.baidu.editor.error({"index":"'.$index.'","msg":"'.$msg.'"})<\/script>';
 
-    function insertHtml() {
-        var value = prompt('插入html代码', '');
-        ue.execCommand('insertHtml', value)
-    }
-    function createEditor() {
-        enableBtn();
-        UE.getEditor('editor');
-    }
-    function getAllHtml() {
-        alert(UE.getEditor('editor').getAllHtml())
-    }
-    function getContent() {
-        var arr = [];
-        arr.push("使用editor.getContent()方法可以获得编辑器的内容");
-        arr.push("内容为：");
-        arr.push(UE.getEditor('editor').getContent());
-        alert(arr.join("\n"));
-    }
-    function getPlainTxt() {
-        var arr = [];
-        arr.push("使用editor.getPlainTxt()方法可以获得编辑器的带格式的纯文本内容");
-        arr.push("内容为：");
-        arr.push(UE.getEditor('editor').getPlainTxt());
-        alert(arr.join('\n'))
-    }
-    function setContent(isAppendTo) {
-        var arr = [];
-        arr.push("使用editor.setContent('欢迎使用ueditor')方法可以设置编辑器的内容");
-        UE.getEditor('editor').setContent('欢迎使用ueditor', isAppendTo);
-        alert(arr.join("\n"));
-    }
-    function setDisabled() {
-        UE.getEditor('editor').setDisabled('fullscreen');
-        disableBtn("enable");
-    }
+    //手动保存内容到cookie
+    //editor.execCommand("handsave");
 
-    function setEnabled() {
-        UE.getEditor('editor').setEnabled();
-        enableBtn();
-    }
-
-    function getText() {
-        //当你点击按钮时编辑区域已经失去了焦点，如果直接用getText将不会得到内容，所以要在选回来，然后取得内容
-        var range = UE.getEditor('editor').selection.getRange();
-        range.select();
-        var txt = UE.getEditor('editor').selection.getText();
-        alert(txt)
-    }
-
-    function getContentTxt() {
-        var arr = [];
-        arr.push("使用editor.getContentTxt()方法可以获得编辑器的纯文本内容");
-        arr.push("编辑器的纯文本内容为：");
-        arr.push(UE.getEditor('editor').getContentTxt());
-        alert(arr.join("\n"));
-    }
-    function hasContent() {
-        var arr = [];
-        arr.push("使用editor.hasContents()方法判断编辑器里是否有内容");
-        arr.push("判断结果为：");
-        arr.push(UE.getEditor('editor').hasContents());
-        alert(arr.join("\n"));
-    }
-    function setFocus() {
-        UE.getEditor('editor').focus();
-    }
-    function deleteEditor() {
-        disableBtn();
-        UE.getEditor('editor').destroy();
-    }
-    function disableBtn(str) {
-        var div = document.getElementById('btns');
-        var btns = domUtils.getElementsByTagName(div, "button");
-        for (var i = 0, btn; btn = btns[i++];) {
-            if (btn.id == str) {
-                domUtils.removeAttributes(btn, ["disabled"]);
-            } else {
-                btn.setAttribute("disabled", "true");
-            }
-        }
-    }
-    function enableBtn() {
-        var div = document.getElementById('btns');
-        var btns = domUtils.getElementsByTagName(div, "button");
-        for (var i = 0, btn; btn = btns[i++];) {
-            domUtils.removeAttributes(btn, ["disabled"]);
-        }
-    }
-
+    //从cookie中加载内容的编辑器
+    //editor.execCommand("reloadcontent");
 
 </script>
+</body>
 </html>

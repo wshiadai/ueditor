@@ -38,7 +38,7 @@
         //图片上传配置区
         ,imageUrl:URL+"php/imageUp.php"             //图片上传提交地址
         ,imagePath:URL + "php/"                     //图片修正地址，引用了fixedImagePath,如有特殊需求，可自行配置
-       //,imageFieldName:"upfile"                   //图片数据的key,若此处修改，需要在后台对应文件修改对应参数
+       ,imageFieldName:"upfile"                   //图片数据的key,若此处修改，需要在后台对应文件修改对应参数
         //,compressSide:0                            //等比压缩的基准，确定maxImageSideLength参数的参照对象。0为按照最长边，1为按照宽度，2为按照高度
         //,maxImageSideLength:900                    //上传图片最大允许的边长，超过会自动等比缩放,不缩放就设置一个比较大的值，更多设置在image.html中
 
@@ -115,13 +115,13 @@
         ,initialFrameHeight:190  //初始化编辑器高度,默认320
         ,initialMaxFrameHeight:420 //自动长高最大高度
 
-        ,autoClearinitialContent:true //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
+        ,autoClearinitialContent:false //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
 
         ,iframeCssUrl: URL + '/themes/iframe.css' //给编辑器内部引入一个css文件
 
         ,textarea:'editorValue' // 提交表单时，服务器获取编辑器提交内容的所用的参数，多实例时可以给容器name属性，会将name给定的值最为每个实例的键值，不用每次实例化的时候都设置这个值
 
-        ,focus:false //初始化时，是否让编辑器获得焦点true或false
+        ,focus:true  //初始化时，是否让编辑器获得焦点true或false
 
         //,autoClearEmptyNode : true //getContent时，是否删除空的inlineElement节点（包括嵌套的情况）
 
@@ -376,6 +376,7 @@
          * ----------------分界线----------------------
          * for zhidao by xuheng
          * */
+        //按钮titile配置
         ,buttonConfig:{
             "insertmap": {
                 title:"地图",
@@ -404,7 +405,28 @@
                 unTitle:"收起编辑器"
             }
         }
+        //单位M
+        ,imageMaxSize:1.311
+        //允许的格式
+        ,acceptImageType:"*.gif;*.jpg;*.png"
+        //占位图地址
+        ,waitImageUrl:URL+'themes/default/images/uploading.gif'
+        //上传图片次数限制
+        ,maxImagesCount:2
+        //上传flash地址
+        ,flashUrl:URL+"/zhidao.swf"
+        //自定义post参数
+        ,customObj:{
+            cm:100672
+        }
+        //后台通过此名称来获取图片对应的index，然后需要原样返回
+        ,indexFlagFieldName:'position'
+        //插入图片时编辑器长高的高度，单位px
+        ,heightIncrement:150
         ,isLogin:true
-        ,isLoginForPlace:true
+        //是否开启自动保存
+        ,autoSaveEnabled:false
+        //自动保存频率，单位秒
+        ,autoSaveFrequency:60
     };
 })();
