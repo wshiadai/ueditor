@@ -2,9 +2,10 @@
 //那个按钮弹出是dialog，是下拉筐等都是在这个js中配置
 //自己写的ui也要在这里配置，放到baidu.editor.ui下边，当编辑器实例化的时候会根据editor_config中的toolbars找到相应的进行实例化
 (function () {
-    var utils = baidu.editor.utils;
-    var editorui = baidu.editor.ui;
-    var _Dialog = editorui.Dialog;
+    var utils = baidu.editor.utils,
+        domUtils = baidu.editor.dom.domUtils,
+        editorui = baidu.editor.ui,
+        _Dialog = editorui.Dialog;
     editorui.buttons = {};
 
     editorui.Dialog = function (options) {
@@ -273,6 +274,23 @@
                 replaceWait(msg.index);
                 editor.fireEvent("networkError", msg);
             };
+
+            function fixFlash(editor) {
+                //解决flash和中文输入法不兼容问题
+                if (baidu.editor.browser.chrome) {
+                    var input = document.createElement("input");
+                    input.type = "text";
+                    input.style.height = "0";
+                    input.style.width = "0";
+                    editor.container.parentNode.appendChild(input);
+                    setTimeout(function () {
+                        input.focus();
+                        editor.focus();
+                        input.parentNode.removeChild(input);
+                    }, 1);
+                }
+            }
+
             function replaceWait(index, url) {
                 var image = editor.document.getElementById("ue_waitflag_" + index);
                 image.hasLoaded = false;
