@@ -414,7 +414,7 @@
         //上传图片次数限制
         ,maxImagesCount:2
         //上传flash地址
-        ,flashUrl:URL+"/zhidao.swf"
+        ,flashUrl:URL+"zhidao.swf"
         //自定义post参数
         ,customObj:{
             cm:100672

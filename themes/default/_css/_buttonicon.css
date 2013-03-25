@@ -1,0 +1,169 @@
+/* for zhidao */
+.edui-default .edui-for-insertimage {
+    height: 22px;
+    font-size: 12px;
+    line-height: 20px;
+    cursor: pointer;
+    _display: inline !important;
+}
+
+.edui-default .edui-for-insertimage .ue_flash{
+    position: relative;
+    z-index: 9999;
+    top: -25px;
+    top: -22 px\0;
+    width: 48px;
+    height: 22px;
+}
+
+.edui-default .edui-for-insertimage .edui-icon {
+    background: url(http://img.baidu.com/img/iknow/ask/iknow-ask.gif) 2px -92px no-repeat;
+}
+
+.edui-default .edui-for-insertimage .edui_disableIcon {
+    background: url(http://img.baidu.com/img/iknow/ask/iknow-ask.gif) 2px -92px no-repeat;
+}
+
+/*解决ie6下文字图标对不起问题*/
+.edui-default .edui-for-insertimage .edui-label {
+    _position: relative;
+    _top: 2px;
+    cursor: pointer;
+    _display: inline !important;
+}
+
+#ue_flash {
+    font-size: 20px;
+}
+
+/*for insertorderedlist*/
+.edui-default .edui-for-insertorderedlist {
+    _display: inline !important;
+}
+
+.edui-default .insertorderedlist .edui-icon {
+    background: url(http://img.baidu.com/img/iknow/ui/icons/global.png) 1px -664px no-repeat;
+}
+
+.edui-default .insertorderedlist .edui_disableIcon {
+    background: url(http://img.baidu.com/img/iknow/ask/iknow-ask.gif) 2px -92px no-repeat;
+}
+
+.edui-default .insertorderedlist .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .insertorderedlist .edui-button-body {
+    width: 48px;
+}
+
+/*for insertunorderedlist*/
+.edui-default .edui-for-insertunorderedlist {
+    _display: inline !important;
+}
+
+.edui-default .insertunorderedlist .edui-icon {
+    background: url(http://img.baidu.com/img/iknow/ui/icons/global.png) 1px -664px no-repeat;
+}
+
+.edui-default .insertunorderedlist .edui_disableIcon {
+    background: url(http://img.baidu.com/img/iknow/ask/iknow-ask.gif) 2px -92px no-repeat;
+}
+
+.edui-default .insertunorderedlist .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .insertunorderedlist .edui-button-body {
+    width: 48px;
+}
+
+/*for autotypeset*/
+.edui-default .edui-for-autotypeset {
+    _display: inline !important;
+}
+
+.edui-default .autotypeset .edui-icon {
+    background: url(http://img.baidu.com/img/iknow/ui/icons/global.png) 1px -664px no-repeat;
+}
+
+.edui-default .autotypeset .edui_disableIcon {
+    background: url(http://img.baidu.com/img/iknow/ask/iknow-ask.gif) 2px -92px no-repeat;
+}
+
+.edui-default .autotypeset .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .autotypeset .edui-button-body {
+    width: 48px;
+}
+
+/*for map*/
+.edui-default .edui-for-insertmap,
+.edui-default .edui-for-insertplace {
+    _display: inline !important;
+}
+
+.edui-default .insertmap .edui-icon,
+.edui-default .insertplace .edui-icon {
+    background: url(http://img.baidu.com/img/iknow/ui/icons/global.png) 1px -664px no-repeat;
+}
+
+.edui-default .insertmap .edui_disableIcon {
+    background: url(http://img.baidu.com/img/iknow/ui/icons/global.png) 1px -664px no-repeat;
+}
+
+.edui-default .deletemap .edui-icon,
+.edui-default .editplace .edui-icon {
+    background: url(http://img.baidu.com/img/iknow/ui/icons/global.png) no-repeat left -1020px;
+}
+
+.edui-default .deletemap .edui-label,
+.edui-default .insertmap .edui-label,
+.edui-default .editplace .edui-label,
+.edui-default .insertplace .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .insertmap .edui-button-body,
+.edui-default .insertplace .edui-button-body {
+    width: 48px;
+}
+
+.edui-default .deletemap .edui-button-body,
+.edui-default .editplace .edui-button-body {
+    width: 73px;
+}
+
+/*for toggleeditor*/
+.edui-default .hideeditor .edui-icon {
+    background: url(http://img.baidu.com/img/iknow/ask/iknow-ask.gif) 4px -45px no-repeat;
+}
+
+.edui-default .showeditor .edui-icon {
+    background: url(http://img.baidu.com/img/iknow/ask/iknow-ask.gif) 4px -68px no-repeat;
+}
+
+.edui-default .hideeditor .edui-label,
+.edui-default .showeditor .edui-label {
+    _display: inline !important;
+    _line-height: 24px;
+    cursor: pointer;
+}
+
+.edui-default .hideeditor, .edui-default .showeditor {
+    _display: inline !important;
+}
+
+.edui-default .hideeditor .edui-button-body {
+    width: 110px;
+}
+
+.edui-default .showeditor .edui-button-body {
+    width: 110px;
+}
