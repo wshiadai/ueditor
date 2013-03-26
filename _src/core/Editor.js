@@ -89,8 +89,8 @@
             focusInEnd:true,
             initialFrameWidth:1000,
             initialFrameHeight:me.options.minFrameHeight || 320, //兼容老版本配置项
-            minFrameWidth:800,
-            minFrameHeight:220,
+            minFrameWidth:100,
+            minFrameHeight:100,
             autoClearEmptyNode:true,
             fullscreen:false,
             readonly:false,

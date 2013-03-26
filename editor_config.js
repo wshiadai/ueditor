@@ -111,7 +111,7 @@
 
         //,initialContent:'欢迎使用ueditor!'    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
 
-        ,initialFrameWidth:626  //初始化编辑器宽度,默认1000
+        ,initialFrameWidth:500  //初始化编辑器宽度,默认1000
         ,initialFrameHeight:190  //初始化编辑器高度,默认320
 
         ,autoClearinitialContent:false //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
@@ -314,8 +314,8 @@
         //scaleEnabled
         //是否可以拉伸长高,默认true(当开启时，自动长高失效)
         //,scaleEnabled:false
-        //,minFrameWidth:800    //编辑器拖动时最小宽度,默认800
-        //,minFrameHeight:220  //编辑器拖动时最小高度,默认220
+        //,minFrameWidth:100    //编辑器拖动时最小宽度,默认100
+        //,minFrameHeight:100  //编辑器拖动时最小高度,默认100
 
         //autoFloatEnabled
         //是否保持toolbar的位置不动,默认true
