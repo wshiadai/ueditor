@@ -386,10 +386,6 @@
             "autotypeset":{
                 title:"排版",
                 hoverTitle:"登录后才能使功能"
-            },
-            "toggleEditor":{
-                title:"展开编辑器",
-                unTitle:"收起编辑器"
             }
         }
         //单位M
