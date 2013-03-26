@@ -13,15 +13,14 @@
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-hover .edui-button-wrap {
-    background-color: #fff5d4;
     padding: 0;
-    border: 1px solid #dcac6c;
+    background: url(../images/zhidao.png) -1px -120px no-repeat;
+    height: 24px;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-checked .edui-button-wrap {
-    background-color: #ffe69f;
+    background: url(../images/zhidao.png) -1px -120px no-repeat;
     padding: 0;
-    border: 1px solid #dcac6c;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-active .edui-button-wrap {
