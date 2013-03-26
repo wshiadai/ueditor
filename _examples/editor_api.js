@@ -30,7 +30,7 @@
             'plugins/keystrokes.js',
             'plugins/fiximgclick.js',
             'plugins/autolink.js',
-            'plugins/autoheight.js',
+            'plugins/_autoheight.js',
             'ui/ui.js',
             'ui/uiutils.js',
             'ui/uibase.js',

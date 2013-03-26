@@ -114,7 +114,6 @@
 
         ,initialFrameWidth:626  //初始化编辑器宽度,默认1000
         ,initialFrameHeight:190  //初始化编辑器高度,默认320
-        ,initialMaxFrameHeight:420 //自动长高最大高度
 
         ,autoClearinitialContent:false //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
 
@@ -415,6 +414,8 @@
         //插入图片时编辑器长高的高度，单位px
         ,heightIncrement:150
         ,isLogin:true
+        //自动长高最大高度
+        ,initialMaxFrameHeight:420
         //是否开启自动保存
         ,autoSaveEnabled:false
         //自动保存频率，单位秒
