@@ -25,6 +25,8 @@
             'plugins/wordcount.js',
             'plugins/undo.js',
             'plugins/paste.js',           //粘贴时候的提示依赖了UI
+            'plugins/puretxtpaste.js',
+            'plugins/video.js',
             'plugins/list.js',
             'plugins/enterkey.js',
             'plugins/keystrokes.js',
