@@ -356,8 +356,8 @@
             'p': {'br':1,'BR':1,'img':1,'iframe':1,'$':{}},
             'br':{'$':{}},
             'img':{'$':{id:1,src:1,'data_ue_src':1,'width':1,'height':1,'alt':1,'title':1}},
-            'iframe':{'$':{'data-type':1,'map':1,src:1,'class':1,'frameborder':1}}
-            '_':{style:1, link:1, object:1, applet:1, input:1, meta:1, base:1, button:1, select:1, textarea:1, '#comment':1, 'map':1, 'area':1}
+            'iframe':{'$':{'data-type':1,'map':1,src:1,'class':1,'frameborder':1}},
+            '-': 'style link object applet input meta base button select textarea #comment map area'
         }
 
         /*
