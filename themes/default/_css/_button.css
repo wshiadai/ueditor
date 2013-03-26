@@ -23,11 +23,12 @@
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-checked .edui-button-wrap {
-    background: url(../images/zhidao.png) -1px -120px no-repeat;
+    background: url(../images/zhidao.png) -1px -150px no-repeat;
     padding: 0;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-active .edui-button-wrap {
+    background: url(../images/zhidao.png) -1px -120px no-repeat;
     padding: 0;
 }
 .edui-default .edui-toolbar .edui-state-disabled .edui-label {
