@@ -1,14 +1,18 @@
 /*普通按钮样式及状态*/
+.edui-default .edui-toolbar .edui-button {
+    height: 24px;
+    line-height: 24px;
+    width: 52px;
+}
 .edui-default .edui-toolbar .edui-button .edui-icon {
     height: 20px !important;
-    width: 23px !important;
+    width: 20px !important;
     cursor: pointer;
 }
 .edui-default .edui-toolbar .edui-button .edui_disableIcon {
     _display: inline !important;
 }
 .edui-default .edui-toolbar .edui-button .edui-button-wrap {
-    padding: 1px;
     position: relative;
 }
 
@@ -24,9 +28,7 @@
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-active .edui-button-wrap {
-    background-color: #ffffff;
     padding: 0;
-    border: 1px solid gray;
 }
 .edui-default .edui-toolbar .edui-state-disabled .edui-label {
     color: #ccc;
