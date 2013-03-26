@@ -18,7 +18,7 @@
             'core/filternode.js',
             'plugins/defaultfilter.js',
             'plugins/inserthtml.js',
-            'plugins/autotypeset.js',
+            'plugins/_autotypeset.js',
             'plugins/_image.js',
             'plugins/link.js',
             'plugins/selectall.js',
