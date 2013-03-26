@@ -49,13 +49,16 @@ UE.plugins['keystrokes'] = function() {
         if (keyCode == 8) {//|| keyCode == 46
             var start,end;
             //避免按两次删除才能生效的问题
-            if(rng.inFillChar()){
+            if(rng.collapsed && rng.inFillChar()){
                 start = rng.startContainer;
-                rng.setStartBefore(start).shrinkBoundary(true).collapse(true);
+
                 if(domUtils.isFillChar(start)){
+                    rng.setStartBefore(start).shrinkBoundary(true).collapse(true);
                     domUtils.remove(start)
                 }else{
                     start.nodeValue = start.nodeValue.replace(new RegExp('^' + domUtils.fillChar ),'');
+                    rng.startOffset--;
+                    rng.collapse(true).select(true)
                 }
             }
 
@@ -78,6 +81,7 @@ UE.plugins['keystrokes'] = function() {
                     return;
                 }
             }
+            me.fireEvent("afterbackspace",evt);
         }
         //处理tab键的逻辑
         if (keyCode == 9) {
@@ -92,7 +96,7 @@ UE.plugins['keystrokes'] = function() {
                 domUtils.preventDefault(evt);
                 return;
             }
-            range = me.selection.getRange();
+            var range = me.selection.getRange();
             me.fireEvent('saveScene');
             for (var i = 0,txt = '',tabSize = me.options.tabSize|| 4,tabNode =  me.options.tabNode || '&nbsp;'; i < tabSize; i++) {
                 txt += tabNode;
@@ -159,7 +163,11 @@ UE.plugins['keystrokes'] = function() {
             }
 //            //chrome下如果删除了inline标签，浏览器会有记忆，在输入文字还是会套上刚才删除的标签，所以这里再选一次就不会了
             if(browser.chrome && rng.collapsed && rng.startContainer.nodeType == 1 && domUtils.isEmptyBlock(rng.startContainer)){
-                rng.select(true);
+                //光标所在节点为textarea，执行select后光标会跳出来 by xuheng
+                var node=rng.startContainer.childNodes[rng.startOffset];
+                if(!/textarea/i.test(node)){
+                    rng.select(true);
+                }
             }
         }
     })

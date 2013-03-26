@@ -130,7 +130,11 @@ UE.I18N['en'] = {
         'copymsg':"Please use 'Ctrl + c' instead!",
         'paste':"Paste(Ctrl + v)",
         'pastemsg':"Please use 'Ctrl + v' instead!",
-        'highlightcode':'insert code'
+        'formulainline':"Inline",
+        'formulablock':"Diplay",
+        'formuladelete':"Delete formula",
+        'formualmergeup':"Merge up",
+        'highlightcode':'Insert code'
     },
 
     'anthorMsg':"Link",
@@ -492,6 +496,10 @@ UE.I18N['en'] = {
     'edittd':{
         'static':{
             lang_tdBkColor:'Background Color:'
+        }
+    },
+    'formula':{
+        'static':{
         }
     },
     wordimage:{

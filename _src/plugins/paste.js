@@ -52,7 +52,6 @@ UE.plugins['paste'] = function() {
     }
 
     var me = this;
-    var word_img_flag = {flag:""};
 
     var txtContent,htmlContent,address;
 
@@ -118,13 +117,20 @@ UE.plugins['paste'] = function() {
             //过滤word粘贴过来的冗余属性
             html = UE.filterWord(html);
 
-            var root = UE.htmlparser(html);
+            var root = UE.htmlparser(html,true);
             //如果给了过滤规则就先进行过滤
             if(me.options.filterRules){
                 UE.filterNode(root,me.options.filterRules);
             }
             //执行默认的处理
             me.filterInputRule(root);
+            //针对chrome的处理
+            if(browser.webkit){
+                var br = root.lastChild();
+                if(br && br.type == 'element' && br.tagName == 'br'){
+                    root.removeChild(br)
+                }
+            }
             html = {'html':root.toHtml()};
             me.fireEvent('beforepaste',html);
             root = UE.htmlparser(html.html);
@@ -193,8 +199,8 @@ UE.plugins['paste'] = function() {
             if(!range.collapsed && me.undoManger){
                 me.undoManger.save();
             }
-
         });
+
         //ie下beforepaste在点击右键时也会触发，所以用监控键盘才处理
         domUtils.on(me.body, browser.ie || browser.opera ? 'keydown' : 'paste',function(e){
             if((browser.ie || browser.opera) && ((!e.ctrlKey && !e.metaKey) || e.keyCode != '86')){

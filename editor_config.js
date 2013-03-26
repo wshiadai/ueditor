@@ -36,9 +36,9 @@
         UEDITOR_HOME_URL : URL
 
         //图片上传配置区
-        ,imageUrl:URL+"php/imageUp.php"             //图片上传提交地址
+        ,imageUrl:URL+"php/_imageUp.php"             //图片上传提交地址
         ,imagePath:URL + "php/"                     //图片修正地址，引用了fixedImagePath,如有特殊需求，可自行配置
-       //,imageFieldName:"upfile"                   //图片数据的key,若此处修改，需要在后台对应文件修改对应参数
+       ,imageFieldName:"upfile"                   //图片数据的key,若此处修改，需要在后台对应文件修改对应参数
         //,compressSide:0                            //等比压缩的基准，确定maxImageSideLength参数的参照对象。0为按照最长边，1为按照宽度，2为按照高度
         //,maxImageSideLength:900                    //上传图片最大允许的边长，超过会自动等比缩放,不缩放就设置一个比较大的值，更多设置在image.html中
 
@@ -49,12 +49,12 @@
         //附件上传配置区
         ,fileUrl:URL+"php/fileUp.php"               //附件上传提交地址
         ,filePath:URL + "php/"                   //附件修正地址，同imagePath
-        //,fileFieldName:"upfile"                    //附件提交的表单名，    若此处修改，需要在后台对应文件修改对应参数
+        //,fileFieldName:"upfile"                    //附件提交的表单名，若此处修改，需要在后台对应文件修改对应参数
 
          //远程抓取配置区
         //,catchRemoteImageEnable:true               //是否开启远程图片抓取,默认开启
         ,catcherUrl:URL +"php/getRemoteImage.php"   //处理远程图片抓取的地址
-        ,catcherPath:URL + "php/"                  //图片修正地址， 同imagePath
+        ,catcherPath:URL + "php/"                  //图片修正地址，同imagePath
         //,catchFieldName:"upfile"                   //提交到后台远程图片uri合集，若此处修改，需要在后台对应文件修改对应参数
         //,separater:'ue_separate_ue'               //提交至后台的远程图片地址字符串分隔符
         //,localDomain:[]                            //本地顶级域名，当开启远程图片抓取时，除此之外的所有其它域名下的图片都将被抓取到本地,默认不抓取127.0.0.1和localhost
@@ -79,18 +79,8 @@
         ,getMovieUrl:URL+"php/getMovie.php"                   //视频数据获取地址
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
-        ,toolbars:[
-            ['fullscreen', 'source', '|', 'undo', 'redo', '|',
-                'bold', 'italic', 'underline', 'fontborder','strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch','autotypeset','blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist','selectall', 'cleardoc', '|',
-                'rowspacingtop', 'rowspacingbottom','lineheight','|',
-                'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
-                'directionalityltr', 'directionalityrtl', 'indent', '|',
-                'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|','touppercase','tolowercase','|',
-                'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright','imagecenter', '|',
-                'insertimage', 'emotion','scrawl', 'insertvideo','music','attachment', 'map', 'gmap', 'insertframe','highlightcode','webapp','pagebreak','template','background', '|',
-                'horizontal', 'date', 'time', 'spechars','snapscreen', 'wordimage', '|',
-                'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', '|',
-                'print', 'preview', 'searchreplace','help','uploadfile']
+        , toolbars:[
+            ['insertimage' ,'|','insertorderedlist','|', 'insertunorderedlist','|','autotypeset','|','insertmap']
         ]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
         ,labelMap:{
@@ -121,32 +111,32 @@
 
         //,initialContent:'欢迎使用ueditor!'    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
 
-        //,initialFrameWidth:1000  //初始化编辑器宽度,默认1000
-        //,initialFrameHeight:320  //初始化编辑器高度,默认320
+        ,initialFrameWidth:626  //初始化编辑器宽度,默认1000
+        ,initialFrameHeight:190  //初始化编辑器高度,默认320
 
-        //,autoClearinitialContent:true //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
+        ,autoClearinitialContent:false //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
 
-        //,iframeCssUrl: URL + '/themes/iframe.css' //给编辑器内部引入一个css文件
+        ,iframeCssUrl: URL + '/themes/iframe.css' //给编辑器内部引入一个css文件
 
-        //,textarea:'editorValue' // 提交表单时，服务器获取编辑器提交内容的所用的参数，多实例时可以给容器name属性，会将name给定的值最为每个实例的键值，不用每次实例化的时候都设置这个值
+        ,textarea:'editorValue' // 提交表单时，服务器获取编辑器提交内容的所用的参数，多实例时可以给容器name属性，会将name给定的值最为每个实例的键值，不用每次实例化的时候都设置这个值
 
-        //,focus:false //初始化时，是否让编辑器获得焦点true或false
+        ,focus:true  //初始化时，是否让编辑器获得焦点true或false
 
         //,autoClearEmptyNode : true //getContent时，是否删除空的inlineElement节点（包括嵌套的情况）
 
         //,fullscreen : false //是否开启初始化时即全屏，默认关闭
 
-        //,readonly : false //编辑器初始化结束后,编辑区域是否是只读的，默认是false
+        ,readonly : false //编辑器初始化结束后,编辑区域是否是只读的，默认是false
 
-        //,zIndex : 900     //编辑器层级的基数,默认是900
+        ,zIndex : 999     //编辑器层级的基数,默认是900
 
         //,imagePopup:true      //图片操作的浮层开关，默认打开
 
-        //,initialStyle:'body{font-size:18px}'   //编辑器内部样式,可以用来改变字体等
+        ,initialStyle:  'p{margin:5px 0;}'   //编辑器内部样式,可以用来改变字体等
 
         //,emotionLocalization:false //是否开启表情本地化，默认关闭。若要开启请确保emotion文件夹下包含官网提供的images表情文件夹
 
-        //,pasteplain:false  //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
+        ,pasteplain:true  //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
         //纯文本粘贴模式下的过滤规则
 //        'filterTxtRules' : function(){
 //            function transP(node){
@@ -279,7 +269,7 @@
 //           ]
 
         //wordCount
-        //,wordCount:true          //是否开启字数统计
+        ,wordCount:false          //是否开启字数统计
         //,maximumWords:10000       //允许的最大字符数
         //字数统计提示，{#count}代表当前字数，{#leave}代表还可以输入多少字符数,留空支持多语言自动切换，否则按此配置显示
         //,wordCountMsg:''   //当前已输入 {#count} 个字符，您还可以输入{#leave} 个字符
@@ -290,11 +280,15 @@
         // 代码高亮时需要加载的第三方插件的路径
         // ,highlightJsUrl:URL + "third-party/SyntaxHighlighter/shCore.js"
         // ,highlightCssUrl:URL + "third-party/SyntaxHighlighter/shCoreDefault.css"
-
+        //formula
+        // 数学公式时需要加载的第三方插件的路径
+        // ,formulaCssUrl:URL + "third-party/mathquill/mathquill.css"
+        // ,jqueryUrl:URL + "third-party/mathquill/jquery.min.js"
+        // ,formulaJsUrl:URL + "third-party/mathquill/mathquill.min.js"
         //tab
         //点击tab键时移动的距离,tabSize倍数，tabNode什么字符做为单位
-        //,tabSize:4
-        //,tabNode:'&nbsp;'
+        ,tabSize:4
+        ,tabNode:'&nbsp;'
 
         //elementPathEnabled
         //是否启用元素路径，默认是显示
@@ -311,17 +305,17 @@
         //可以最多回退的次数,默认20
         //,maxUndoCount:20
         //当输入的字符数超过该值时，保存一次现场
-        //,maxInputCount:1
+        ,maxInputCount:20
 
         //autoHeightEnabled
         // 是否自动长高,默认true
-        //,autoHeightEnabled:true
+        ,autoHeightEnabled:true
 
         //scaleEnabled
         //是否可以拉伸长高,默认true(当开启时，自动长高失效)
         //,scaleEnabled:false
-        //,minFrameWidth:800    //编辑器拖动时最小宽度,默认800
-        //,minFrameHeight:220  //编辑器拖动时最小高度,默认220
+        //,minFrameWidth:100    //编辑器拖动时最小宽度,默认100
+        //,minFrameHeight:100  //编辑器拖动时最小高度,默认100
 
         //autoFloatEnabled
         //是否保持toolbar的位置不动,默认true
@@ -334,8 +328,8 @@
         //,indentValue:'2em'
 
         //pageBreakTag
-        //分页标识符,默认是_baidu_page_break_tag_
-        //,pageBreakTag:'_baidu_page_break_tag_'
+        //分页标识符,默认是_ueditor_page_break_tag_
+        //,pageBreakTag:'_ueditor_page_break_tag_'
 
         //sourceEditor
         //源码的查看方式,codemirror 是代码高亮，textarea是文本框,默认是codemirror
@@ -351,22 +345,73 @@
 
         //autotypeset
         //  //自动排版参数
-        //  ,autotypeset:{
-        //      mergeEmptyline : true,         //合并空行
-        //      removeClass : true,           //去掉冗余的class
-        //      removeEmptyline : false,      //去掉空行
-        //      textAlign : "left" ,           //段落的排版方式，可以是 left,right,center,justify 去掉这个属性表示不执行排版
-        //      imageBlockLine : 'center',      //图片的浮动方式，独占一行剧中,左右浮动，默认: center,left,right,none 去掉这个属性表示不执行排版
-        //      pasteFilter : false,            //根据规则过滤没事粘贴进来的内容
-        //      clearFontSize : false,          //去掉所有的内嵌字号，使用编辑器默认的字号
-        //      clearFontFamily : false,        //去掉所有的内嵌字体，使用编辑器默认的字体
-        //      removeEmptyNode : false ,       // 去掉空节点
-        //      //可以去掉的标签
-        //      removeTagNames : {标签名字:1},
-        //      indent : false,                 // 行首缩进
-        //      indentValue : '2em'             //行首缩进的大小
-        //  },
+          ,autotypeset:{
+            mergeEmptyline : true,         //合并空行
+            indent : true,                 // 行首缩进
+            indentValue : '2em'             //行首缩进的大小
+          }
         //填写过滤规则
-        //filterRules : {}
+        ,filterRules : {
+            'p': {'br':1,'BR':1,'img':1,'iframe':1,'$':{}},
+            'br':{'$':{}},
+            'img':{'$':{id:1,src:1,'data_ue_src':1,'width':1,'height':1,'alt':1,'title':1}},
+            'iframe':{'$':{'data-type':1,'map':1,src:1,'class':1,'frameborder':1}},
+            '-': 'style link object applet input meta base button select textarea #comment map area'
+        }
+
+        /*
+         * ----------------分界线----------------------
+         * for zhidao by xuheng
+         * */
+        //按钮titile配置
+        ,buttonConfig:{
+            "insertmap": {
+                title:"地图",
+                unTitle:"删除地图",
+                hoverTitle:"登录后才能使功能"
+            },
+            "insertimage":{
+                title:"图片",
+                hoverTitle:"登录后才能使用工具栏功能",
+                overflowMsg:"您今日上传的图片数目已经超过限制！"
+            },
+            "insertunorderedlist": {
+                title:"符号",
+                hoverTitle:"登录后才能使功能"
+            },
+            "insertorderedlist": {
+                title:"编号",
+                hoverTitle:"登录后才能使功能"
+            },
+            "autotypeset":{
+                title:"排版",
+                hoverTitle:"登录后才能使功能"
+            }
+        }
+        //单位M
+        ,imageMaxSize:1.311
+        //允许的格式
+        ,acceptImageType:"*.gif;*.jpg;*.png"
+        //占位图地址
+        ,waitImageUrl:URL+'themes/default/images/uploading.gif'
+        //上传图片次数限制
+        ,maxImagesCount:2
+        //上传flash地址
+        ,flashUrl:URL+"zhidao.swf"
+        //自定义post参数
+        ,customObj:{
+            cm:100672
+        }
+        //后台通过此名称来获取图片对应的index，然后需要原样返回
+        ,indexFlagFieldName:'position'
+        //插入图片时编辑器长高的高度，单位px
+        ,heightIncrement:150
+        ,isLogin:true
+        //自动长高最大高度
+        ,initialMaxFrameHeight:420
+        //是否开启自动保存
+        ,autoSaveEnabled:false
+        //自动保存频率，单位秒
+        ,autoSaveFrequency:60
     };
 })();

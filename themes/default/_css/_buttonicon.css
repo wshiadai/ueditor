@@ -1,0 +1,129 @@
+/* for zhidao */
+.edui-default .edui-for-insertimage {
+    height: 22px;
+    font-size: 12px;
+    line-height: 20px;
+    cursor: pointer;
+    _display: inline !important;
+}
+
+.edui-default .edui-for-insertimage .ue_flash{
+    position: relative;
+    z-index: 9999;
+    top: -25px;
+    top: -22 px\0;
+    width: 48px;
+    height: 22px;
+}
+
+.edui-default .edui-for-insertimage .edui-icon {
+    background: url(../images/zhidao.png) 4px -66px no-repeat;
+}
+
+.edui-default .edui-for-insertimage .edui_disableIcon {
+    background: url(../images/zhidao.png) 4px -66px no-repeat;
+}
+
+/*解决ie6下文字图标对不起问题*/
+.edui-default .edui-for-insertimage .edui-label {
+    _position: relative;
+    _top: 2px;
+    cursor: pointer;
+    _display: inline !important;
+}
+/*for insertorderedlist*/
+.edui-default .edui-for-insertorderedlist {
+    _display: inline !important;
+}
+
+.edui-default .insertorderedlist .edui-icon {
+    background: url(../images/zhidao.png) 4px 5px no-repeat;
+}
+
+.edui-default .insertorderedlist .edui_disableIcon {
+    background: url(../images/zhidao.png) 4px 5px no-repeat;
+}
+
+.edui-default .insertorderedlist .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .insertorderedlist .edui-button-body {
+    width: 48px;
+}
+
+/*for insertunorderedlist*/
+.edui-default .edui-for-insertunorderedlist {
+    _display: inline !important;
+}
+
+.edui-default .insertunorderedlist .edui-icon {
+    background: url(../images/zhidao.png) 5px -19px no-repeat;
+}
+
+.edui-default .insertunorderedlist .edui_disableIcon {
+    background: url(../images/zhidao.png) 5px -19px no-repeat;
+}
+
+.edui-default .insertunorderedlist .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .insertunorderedlist .edui-button-body {
+    width: 48px;
+}
+
+/*for autotypeset*/
+.edui-default .edui-for-autotypeset {
+    _display: inline !important;
+}
+
+.edui-default .autotypeset .edui-icon {
+    background: url(../images/zhidao.png) 3px -45px no-repeat;
+}
+
+.edui-default .autotypeset .edui_disableIcon {
+    background: url(../images/zhidao.png) 3px -45px no-repeat;
+}
+
+.edui-default .autotypeset .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .autotypeset .edui-button-body {
+    width: 48px;
+}
+
+/*for map*/
+.edui-default .edui-for-insertmap {
+    _display: inline !important;
+}
+
+.edui-default .insertmap .edui-icon {
+    background: url(../images/zhidao.png) 2px -91px no-repeat;
+}
+
+.edui-default .insertmap .edui_disableIcon {
+    background: url(../images/zhidao.png) 2px -91px no-repeat;
+}
+
+.edui-default .deletemap .edui-icon {
+    background: url(../images/zhidao.png) -26px -45px no-repeat;
+}
+
+.edui-default .deletemap .edui-label,
+.edui-default .insertmap .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .insertmap .edui-button-body {
+    width: 48px;
+}
+
+.edui-default .deletemap .edui-button-body{
+    width: 73px;
+}

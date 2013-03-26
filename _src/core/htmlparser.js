@@ -1,9 +1,13 @@
 //html字符串转换成uNode节点
 //by zhanyi
-var htmlparser = UE.htmlparser = function (htmlstr) {
+var htmlparser = UE.htmlparser = function (htmlstr,coverBlank) {
     var reg = new RegExp(domUtils.fillChar, 'g');
     //ie下取得的html可能会有\n存在，要去掉，在处理replace(/[\t\r\n]*/g,'');代码高量的\n不能去除
-    htmlstr = htmlstr.replace(reg, '').replace(/>[\t\r\n]*?</g, '><');
+    htmlstr = htmlstr.replace(reg, '')
+        .replace(/(?:^[ \t\r\n]*?<)/, '<')
+        .replace(/(?:>[ \t\r\n]*?$)/, '>');
+
+    !coverBlank && (htmlstr = htmlstr.replace(/>(?:[ \t\r\n]*)/g, '>').replace(/(?:[ \t\r\n]*)</g, '<'));
 
     var re_tag = /<(?:(?:\/([^>]+)>)|(?:!--([\S|\s]*?)-->)|(?:([^\s\/>]+)\s*((?:(?:"[^"]*")|(?:'[^']*')|[^"'<>])*)\/?>))/g,
         re_attr = /([\w\-:.]+)(?:(?:\s*=\s*(?:(?:"([^"]*)")|(?:'([^']*)')|([^\s>]+)))|(?=\s|$))/g;
@@ -11,7 +15,7 @@ var htmlparser = UE.htmlparser = function (htmlstr) {
     var uNode = UE.uNode,
         needParentNode = {
             'td':'tr',
-            'tr':'tbody',
+            'tr':['tbody','thead','tfoot'],
             'tbody':'table',
             'th':'tr',
             'thead':'table',
@@ -21,14 +25,22 @@ var htmlparser = UE.htmlparser = function (htmlstr) {
             'dt':'dl',
             'dd':'dl',
             'option':'select'
+        },
+        needChild = {
+            'ol':'li',
+            'ul':'li'
         };
 
     function text(parent, data) {
-        parent.children.push(new uNode({
-            type:'text',
-            data:data,
-            parentNode:parent
-        }));
+        if(needChild[parent.tagName]){
+            var tmpNode = uNode.createElement(needChild[parent.tagName]);
+            parent.appendChild(tmpNode);
+            tmpNode.appendChild(uNode.createText(data));
+            parent = tmpNode;
+        }else{
+
+            parent.appendChild(uNode.createText(data));
+        }
     }
 
     function element(parent, tagName, htmlattr) {
@@ -47,15 +59,13 @@ var htmlparser = UE.htmlparser = function (htmlstr) {
                 parent = element(parent, utils.isArray(needParentTag) ? needParentTag[0] : needParentTag)
             }
         }
-//        //根据dtd判断是否当前节点可以放入新的节点
-//        while(dtd[parent.tagName] && !dtd[parent.tagName][tagName]){
+        //按dtd处理嵌套
+//        if(parent.type != 'root' && !dtd[parent.tagName][tagName])
 //            parent = parent.parentNode;
-//        }
-
         var elm = new uNode({
             parentNode:parent,
             type:'element',
-            tagName:tagName,
+            tagName:tagName.toLowerCase(),
             //是自闭合的处理一下
             children:dtd.$empty[tagName] ? null : []
         });
@@ -63,7 +73,7 @@ var htmlparser = UE.htmlparser = function (htmlstr) {
         if (htmlattr) {
             var attrs = {}, match;
             while (match = re_attr.exec(htmlattr)) {
-                attrs[match[1].toLowerCase()] = match[2]
+                attrs[match[1].toLowerCase()] = match[2] || match[3] || match[4]
             }
             elm.attrs = attrs;
         }
@@ -90,24 +100,35 @@ var htmlparser = UE.htmlparser = function (htmlstr) {
     var currentParent = root;
     while (match = re_tag.exec(htmlstr)) {
         currentIndex = match.index;
-        if (currentIndex > nextIndex) {
-            //text node
-            text(currentParent, htmlstr.slice(nextIndex, currentIndex));
-        }
-        if (match[3]) {
-            //start tag
-            currentParent = element(currentParent, match[3], match[4]);
-
-        } else if (match[1]) {
-            while(currentParent.type == 'element' && currentParent.tagName != match[1]){
-                currentParent = currentParent.parentNode;
+        try{
+            if (currentIndex > nextIndex) {
+                //text node
+                text(currentParent, htmlstr.slice(nextIndex, currentIndex));
             }
-            //end tag
-            currentParent = currentParent.parentNode;
-        } else if (match[2]) {
-            //comment
-            comment(currentParent, match[2])
-        }
+            if (match[3]) {
+                //start tag
+                currentParent = element(currentParent, match[3].toLowerCase(), match[4]);
+
+            } else if (match[1]) {
+                if(currentParent.type != 'root'){
+                    var tmpParent = currentParent;
+                    while(currentParent.type == 'element' && currentParent.tagName != match[1].toLowerCase()){
+                        currentParent = currentParent.parentNode;
+                        if(currentParent.type == 'root'){
+                            currentParent = tmpParent;
+                            throw 'break'
+                        }
+                    }
+                    //end tag
+                    currentParent = currentParent.parentNode;
+                }
+
+            } else if (match[2]) {
+                //comment
+                comment(currentParent, match[2])
+            }
+        }catch(e){}
+
         nextIndex = re_tag.lastIndex;
 
     }
