@@ -24,7 +24,7 @@ UE.plugins['image'] = function(){
                 (opt.height ? ' height="'+opt.height+'" ':'') +
                 (opt.alt?' alt="'+opt.alt+'"':'') +'/></p>';
             me.execCommand('inserthtml',str);
-debugger;
+
             if (flag) {
                 me.setHeight(options.initialFrameHeight + options.heightIncrement);
                 flag = false;
