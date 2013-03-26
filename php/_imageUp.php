@@ -46,5 +46,5 @@ $info = $up->getFileInfo();
  * }
  */
 
-//sleep(10);
+sleep(1);
 echo '{"url":"'.$info["url"].'","index":"'.$index.'","state":"'.$info["state"].'"}';
