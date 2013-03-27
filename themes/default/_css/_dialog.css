@@ -152,10 +152,10 @@
 /*link-dialog*/
 .edui-default .edui-for-link .edui-dialog-content {
     width: 400px;
-    height: 200px;
+    height: 120px;
 }
 /*video-dialog*/
 .edui-default .edui-for-insertvideo .edui-dialog-content {
     width: 550px;
-    height: 450px;
+    height: 470px;
 }

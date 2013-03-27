@@ -20,7 +20,7 @@
 }
 #preview {
     width: 440px;
-    margin-left: 65px;
+    margin:5px 0 0 65px;
     height: 365px;
     background-color: #ddd;
 }
@@ -32,4 +32,12 @@ fieldset input.txt {
     margin: 8px 5px;
     background: #FFF;
     border: 1px solid #d7d7d7;
+}
+.tip{
+    margin-left: 64px;
+}
+.tip a{
+    text-decoration: none;
+    color: #2d64b3;
+    margin: 0 5px;
 }
