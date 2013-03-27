@@ -33,6 +33,7 @@
             'ui/ui.js',
             'ui/uiutils.js',
             'ui/uibase.js',
+            'ui/separator.js',
             'ui/mask.js',
             'ui/popup.js',
             'ui/stateful.js',

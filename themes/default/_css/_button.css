@@ -9,8 +9,11 @@
     width: 20px !important;
     cursor: pointer;
 }
+
 .edui-default .edui-toolbar .edui-button .edui_disableIcon {
     _display: inline !important;
+    height: 20px !important;
+    width: 20px !important;
 }
 .edui-default .edui-toolbar .edui-button .edui-button-wrap {
     position: relative;
