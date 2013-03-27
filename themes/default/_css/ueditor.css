@@ -20,3 +20,5 @@
 /*-------独立按钮样式，按需加载-------*/
     /*弹出对话框样式*/
 @import "dialog.css";
+    /*分隔线*/
+@import "separtor.css";
