@@ -61,11 +61,7 @@
     height: 20px;
     width: 20px;
     cursor: pointer;
-    background: url("../images/icons-all.gif") no-repeat 0 -59px;
-}
-
-.edui-default .edui-dialog-closebutton .edui-state-hover .edui-button-body {
-    background: url("../images/icons-all.gif") no-repeat 0 -89px;
+    background: url("../images/dialog.gif") no-repeat 0 -92px;
 }
 
 .edui-default .edui-dialog-foot {
@@ -81,20 +77,38 @@
     margin-right: 10px;
 }
 
-.edui-default .edui-dialog-buttons .edui-button .edui-button-body {
-    background: url("../images/icons-all.gif") no-repeat;
-    height: 24px;
-    width: 96px;
+.edui-default .edui-dialog-buttons .edui-okbutton .edui-button-body {
+    background: url("../images/dialog.gif") no-repeat;
+    height: 31px;
+    width: 94px;
     font-size: 12px;
-    line-height: 24px;
+    line-height: 31px;
     text-align: center;
     cursor: default;
 }
-
-.edui-default .edui-dialog-buttons .edui-button .edui-state-hover .edui-button-body {
-    background: url("../images/icons-all.gif") no-repeat 0 -30px;
+.edui-default .edui-dialog-buttons .edui-okbutton .edui-state-hover .edui-button-body {
+    background: url("../images/dialog.gif") no-repeat -167px 0;
+}
+.edui-default .edui-dialog-buttons .edui-okbutton .edui-label{
+     color: #ffffff;
+ }
+.edui-default .edui-dialog-buttons .edui-cancelbutton .edui-button-body {
+    background: url("../images/dialog.gif") no-repeat 0 -50px ;
+    height: 31px;
+    width: 94px;
+    font-size: 12px;
+    line-height: 31px;
+    text-align: center;
+    cursor: default;
+    color: #000;
 }
 
+.edui-default .edui-dialog-buttons .edui-cancelbutton .edui-state-hover .edui-button-body {
+    background: url("../images/dialog.gif") no-repeat -167px -50px;
+}
+.edui-default .edui-dialog-buttons .edui-cancelbutton .edui-label{
+    color: #333;
+}
 .edui-default .edui-dialog iframe {
     border: 0;
     padding: 0;
@@ -131,7 +145,6 @@
     opacity: 0;
     filter: alpha(opacity = 0);
 }
-
 /*link-dialog*/
 .edui-default .edui-for-link .edui-dialog-content {
     width: 420px;
@@ -140,6 +153,6 @@
 }
 /*video-dialog*/
 .edui-default .edui-for-insertvideo .edui-dialog-content {
-    width: 590px;
+    width: 550px;
     height: 450px;
 }
