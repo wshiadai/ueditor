@@ -36,7 +36,6 @@
 
 .edui-default .edui-dialog-titlebar {
     height: 47px;
-    border-bottom: 2px solid #3daa11;
     position: relative;
     cursor: move;
 }
@@ -66,12 +65,13 @@
 }
 
 .edui-default .edui-dialog-foot {
+    margin-top: 15px;
     height: 40px;
 }
 
 .edui-default .edui-dialog-buttons {
-    position: absolute;
-    right: 0;
+    width: 210px;
+    margin: 0 auto;
 }
 
 .edui-default .edui-dialog-buttons .edui-button {
@@ -134,6 +134,9 @@
 
 .edui-default .edui-dialog-content {
     position: relative;
+    border-top: 2px solid #3daa11;
+    border-bottom: 1px solid #eeeeee;
+    margin: 0 20px;
 }
 
 .edui-default .dialogcontmask {
@@ -148,12 +151,11 @@
 }
 /*link-dialog*/
 .edui-default .edui-for-link .edui-dialog-content {
-    width: 420px;
+    width: 400px;
     height: 200px;
-    overflow: hidden;
 }
 /*video-dialog*/
 .edui-default .edui-for-insertvideo .edui-dialog-content {
     width: 550px;
-    height: 350px;
+    height: 450px;
 }

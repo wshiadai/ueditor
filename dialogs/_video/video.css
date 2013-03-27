@@ -3,7 +3,7 @@
     position: relative
 }
 .panel{
-    width: 500px;
+    width: 515px;
     margin: 0 auto;
 }
 .panel table td {
@@ -11,7 +11,7 @@
 }
 
 #videoUrl {
-    width: 420px;
+    width: 439px;
     height: 23px;
     line-height: 23px;
     margin: 8px 5px;
@@ -19,9 +19,9 @@
     border: 1px solid #d7d7d7;
 }
 #preview {
-    width: 421px;
+    width: 440px;
     margin-left: 65px;
-    height: 270px;
+    height: 365px;
     background-color: #ddd;
 }
 
@@ -32,7 +32,4 @@ fieldset input.txt {
     margin: 8px 5px;
     background: #FFF;
     border: 1px solid #d7d7d7;
-}
-
-label.url {
 }
