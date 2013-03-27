@@ -1,0 +1,7 @@
+/*分隔线*/
+.edui-default .edui-toolbar .edui-separator {
+    width: 1px;
+    height: 14px;
+    margin: 5px 4px 0 4px;
+    background: #dfe7d8;
+}
