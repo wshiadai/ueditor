@@ -386,6 +386,14 @@
             "autotypeset":{
                 title:"排版",
                 hoverTitle:"登录后才能使功能"
+            },
+            "link":{
+                title:"文字链",
+                hoverTitle:"登录后才能使功能"
+            },
+            "insertvideo":{
+                title:"多媒体按钮",
+                hoverTitle:"登录后才能使功能"
             }
         }
         //单位M

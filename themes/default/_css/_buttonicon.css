@@ -127,3 +127,57 @@
 .edui-default .deletemap .edui-button-body{
     width: 73px;
 }
+/*for link*/
+.edui-default .edui-for-link {
+    _display: inline !important;
+}
+
+.edui-default .edui-for-link .edui-icon {
+    background:url(../images/zhidao.png) -24px 7px no-repeat
+}
+
+.edui-default .edui-for-link .edui_disableIcon {
+    background:url(../images/zhidao.png) -24px 7px no-repeat
+}
+
+.edui-default .edui-for-link .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .edui-for-link .edui-button-body {
+    width: 62px;
+}
+.edui-default .edui-button.edui-for-link {
+    width: 66px;
+}
+.edui-default .edui-toolbar .edui-button.edui-for-link .edui-state-hover .edui-button-wrap {
+    background: url(../images/zhidao.png) 0 -210px no-repeat;
+}
+/*for insertvideo*/
+.edui-default .edui-for-insertvideo {
+    _display: inline !important;
+}
+
+.edui-default .edui-for-insertvideo .edui-icon {
+    background:url(../images/zhidao.png) -64px 6px no-repeat
+}
+
+.edui-default .edui-for-insertvideo .edui_disableIcon {
+    background:url(../images/zhidao.png) -64px 6px no-repeat
+}
+
+.edui-default .edui-for-insertvideo .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .edui-for-insertvideo .edui-button-body {
+    width: 90px;
+}
+.edui-default .edui-button.edui-for-insertvideo {
+    width: 94px;
+}
+.edui-default .edui-toolbar .edui-button.edui-for-insertvideo .edui-state-hover .edui-button-wrap {
+    background: url(../images/zhidao.png) 0 -181px no-repeat;
+}

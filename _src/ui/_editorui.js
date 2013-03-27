@@ -50,7 +50,7 @@
                 (function (cmd) {
                     editorui[cmd] = function (editor, iframeUrl, title) {
                         iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
-                        title = editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '';
+                        title = editor.options.buttonConfig[cmd].title;
 
                         var dialog;
                         //没有iframeUrl不创建dialog
@@ -88,6 +88,7 @@
                         var ui = new editorui.Button({
                             className:'edui-for-' + cmd,
                             title:title,
+                            label:title,
                             onclick:function () {
                                 if (dialog) {
                                     switch (cmd) {
@@ -112,6 +113,7 @@
                                 }
                             },
                             theme:editor.options.theme,
+                            showText:true,
                             disabled:cmd == 'scrawl' && editor.queryCommandState("scrawl") == -1
                         });
                         editorui.buttons[cmd] = ui;
