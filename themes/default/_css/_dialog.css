@@ -7,7 +7,7 @@
 .edui-default .edui-dialog-wrap {
     margin-right: 6px;
     margin-bottom: 6px;
-    border: 1px solid #3daa11;
+    border: 2px solid #3daa11;
 }
 
 .edui-default .edui-dialog-body {
@@ -35,16 +35,17 @@
 }
 
 .edui-default .edui-dialog-titlebar {
-    height: 26px;
-    border-bottom: 1px solid #3daa11;
+    height: 47px;
+    border-bottom: 2px solid #3daa11;
     position: relative;
     cursor: move;
 }
 .edui-default .edui-dialog-caption {
     font-weight: bold;
-    font-size: 12px;
-    line-height: 26px;
-    padding-left: 5px;
+    font-size: 16px;
+    color: #333;
+    line-height: 47px;
+    padding-left: 10px;
 }
 
 .edui-default .edui-dialog-draghandle {
@@ -154,5 +155,5 @@
 /*video-dialog*/
 .edui-default .edui-for-insertvideo .edui-dialog-content {
     width: 550px;
-    height: 450px;
+    height: 350px;
 }
