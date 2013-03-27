@@ -33,8 +33,8 @@
     };
 
     var iframeUrlMap = {
-        'link':'~/dialogs/link/link.html',
-        'insertvideo':'~/dialogs/video/video.html'
+        'link':'~/dialogs/_link/link.html',
+        'insertvideo':'~/dialogs/_video/video.html'
     };
     var dialogBtns = {
         noOk:[],
