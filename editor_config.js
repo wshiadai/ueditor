@@ -423,8 +423,10 @@
         ,autoSaveFrequency:60
         //快捷链接输入
         ,'linkList':[
-            { title:'百度','href':'www.baidu.com'},
+            { title:'百度asdfasdfasdfasdf','href':'www.baidu.com'},
             { title:'优酷',href:'www.youku.com'}
           ]
+        //链接字数限制
+        ,'linkWordLimit':9
     };
 })();

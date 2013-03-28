@@ -16,17 +16,20 @@
             this.Stateful_init();
         },
         getHtmlTpl:function () {
-            var list = this.editor.options.linkList, arr = [];
+            var opt = this.editor.options,
+                list = opt.linkList,
+                arr = [];
 
             arr.push('<div id="##" class="edui-linkpicker %%">' +
                 '<div class="edui-linkpicker-body">');
+
             for (var i = 0, item; item = list[i++];) {
-                var txt=item.title;
-                if(txt.length)
+                var txt = item.title;
+                if (txt.length > opt.linkWordLimit) {
+                    txt = txt.substring(0, opt.linkWordLimit) + "...";
+                }
                 arr.push('<div onclick="$$._onClick(event);" class="edui-linkpicker-item" stateful  _href="' +
-                    item.href + '" _title="' + item.title + '">' +
-                    item.title.length>7?item.title.substring(0,7) +
-                    + '</div>');
+                    item.href + '" _title="' + item.title + '">' + txt + '</div>');
             }
             arr.push('</div>' +
                 '<div onclick="$$._showDialog(event);" class="edui-linkpicker-edit edui-linkpicker-item">编辑</div>' +
