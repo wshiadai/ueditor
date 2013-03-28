@@ -41,54 +41,6 @@
      * ----------------分界线----------------------
      * for zhidao by xuheng
      * */
-    editorui["link"] = function (editor, iframeUrl, title,list) {
-        var cmd="link";
-        iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
-        title = editor.options.buttonConfig[cmd].title;
-        list = list || editor.options[cmd] || [];
-        if (!list.length) return;
-        var items = [];
-        for (var i = 0; i < list.length; i++) {
-            var size = list[i] + 'px';
-            items.push({
-                label:size,
-                value:size,
-                theme:editor.options.theme,
-                renderLabelHtml:function () {
-                    return '<div class="edui-label %%-label" style="line-height:1;font-size:' +
-                        this.value + '">' + (this.label || '') + '</div>';
-                }
-            });
-        }
-        var ui = new editorui.Combox({
-            editor:editor,
-            items:items,
-            title:title,
-            initValue:title,
-            onselect:function (t, index) {
-                editor.execCommand('insertlink', this.items[index].value);
-            },
-            onbuttonclick:function () {
-                this.showPopup();
-            },
-            className:'edui-for-' + cmd
-        });
-        editorui.buttons[cmd] = ui;
-        editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
-            if (!uiReady) {
-                var state = editor.queryCommandState('insertlink');
-                if (state == -1) {
-                    ui.setDisabled(true);
-                } else {
-                    ui.setDisabled(false);
-                    ui.setValue(editor.queryCommandValue('insertlink'));
-                }
-            }
-
-        });
-        return ui;
-    };
-
       editorui["link"] = function (editor, iframeUrl, title) {
         var cmd="link";
         iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
