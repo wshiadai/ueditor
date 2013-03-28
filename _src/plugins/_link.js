@@ -91,6 +91,7 @@ UE.plugins['link'] = function(){
     }
     UE.commands['link'] = {
         execCommand : function( cmdName, opt ) {
+            this.fireEvent("beforeinsertlink",opt);
             var range;
             opt._href && (opt._href = utils.unhtml(opt._href,/[<">]/g));
             opt.href && (opt.href = utils.unhtml(opt.href,/[<">]/g));
@@ -98,7 +99,6 @@ UE.plugins['link'] = function(){
             doLink(range=this.selection.getRange(),opt,this);
             //闭合都不加占位符，如果加了会在a后边多个占位符节点，导致a是图片背景组成的列表，出现空白问题
             range.collapse().select(true);
-            this.fireEvent("afterinsertlink");
         },
         queryCommandValue : function() {
             var range = this.selection.getRange(),
