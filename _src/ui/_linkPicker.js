@@ -16,18 +16,18 @@
             this.Stateful_init();
         },
         getHtmlTpl:function () {
-            var list = this.editor.options.linkList;
-            var start = '<div id="##" class="edui-linkpicker %%">' +
-                '<div class="edui-linkpicker-body">';
+            var list = this.editor.options.linkList, arr = [];
 
-            var str = "";
+            arr.push('<div id="##" class="edui-linkpicker %%">' +
+                '<div class="edui-linkpicker-body">');
             for (var i = 0, item; item = list[i++];) {
-                str += '<div onclick="$$._onClick(event);" class="edui-linkpicker-item" stateful>' + item.title + '</div>';
+                arr.push('<div onclick="$$._onClick(event);" class="edui-linkpicker-item" stateful>' + item.title + '</div>');
             }
-            var end = '</div>' +
-                '<div onclick="$$._showDialog(event);" class="edui-linkpicker-edit edui-linkpicker-item">编辑</div>'+
-                '</div>';
-            return start + str + end;
+            arr.push('</div>' +
+                '<div onclick="$$._showDialog(event);" class="edui-linkpicker-edit edui-linkpicker-item">编辑</div>' +
+                ' </div>');
+
+            return arr.join("");
         },
         getStateDom:function () {
             return this.target;
