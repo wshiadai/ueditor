@@ -414,7 +414,7 @@
         ,indexFlagFieldName:'position'
         //插入图片时编辑器长高的高度，单位px
         ,heightIncrement:150
-        ,isLogin:false
+        ,isLogin:true
         //自动长高最大高度
         ,initialMaxFrameHeight:420
         //是否开启自动保存
