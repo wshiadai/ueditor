@@ -40,6 +40,7 @@
         getStateDom:function () {
             return this.target;
         },
+
         _showDialog:function (evt) {
             this.editor.getDialog("link").open();
             Popup.postHide(evt);
