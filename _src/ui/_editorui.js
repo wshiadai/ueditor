@@ -37,7 +37,11 @@
         'insertvideo':'~/dialogs/_video/video.html'
     };
 
-    editorui["link"] = function (editor, iframeUrl, title) {
+    /*
+     * ----------------分界线----------------------
+     * for zhidao by xuheng
+     * */
+     editorui["link"] = function (editor, iframeUrl, title) {
         var cmd="link";
         iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
         title = editor.options.buttonConfig[cmd].title;
@@ -172,10 +176,7 @@
 
         return ui;
     };
-    /*
-    * ----------------分界线----------------------
-    * for zhidao by xuheng
-    * */
+
     var $ = function (id) {
         return document.getElementById(id);
     };
