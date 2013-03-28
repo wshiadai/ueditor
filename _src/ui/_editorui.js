@@ -44,7 +44,7 @@
     var $ = function (id) {
         return document.getElementById(id);
     };
-    var setState=function(ui,hovertitle){
+    var setState = function (ui, hovertitle) {
         if (!editor.options.isLogin) {
             var dom = ui.getDom(),
                 label = $(dom.id + "_body").children[1];
@@ -59,8 +59,8 @@
 
     var dialogs = ['link', 'insertvideo'];
 
-    for(var j= 0,dl;dl=dialogs[j++];){
-        (function(cmd){
+    for (var j = 0, dl; dl = dialogs[j++];) {
+        (function (cmd) {
             editorui[cmd] = function (editor, iframeUrl, title) {
                 iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
                 title = editor.options.buttonConfig[cmd].title;
@@ -103,7 +103,7 @@
                     title:hovertitle,
                     label:title || '',
                     onmouseover:cmd == "link" ? function () {
-                        if(editor.options.isLogin){
+                        if (editor.options.isLogin) {
                             var linkPop = new baidu.editor.ui.Popup({
                                 content:new baidu.editor.ui.LinkPicker({editor:editor}),
                                 editor:editor,
@@ -114,7 +114,7 @@
                         }
                     } : null,
                     onclick:function () {
-                        if (dialog) {
+                        if (editor.options.isLogin && dialog) {
                             dialog.render();
                             dialog.open();
                         }
@@ -124,7 +124,7 @@
                 });
                 editorui.buttons[cmd] = ui;
                 ui.addListener("renderReady", function () {
-                    setState(ui,hovertitle)
+                    setState(ui, hovertitle)
                 });
                 editor.addListener('selectionchange', function () {
                     //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
@@ -132,16 +132,14 @@
                     if (cmd in unNeedCheckState)return;
 
                     if (!editor.options.isLogin) {
-                        if (!editor.options.isLogin) {
-                            var dom = ui.getDom(),
-                                label = $(dom.id + "_body").children[1];
-                            label.style.color = "#999";
-                            dom.setAttribute("title", hovertitle);
+                        var dom = ui.getDom(),
+                            label = $(dom.id + "_body").children[1];
+                        label.style.color = "#999";
+                        dom.setAttribute("title", hovertitle);
 
-                            var icon = $(dom.id + "_body").children[0];
-                            domUtils.removeClasses(icon, ["edui-icon"]);
-                            domUtils.addClass(icon, "edui_disableIcon");
-                        }
+                        var icon = $(dom.id + "_body").children[0];
+                        domUtils.removeClasses(icon, ["edui-icon"]);
+                        domUtils.addClass(icon, "edui_disableIcon");
                         return;
                     }
                     var state = editor.queryCommandState(cmd);
@@ -242,7 +240,7 @@
                 }
             }
 
-            setState(ui,hovertitle);
+            setState(ui, hovertitle);
 
             window[checkupload] = function () {
                 //获取当前是否登录状态
@@ -389,7 +387,7 @@
             showText:true
         });
         ui.addListener("renderReady", function () {
-            setState(ui,hovertitle);
+            setState(ui, hovertitle);
         });
 
         editor.addListener('selectionchange', function () {
@@ -447,7 +445,7 @@
                     showText:true
                 });
                 ui.addListener("renderReady", function () {
-                    setState(ui,hoverTitle);
+                    setState(ui, hoverTitle);
                 });
 
                 editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
