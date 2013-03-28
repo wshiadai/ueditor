@@ -41,176 +41,114 @@
      * ----------------分界线----------------------
      * for zhidao by xuheng
      * */
-    editorui["link"] = function (editor, iframeUrl, title) {
-        var cmd = "link";
-        iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
-        title = editor.options.buttonConfig[cmd].title;
-        var hoverTitle = editor.options.buttonConfig[cmd].hoverTitle;
-        var dialog;
-        //没有iframeUrl不创建dialog
-        if (iframeUrl) {
-            dialog = new editorui.Dialog(utils.extend({
-                iframeUrl:editor.ui.mapUrl(iframeUrl),
-                editor:editor,
-                className:'edui-for-' + cmd,
-                title:title,
-                closeDialog:editor.getLang("closeDialog")
-            }, {
-                buttons:[
-                    {
-                        className:'edui-okbutton',
-                        label:editor.getLang("ok"),
+    var dialogs = ['link', 'insertvideo', 'autotypeset'];
+
+    for(var j= 0,dl;dl=dialogs[j++];){
+        (function(cmd){
+            editorui[cmd] = function (editor, iframeUrl, title) {
+                iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
+                title = editor.options.buttonConfig[cmd].title;
+                var hoverTitle = editor.options.buttonConfig[cmd].hoverTitle;
+                var dialog;
+                //没有iframeUrl不创建dialog
+                if (iframeUrl) {
+                    dialog = new editorui.Dialog(utils.extend({
+                        iframeUrl:editor.ui.mapUrl(iframeUrl),
                         editor:editor,
-                        onclick:function () {
-                            dialog.close(true);
+                        className:'edui-for-' + cmd,
+                        title:title,
+                        closeDialog:editor.getLang("closeDialog")
+                    }, {
+                        buttons:[
+                            {
+                                className:'edui-okbutton',
+                                label:editor.getLang("ok"),
+                                editor:editor,
+                                onclick:function () {
+                                    dialog.close(true);
+                                }
+                            },
+                            {
+                                className:'edui-cancelbutton',
+                                label:editor.getLang("cancel"),
+                                editor:editor,
+                                onclick:function () {
+                                    dialog.close(false);
+                                }
+                            }
+                        ]
+                    }));
+
+                    editor.ui._dialogs[cmd + "Dialog"] = dialog;
+                }
+
+                var ui = new editorui.Button({
+                    className:'edui-for-' + cmd,
+                    title:hoverTitle,
+                    label:title || '',
+                    onmouseover:cmd == "link" ? function () {
+                        var linkPop = new baidu.editor.ui.Popup({
+                            content:new baidu.editor.ui.LinkPicker({editor:editor}),
+                            editor:editor,
+                            className:'edui-linkPop'
+                        });
+                        linkPop.render();
+                        linkPop.showAnchor(this.getDom());
+                    } : null,
+                    onclick:function () {
+                        if (dialog) {
+                            dialog.render();
+                            dialog.open();
                         }
                     },
-                    {
-                        className:'edui-cancelbutton',
-                        label:editor.getLang("cancel"),
-                        editor:editor,
-                        onclick:function () {
-                            dialog.close(false);
-                        }
-                    }
-                ]
-            }));
-
-            editor.ui._dialogs[cmd + "Dialog"] = dialog;
-        }
-
-        var ui = new editorui.Button({
-            className:'edui-for-' + cmd,
-            title:hoverTitle,
-            label:title || '',
-            onmouseover:function () {
-                var linkPop = new baidu.editor.ui.Popup({
-                    content:new baidu.editor.ui.LinkPicker({editor:editor}),
-                    editor:editor,
-                    className:'edui-linkPop'
+                    theme:editor.options.theme,
+                    showText:true
                 });
-                linkPop.render();
-                linkPop.showAnchor(this.getDom());
-            },
-            onclick:function () {
-                if (dialog) {
-                    dialog.render();
-                    dialog.open();
-                }
-            },
-            theme:editor.options.theme,
-            showText:true
-        });
-        editorui.buttons[cmd] = ui;
-        ui.addListener("renderReady", function () {
-            if (!editor.options.isLogin) {
-                var dom = ui.getDom(),
-                    label = $(dom.id + "_body").children[1],
-                    icon = $(dom.id + "_body").children[0];
-                label.style.color = "#999";
-                dom.setAttribute("title", hoverTitle);
-                domUtils.removeClasses(icon, ["edui-icon"]);
-                domUtils.addClass(icon, "edui_disableIcon");
-            }
-        });
-        editor.addListener('selectionchange', function () {
-            //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
-            var unNeedCheckState = {'edittable':1};
-            if (cmd in unNeedCheckState)return;
-
-            var state = editor.queryCommandState(cmd);
-            if (ui.getDom()) {
-                ui.setDisabled(state == -1);
-                ui.setChecked(state);
-            }
-
-        });
-
-        return ui;
-    };
-
-    editorui["insertvideo"] = function (editor, iframeUrl, title) {
-        var cmd = "insertvideo";
-        iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
-        title = editor.options.buttonConfig[cmd].title;
-        var hoverTitle = editor.options.buttonConfig[cmd].hoverTitle;
-
-        var dialog;
-        //没有iframeUrl不创建dialog
-        if (iframeUrl) {
-            dialog = new editorui.Dialog(utils.extend({
-                iframeUrl:editor.ui.mapUrl(iframeUrl),
-                editor:editor,
-                className:'edui-for-' + cmd,
-                title:title,
-                closeDialog:editor.getLang("closeDialog")
-            }, {
-                buttons:[
-                    {
-                        className:'edui-okbutton',
-                        label:editor.getLang("ok"),
-                        editor:editor,
-                        onclick:function () {
-                            dialog.close(true);
-                        }
-                    },
-                    {
-                        className:'edui-cancelbutton',
-                        label:editor.getLang("cancel"),
-                        editor:editor,
-                        onclick:function () {
-                            dialog.close(false);
-                        }
+                editorui.buttons[cmd] = ui;
+                ui.addListener("renderReady", function () {
+                    if (!editor.options.isLogin) {
+                        var dom = ui.getDom(),
+                            label = $(dom.id + "_body").children[1],
+                            icon = $(dom.id + "_body").children[0];
+                        label.style.color = "#999";
+                        dom.setAttribute("title", hoverTitle);
+                        domUtils.removeClasses(icon, ["edui-icon"]);
+                        domUtils.addClass(icon, "edui_disableIcon");
                     }
-                ]
-            }));
+                });
+                editor.addListener('selectionchange', function () {
+                    //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
+                    var unNeedCheckState = {'edittable':1};
+                    if (cmd in unNeedCheckState)return;
 
-            editor.ui._dialogs[cmd + "Dialog"] = dialog;
-        }
+                    var state = editor.queryCommandState(cmd);
+                    if (ui.getDom()) {
+                        ui.setDisabled(state == -1);
+                        ui.setChecked(state);
+                    }
 
-        var ui = new editorui.Button({
-            className:'edui-for-' + cmd,
-            title:hoverTitle,
-            label:title || '',
-            onclick:function () {
-                if (dialog) {
-                    dialog.render();
-                    dialog.open();
-                }
-            },
-            theme:editor.options.theme,
-            showText:true
-        });
-        editorui.buttons[cmd] = ui;
-        ui.addListener("renderReady", function () {
-            if (!editor.options.isLogin) {
-                var dom = ui.getDom(),
-                    label = $(dom.id + "_body").children[1],
-                    icon = $(dom.id + "_body").children[0];
-                label.style.color = "#999";
-                dom.setAttribute("title", hoverTitle);
-                domUtils.removeClasses(icon, ["edui-icon"]);
-                domUtils.addClass(icon, "edui_disableIcon");
-            }
-        });
-        editor.addListener('selectionchange', function () {
-            //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
-            var unNeedCheckState = {'edittable':1};
-            if (cmd in unNeedCheckState)return;
+                });
 
-            var state = editor.queryCommandState(cmd);
-            if (ui.getDom()) {
-                ui.setDisabled(state == -1);
-                ui.setChecked(state);
-            }
+                return ui;
+            };
+        })(dl);
+    }
 
-        });
-
-        return ui;
-    };
 
     var $ = function (id) {
         return document.getElementById(id);
+    };
+    var setState=function(ui,hovertitle){
+        if (!editor.options.isLogin) {
+            var dom = ui.getDom(),
+                label = $(dom.id + "_body").children[1];
+            label.style.color = "#999";
+            dom.setAttribute("title", hovertitle);
+
+            var icon = $(dom.id + "_body").children[0];
+            domUtils.removeClasses(icon, ["edui-icon"]);
+            domUtils.addClass(icon, "edui_disableIcon");
+        }
     };
     editorui.insertimage = function (editor) {
         var iframeUrl = editor.options.buttonConfig["insertimage"],
@@ -296,16 +234,7 @@
                 }
             }
 
-            if (!editor.options.isLogin) {
-                var dom = ui.getDom(),
-                    label = $(dom.id + "_body").children[1];
-                label.style.color = "#999";
-                dom.setAttribute("title", hovertitle);
-
-                var icon = $(dom.id + "_body").children[0];
-                domUtils.removeClasses(icon, ["edui-icon"]);
-                domUtils.addClass(icon, "edui_disableIcon");
-            }
+            setState(ui,hovertitle);
 
             window[checkupload] = function () {
                 //获取当前是否登录状态
@@ -439,10 +368,10 @@
         var iframeUrl = editor.options.buttonConfig["insertmap"],
             title = iframeUrl.title,
             unTitle = iframeUrl.unTitle,
-            hoverTitle = iframeUrl.hoverTitle;
+            hovertitle = iframeUrl.hoverTitle;
         var ui = new editorui.Button({
             className:'edui-for-insertmap insertmap',
-            title:hoverTitle,
+            title:hovertitle,
             label:title,
             onclick:function () {
                 if (editor.options.isLogin) {
@@ -452,15 +381,7 @@
             showText:true
         });
         ui.addListener("renderReady", function () {
-            if (!editor.options.isLogin) {
-                var dom = ui.getDom(),
-                    label = $(dom.id + "_body").children[1],
-                    icon = $(dom.id + "_body").children[0];
-                label.style.color = "#999";
-                dom.setAttribute("title", hoverTitle);
-                domUtils.removeClasses(icon, ["edui-icon"]);
-                domUtils.addClass(icon, "edui_disableIcon");
-            }
+            setState(ui,hovertitle);
         });
 
         editor.addListener('selectionchange', function () {
@@ -469,7 +390,7 @@
                 label = $(dom.id + "_body").children[1];
             if (!editor.options.isLogin) {
                 label.style.color = "#999";
-                ui.getDom().setAttribute("title", hoverTitle);
+                ui.getDom().setAttribute("title", hovertitle);
 
                 var icon = $(dom.id + "_body").children[0];
                 domUtils.removeClasses(icon, ["edui-icon"]);
@@ -491,7 +412,7 @@
                 };
                 ui.removeClass(["deletemap"]);
                 ui.addClass("insertmap");
-                ui.getDom().setAttribute("title", hoverTitle);
+                ui.getDom().setAttribute("title", hovertitle);
                 label.innerHTML = title;
             }
         });
@@ -518,15 +439,7 @@
                     showText:true
                 });
                 ui.addListener("renderReady", function () {
-                    if (!editor.options.isLogin) {
-                        var dom = ui.getDom(),
-                            label = $(dom.id + "_body").children[1];
-                        label.style.color = "#999";
-                        dom.setAttribute("title", hoverTitle);
-                        var icon = $(dom.id + "_body").children[0];
-                        domUtils.removeClasses(icon, ["edui-icon"]);
-                        domUtils.addClass(icon, "edui_disableIcon");
-                    }
+                    setState(ui,hoverTitle);
                 });
 
                 editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
