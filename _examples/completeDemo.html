@@ -65,6 +65,9 @@
     editor.addListener("beforeexeccmd",function(type,cmd){
     });
 
+    //插入链接后
+    editor.addListener("afterinsertlink",function(type,cmd){
+    });
     //服务器端输出格式
     //1、成功保存
     // '<script type="text/javascript">parent.baidu.editor.success({"index":"'.$index.'","url":"'.$url.'"})<\/script>';
