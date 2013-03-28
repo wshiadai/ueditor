@@ -4,8 +4,13 @@
     font-size: 12px;
     cursor: default;
 }
-.edui-default .edui-linkpicker-body .edui-linkpicker-item {
+.edui-default .edui-linkpicker-item {
     padding:5px 10px;
+    cursor: pointer;
+}
+.edui-default .edui-linkpicker-edit {
+    color: #133db6;
+    font-size: 12px;
 }
 .edui-default .edui-linkpicker-body .edui-linkpicker-item.edui-state-hover {
     background-color: #ebf6e6;

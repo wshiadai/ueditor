@@ -24,18 +24,20 @@
             for (var i = 0, item; item = list[i++];) {
                 str += '<div onclick="$$._onClick(event);" class="edui-linkpicker-item" stateful>' + item.title + '</div>';
             }
-            var end = '</div></div>';
+            var end = '</div>' +
+                '<div onclick="$$._showDialog(event);" class="edui-linkpicker-edit edui-linkpicker-item">编辑</div>'+
+                '</div>';
             return start + str + end;
         },
         getStateDom:function () {
             return this.target;
         },
+        _showDialog:function (evt) {
+            this.editor.getDialog("link").open();
+            Popup.postHide(evt);
+        },
         _onClick:function (evt) {
-            var target = evt.target || evt.srcElement;
-            if (/icon/.test(target.className)) {
-                this.items[target.parentNode.getAttribute("index")].onclick();
-                Popup.postHide(evt);
-            }
+
         },
         _UIBase_render:UIBase.prototype.render
     };
