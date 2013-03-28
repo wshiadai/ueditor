@@ -421,5 +421,10 @@
         ,autoSaveEnabled:false
         //自动保存频率，单位秒
         ,autoSaveFrequency:60
+        //快捷链接输入
+        ,'linkList':[
+            { title:'百度','href':'www.baidu.com'},
+            { title:'优酷',href:'www.youku.com'}
+          ]
     };
 })();

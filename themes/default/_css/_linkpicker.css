@@ -1,0 +1,12 @@
+/*链接弹出菜单*/
+.edui-default .edui-linkpicker .edui-linkpicker-body {
+    width: 120px;
+    font-size: 12px;
+    cursor: default;
+}
+.edui-default .edui-linkpicker-body .edui-linkpicker-item {
+    padding:5px 10px;
+}
+.edui-default .edui-linkpicker-body .edui-linkpicker-item.edui-state-hover {
+    background-color: #ebf6e6;
+}

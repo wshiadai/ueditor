@@ -14,7 +14,7 @@
     /*按钮icon*/
 @import "_buttonicon.css";
     /*弹出菜单*/
-@import "popup.css";
+@import "_popup.css";
 
 
 /*-------独立按钮样式，按需加载-------*/
@@ -22,3 +22,5 @@
 @import "_dialog.css";
     /*分隔线*/
 @import "_separtor.css";
+    /*快捷链接弹出菜单*/
+@import "_linkpicker.css";
