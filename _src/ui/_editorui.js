@@ -41,6 +41,22 @@
      * ----------------分界线----------------------
      * for zhidao by xuheng
      * */
+    var $ = function (id) {
+        return document.getElementById(id);
+    };
+    var setState=function(ui,hovertitle){
+        if (!editor.options.isLogin) {
+            var dom = ui.getDom(),
+                label = $(dom.id + "_body").children[1];
+            label.style.color = "#999";
+            dom.setAttribute("title", hovertitle);
+
+            var icon = $(dom.id + "_body").children[0];
+            domUtils.removeClasses(icon, ["edui-icon"]);
+            domUtils.addClass(icon, "edui_disableIcon");
+        }
+    };
+
     var dialogs = ['link', 'insertvideo'];
 
     for(var j= 0,dl;dl=dialogs[j++];){
@@ -48,7 +64,7 @@
             editorui[cmd] = function (editor, iframeUrl, title) {
                 iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
                 title = editor.options.buttonConfig[cmd].title;
-                var hoverTitle = editor.options.buttonConfig[cmd].hoverTitle;
+                var hovertitle = editor.options.buttonConfig[cmd].hoverTitle;
                 var dialog;
                 //没有iframeUrl不创建dialog
                 if (iframeUrl) {
@@ -84,7 +100,7 @@
 
                 var ui = new editorui.Button({
                     className:'edui-for-' + cmd,
-                    title:hoverTitle,
+                    title:hovertitle,
                     label:title || '',
                     onmouseover:cmd == "link" ? function () {
                         if(editor.options.isLogin){
@@ -108,21 +124,26 @@
                 });
                 editorui.buttons[cmd] = ui;
                 ui.addListener("renderReady", function () {
-                    if (!editor.options.isLogin) {
-                        var dom = ui.getDom(),
-                            label = $(dom.id + "_body").children[1],
-                            icon = $(dom.id + "_body").children[0];
-                        label.style.color = "#999";
-                        dom.setAttribute("title", hoverTitle);
-                        domUtils.removeClasses(icon, ["edui-icon"]);
-                        domUtils.addClass(icon, "edui_disableIcon");
-                    }
+                    setState(ui,hovertitle)
                 });
                 editor.addListener('selectionchange', function () {
                     //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
                     var unNeedCheckState = {'edittable':1};
                     if (cmd in unNeedCheckState)return;
 
+                    if (!editor.options.isLogin) {
+                        if (!editor.options.isLogin) {
+                            var dom = ui.getDom(),
+                                label = $(dom.id + "_body").children[1];
+                            label.style.color = "#999";
+                            dom.setAttribute("title", hovertitle);
+
+                            var icon = $(dom.id + "_body").children[0];
+                            domUtils.removeClasses(icon, ["edui-icon"]);
+                            domUtils.addClass(icon, "edui_disableIcon");
+                        }
+                        return;
+                    }
                     var state = editor.queryCommandState(cmd);
                     if (ui.getDom()) {
                         ui.setDisabled(state == -1);
@@ -137,21 +158,6 @@
     }
 
 
-    var $ = function (id) {
-        return document.getElementById(id);
-    };
-    var setState=function(ui,hovertitle){
-        if (!editor.options.isLogin) {
-            var dom = ui.getDom(),
-                label = $(dom.id + "_body").children[1];
-            label.style.color = "#999";
-            dom.setAttribute("title", hovertitle);
-
-            var icon = $(dom.id + "_body").children[0];
-            domUtils.removeClasses(icon, ["edui-icon"]);
-            domUtils.addClass(icon, "edui_disableIcon");
-        }
-    };
     editorui.insertimage = function (editor) {
         var iframeUrl = editor.options.buttonConfig["insertimage"],
             title = iframeUrl['title'],
@@ -448,6 +454,7 @@
                     var state = editor.queryCommandState(cmd),
                         dom = ui.getDom(),
                         label = $(dom.id + "_body").children[1];
+
                     if (!editor.options.isLogin) {
                         label.style.color = "#999";
                         dom.setAttribute("title", hoverTitle);
