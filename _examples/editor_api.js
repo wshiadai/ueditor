@@ -20,7 +20,7 @@
             'plugins/inserthtml.js',
             'plugins/_autotypeset.js',
             'plugins/_image.js',
-            'plugins/link.js',
+            'plugins/_link.js',
             'plugins/selectall.js',
             'plugins/wordcount.js',
             'plugins/undo.js',
