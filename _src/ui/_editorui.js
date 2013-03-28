@@ -83,6 +83,15 @@
             className:'edui-for-' + cmd,
             title:title,
             label:title,
+            onmouseover:function(){
+               var linkPop = new baidu.editor.ui.Popup({
+                    content:new baidu.editor.ui.LinkPicker({editor:editor}),
+                    editor:editor,
+                    className:'edui-wordpastepop'
+                });
+                linkPop.render();
+                linkPop.showAnchor(this.getDom());
+            },
             onclick:function () {
                 if (dialog) {
                     dialog.render();
