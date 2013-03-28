@@ -87,7 +87,7 @@
                var linkPop = new baidu.editor.ui.Popup({
                     content:new baidu.editor.ui.LinkPicker({editor:editor}),
                     editor:editor,
-                    className:'edui-wordpastepop'
+                    className:'edui-linkPop'
                 });
                 linkPop.render();
                 linkPop.showAnchor(this.getDom());
