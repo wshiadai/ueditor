@@ -87,13 +87,15 @@
                     title:hoverTitle,
                     label:title || '',
                     onmouseover:cmd == "link" ? function () {
-                        var linkPop = new baidu.editor.ui.Popup({
-                            content:new baidu.editor.ui.LinkPicker({editor:editor}),
-                            editor:editor,
-                            className:'edui-linkPop'
-                        });
-                        linkPop.render();
-                        linkPop.showAnchor(this.getDom());
+                        if(editor.options.isLogin){
+                            var linkPop = new baidu.editor.ui.Popup({
+                                content:new baidu.editor.ui.LinkPicker({editor:editor}),
+                                editor:editor,
+                                className:'edui-linkPop'
+                            });
+                            linkPop.render();
+                            linkPop.showAnchor(this.getDom());
+                        }
                     } : null,
                     onclick:function () {
                         if (dialog) {
