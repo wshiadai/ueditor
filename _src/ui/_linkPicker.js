@@ -21,7 +21,7 @@
                 arr = [];
 
             arr.push('<div id="##" class="edui-linkpicker %%">' +
-                '<div class="edui-linkpicker-body">');
+                '<div class="edui-linkpicker-body" style="height:' + opt.linkCountLimit * opt.linkSingleHeight + 'px;">');
 
             for (var i = 0, item; item = list[i++];) {
                 var txt = item.title;

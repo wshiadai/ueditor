@@ -424,9 +424,21 @@
         //快捷链接输入
         ,'linkList':[
             { title:'百度asdfasdfasdfasdf','href':'www.baidu.com'},
+            { title:'优酷',href:'www.youku.com'},
+            { title:'百度asdfasdfasdfasdf','href':'www.baidu.com'},
+            { title:'优酷',href:'www.youku.com'},
+            { title:'百度asdfasdfasdfasdf','href':'www.baidu.com'},
+            { title:'优酷',href:'www.youku.com'},
+            { title:'百度asdfasdfasdfasdf','href':'www.baidu.com'},
+            { title:'优酷',href:'www.youku.com'},
+            { title:'百度asdfasdfasdfasdf','href':'www.baidu.com'},
             { title:'优酷',href:'www.youku.com'}
           ]
         //链接字数限制
-        ,'linkWordLimit':9
+        ,'linkWordLimit':7
+        //链接条数限制
+        ,'linkCountLimit':5
+        //单条链接高度
+        ,'linkSingleHeight':24
     };
 })();

@@ -3,6 +3,7 @@
     width: 120px;
     font-size: 12px;
     cursor: default;
+    overflow-y: auto;
 }
 .edui-default .edui-linkpicker-item {
     padding:5px 10px;
