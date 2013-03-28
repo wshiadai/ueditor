@@ -36,108 +36,142 @@
         'link':'~/dialogs/_link/link.html',
         'insertvideo':'~/dialogs/_video/video.html'
     };
-    var dialogBtns = {
-        noOk:[],
-        ok:['link','insertvideo']
-    };
-    for (var p in dialogBtns) {
-        (function (type, vals) {
-            for (var i = 0, ci; ci = vals[i++];) {
-                //todo opera下存在问题
-                if (browser.opera && ci === "searchreplace") {
-                    continue;
-                }
-                (function (cmd) {
-                    editorui[cmd] = function (editor, iframeUrl, title) {
-                        iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
-                        title = editor.options.buttonConfig[cmd].title;
 
-                        var dialog;
-                        //没有iframeUrl不创建dialog
-                        if (iframeUrl) {
-                            dialog = new editorui.Dialog(utils.extend({
-                                iframeUrl:editor.ui.mapUrl(iframeUrl),
-                                editor:editor,
-                                className:'edui-for-' + cmd,
-                                title:title,
-                                closeDialog:editor.getLang("closeDialog")
-                            }, type == 'ok' ? {
-                                buttons:[
-                                    {
-                                        className:'edui-okbutton',
-                                        label:editor.getLang("ok"),
-                                        editor:editor,
-                                        onclick:function () {
-                                            dialog.close(true);
-                                        }
-                                    },
-                                    {
-                                        className:'edui-cancelbutton',
-                                        label:editor.getLang("cancel"),
-                                        editor:editor,
-                                        onclick:function () {
-                                            dialog.close(false);
-                                        }
-                                    }
-                                ]
-                            } : {}));
+    editorui["link"] = function (editor, iframeUrl, title) {
+        var cmd="link";
+        iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
+        title = editor.options.buttonConfig[cmd].title;
 
-                            editor.ui._dialogs[cmd + "Dialog"] = dialog;
+        var dialog;
+        //没有iframeUrl不创建dialog
+        if (iframeUrl) {
+            dialog = new editorui.Dialog(utils.extend({
+                iframeUrl:editor.ui.mapUrl(iframeUrl),
+                editor:editor,
+                className:'edui-for-' + cmd,
+                title:title,
+                closeDialog:editor.getLang("closeDialog")
+            }, {
+                buttons:[
+                    {
+                        className:'edui-okbutton',
+                        label:editor.getLang("ok"),
+                        editor:editor,
+                        onclick:function () {
+                            dialog.close(true);
                         }
+                    },
+                    {
+                        className:'edui-cancelbutton',
+                        label:editor.getLang("cancel"),
+                        editor:editor,
+                        onclick:function () {
+                            dialog.close(false);
+                        }
+                    }
+                ]
+            } ));
 
-                        var ui = new editorui.Button({
-                            className:'edui-for-' + cmd,
-                            title:title,
-                            label:title,
-                            onclick:function () {
-                                if (dialog) {
-                                    switch (cmd) {
-                                        case "wordimage":
-                                            editor.execCommand("wordimage", "word_img");
-                                            if (editor.word_img) {
-                                                dialog.render();
-                                                dialog.open();
-                                            }
-                                            break;
-                                        case "scrawl":
-                                            if (editor.queryCommandState("scrawl") != -1) {
-                                                dialog.render();
-                                                dialog.open();
-                                            }
+            editor.ui._dialogs[cmd + "Dialog"] = dialog;
+        }
 
-                                            break;
-                                        default:
-                                            dialog.render();
-                                            dialog.open();
-                                    }
-                                }
-                            },
-                            theme:editor.options.theme,
-                            showText:true,
-                            disabled:cmd == 'scrawl' && editor.queryCommandState("scrawl") == -1
-                        });
-                        editorui.buttons[cmd] = ui;
-                        editor.addListener('selectionchange', function () {
-                            //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
-                            var unNeedCheckState = {'edittable':1};
-                            if (cmd in unNeedCheckState)return;
+        var ui = new editorui.Button({
+            className:'edui-for-' + cmd,
+            title:title,
+            label:title,
+            onclick:function () {
+                if (dialog) {
+                    dialog.render();
+                    dialog.open();
+                }
+            },
+            theme:editor.options.theme,
+            showText:true
+        });
+        editorui.buttons[cmd] = ui;
+        editor.addListener('selectionchange', function () {
+            //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
+            var unNeedCheckState = {'edittable':1};
+            if (cmd in unNeedCheckState)return;
 
-                            var state = editor.queryCommandState(cmd);
-                            if (ui.getDom()) {
-                                ui.setDisabled(state == -1);
-                                ui.setChecked(state);
-                            }
-
-                        });
-
-                        return ui;
-                    };
-                })(ci.toLowerCase())
+            var state = editor.queryCommandState(cmd);
+            if (ui.getDom()) {
+                ui.setDisabled(state == -1);
+                ui.setChecked(state);
             }
-        })(p, dialogBtns[p])
-    }
 
+        });
 
+        return ui;
+    };
+
+    editorui["insertvideo"] = function (editor, iframeUrl, title) {
+        var cmd="insertvideo";
+        iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
+        title = editor.options.buttonConfig[cmd].title;
+
+        var dialog;
+        //没有iframeUrl不创建dialog
+        if (iframeUrl) {
+            dialog = new editorui.Dialog(utils.extend({
+                iframeUrl:editor.ui.mapUrl(iframeUrl),
+                editor:editor,
+                className:'edui-for-' + cmd,
+                title:title,
+                closeDialog:editor.getLang("closeDialog")
+            },  {
+                buttons:[
+                    {
+                        className:'edui-okbutton',
+                        label:editor.getLang("ok"),
+                        editor:editor,
+                        onclick:function () {
+                            dialog.close(true);
+                        }
+                    },
+                    {
+                        className:'edui-cancelbutton',
+                        label:editor.getLang("cancel"),
+                        editor:editor,
+                        onclick:function () {
+                            dialog.close(false);
+                        }
+                    }
+                ]
+            }));
+
+            editor.ui._dialogs[cmd + "Dialog"] = dialog;
+        }
+
+        var ui = new editorui.Button({
+            className:'edui-for-' + cmd,
+            title:title,
+            label:title,
+            onclick:function () {
+                if (dialog) {
+                    dialog.render();
+                    dialog.open();
+                }
+            },
+            theme:editor.options.theme,
+            showText:true
+        });
+        editorui.buttons[cmd] = ui;
+        editor.addListener('selectionchange', function () {
+            //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
+            var unNeedCheckState = {'edittable':1};
+            if (cmd in unNeedCheckState)return;
+
+            var state = editor.queryCommandState(cmd);
+            if (ui.getDom()) {
+                ui.setDisabled(state == -1);
+                ui.setChecked(state);
+            }
+
+        });
+
+        return ui;
+    };
     /*
     * ----------------分界线----------------------
     * for zhidao by xuheng
