@@ -18,10 +18,12 @@
         getHtmlTpl:function () {
             var opt = this.editor.options,
                 list = opt.linkList,
-                arr = [];
+                arr = [], height = "";
+
+            height = list.length > opt.linkCountLimit ? (opt.linkCountLimit * opt.linkSingleHeight + 'px') : "";
 
             arr.push('<div id="##" class="edui-linkpicker %%">' +
-                '<div class="edui-linkpicker-body" style="height:' + opt.linkCountLimit * opt.linkSingleHeight + 'px;">');
+                '<div class="edui-linkpicker-body" style="height:' + height + '">');
 
             for (var i = 0, item; item = list[i++];) {
                 var txt = item.title;
