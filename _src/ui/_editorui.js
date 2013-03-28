@@ -41,7 +41,7 @@
      * ----------------分界线----------------------
      * for zhidao by xuheng
      * */
-    var dialogs = ['link', 'insertvideo', 'autotypeset'];
+    var dialogs = ['link', 'insertvideo'];
 
     for(var j= 0,dl;dl=dialogs[j++];){
         (function(cmd){
