@@ -21,8 +21,12 @@
             arr.push('<div id="##" class="edui-linkpicker %%">' +
                 '<div class="edui-linkpicker-body">');
             for (var i = 0, item; item = list[i++];) {
+                var txt=item.title;
+                if(txt.length)
                 arr.push('<div onclick="$$._onClick(event);" class="edui-linkpicker-item" stateful  _href="' +
-                    item.href + '" _title="' + item.title + '">' + item.title + '</div>');
+                    item.href + '" _title="' + item.title + '">' +
+                    item.title.length>7?item.title.substring(0,7) +
+                    + '</div>');
             }
             arr.push('</div>' +
                 '<div onclick="$$._showDialog(event);" class="edui-linkpicker-edit edui-linkpicker-item">编辑</div>' +
