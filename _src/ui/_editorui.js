@@ -299,6 +299,179 @@
         return ui;
     };
 
+    editorui['uploadfile'] = function (editor) {
+        var cmd = 'uploadfile',
+            timestamp = +new Date(),
+            placeholderId = 'swfUploadPlaceholder' + timestamp,
+            uploadProgressId = 'swfUploadUploadProgress' + timestamp,
+            flashContainerId = 'swfUploadflashContainerId' + timestamp,
+            title = '上传',
+            hoverTitle = '登录后才能使用功能';
+
+        var ui = new editorui.Button({
+            className:'edui-for-' + cmd,
+            title:hoverTitle,
+            label:title,
+            showText:true,
+            getHtmlTpl:function () {
+                return '<div id="##" class="edui-box %%">' +
+                    '<div id="##_state" stateful>' +
+                    '<div class="%%-wrap"><div id="##_body" unselectable="on" ' + (this.title ? 'title="' + this.title + '"' : '') +
+                    ' class="%%-body" onmousedown="return false;" onclick="return $$._onClick();">' +
+                    (this.showIcon ? '<div class="edui-box edui-icon"></div>' : '') +
+                    (this.showText ? '<div class="edui-box edui-label">' + this.label + '</div>' : '') +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="ue_flash" id="' + flashContainerId + '"><div id="' + placeholderId + '"></div></div>' +
+                    '</div>' +
+                    '</div>';
+            }
+        });
+
+        editor.addListener('ready', function () {
+            var div = document.createElement("div");
+            div.id = uploadProgressId;
+            div.innerHTML = '<div class="progressWrapper" style="display:none;">' +
+                '<div class="fileIcon icon_file_default"></div>' +
+                '<div class="progressName textClip"></div>' +
+                '<div class="progressSize"></div>' +
+                '<div class="progressRename">' +
+                '<input class="progressRenameValue" type="text">' +
+                '<a class="btn btn-20-green progressRenameBtn" rel="nofollow"><em><b>确定</b></em></a>' +
+                '</div>' +
+                '<div class="progressMessage"></div>' +
+                '<div class="progressBarWrapper">' +
+                '<div class="progressBar"></div>' +
+                '<span class="progressBarText"></span>' +
+                '</div>' +
+                '<a class="progressCancel" href="#">取消</a>' +
+                '<div class="progressFileOperator">' +
+                '<a href="#" class="rename">重命名</a>' +
+                '<a href="#" class="remove">删除</a>' +
+                '</div>' +
+                '</div>';
+            editor.ui.getDom().insertBefore(div, this.ui.getDom("iframeholder"));
+            editor.uploadFile = {fileInfo:null, backFileInfo:null, status:'ready', errorCode:null};
+            editor.swfupload = new SWFUpload({
+                flash_url:editor.options.swfUploadFlashUrl,
+                upload_url:editor.options.swfUploadUrl,
+                file_post_name:editor.options.swfUploadPostName,
+                post_params:editor.options.swfUploadPostParams,
+                file_types:"*.*",
+                file_types_description:"All Files",
+                file_queue_limit:0,
+                file_size_limit : "2 GB",
+                custom_settings:{                                         //自定义设置，用户可在此向服务器传递自定义变量
+                    progressTarget:uploadProgressId,
+                    swfUploadUrl:editor.options.swfUploadUrl,
+                    swfUploadDir:editor.options.swfUploadDir,
+                    isLogin:editor.options.isLogin,
+                    isEditorFile:false,
+                    isUploading:false,
+                    successCount:0,
+                    currentFile:null,
+                    getBindUploadFile:function () {
+                        return editor.uploadFile.fileInfo;
+                    },
+                    setBindUploadFile:function (a, b) {
+                        if (a == null) {
+                            editor.uploadFile.fileInfo = null;
+                        } else if (typeof a == "object") {
+                            editor.uploadFile.fileInfo = a;
+                        } else if (typeof a == "string") {
+                            if (editor.uploadFile.fileInfo == null) {
+                                editor.uploadFile.fileInfo = {};
+                            }
+                            editor.uploadFile.fileInfo[a] = b;
+                        }
+                    },
+                    setBindUploadStatus:function (state, errorCode) {
+                        editor.uploadFile.status = state;
+                        if (state == 'error') editor.uploadFile.errorCode = errorCode;
+                        else editor.uploadFile.errorCode = null;
+                        // ready    就绪，未上传
+                        // uploading上传中
+                        // finish   上传结束等待文件检查
+                        // complete 检查完成，上传成功
+                        // error    上传出错
+                    },
+                    setBindBackupFile:function (a, b) {
+                        if (a == null) {
+                            editor.uploadFile.backFileInfo = null;
+                        } else if (typeof a == "object") {
+                            editor.uploadFile.backFileInfo = a;
+                        } else if (typeof a == "string") {
+                            if (editor.uploadFile.backFileInfo == null) {
+                                editor.uploadFile.backFileInfo = {};
+                            }
+                            editor.uploadFile.backFileInfo[a] = b;
+                        }
+                    },
+                    setEditorStatusBar:function(msg){
+                        if (T('.f-red', editor.container).length){
+                            T(".edui-editor-wordcount", editor.container).eq(0).html(msg);
+                        }
+                    }
+                },
+                // 按钮设置
+                button_action:SWFUpload.BUTTON_ACTION.SELECT_FILE,
+                button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+                button_cursor: SWFUpload.CURSOR.HAND,
+                button_placeholder_id : placeholderId,
+                button_width:51,
+                button_height: 24,
+                // SWFupload对象加载设置
+                minimum_flash_version:"9.0.28",
+                swfupload_pre_load_handler:swfUploadPreLoad,
+                swfupload_loaded_handler:swfUploadLoaded,
+                swfupload_load_failed_handler:swfUploadLoadFailed,
+                // 上传流程回调函数
+                file_dialog_complete_handler:swfUploadFileDialogComplete,
+                file_queued_handler:swfUploadFileQueued,
+                file_queue_error_handler:swfUploadFileQueueError,
+                queue_complete_handler:swfUploadQueueComplete,
+                upload_start_handler:swfUploadSendStart,
+                upload_progress_handler:swfUploadSendProgress,
+                upload_success_handler:swfUploadSendSuccess,
+                upload_error_handler:swfUploadSendError,
+                upload_complete_handler:swfUploadSendComplete
+            });
+            editor.setUploadFile = function (fileInfo) {
+                editorSetUploadFile(fileInfo, editor);
+            };
+            editor.uploadAction = function (method, callback) {
+                editorSubmitUploadFile(method, editor, callback);
+            };
+            //Flash插件版本过低提示
+            var flashContainer = $(flashContainerId);
+            if (flashContainer.children[0].nodeName!='OBJECT') {
+                flashContainer.title = "您的Flash插件版本过低，请更新后再尝试！";
+            }
+        });
+
+        ui.addListener("renderReady", function () {
+            //鼠标mouseover/mouseout上传按钮事件
+            domUtils.on(ui.getDom(), "mouseover", function (e) {
+                ui.addState("hover");
+            });
+            domUtils.on(ui.getDom(), "mouseout", function (e) {
+                ui.removeState("hover");
+            });
+            //未登录提示
+            if (!editor.options.isLogin) {
+                var dom = ui.getDom(),
+                    label = $(dom.id + "_body").children[1];
+                label.style.color = "#999";
+                dom.setAttribute("title", hoverTitle);
+                var icon = $(dom.id + "_body").children[0];
+                domUtils.removeClasses(icon, ["edui-icon"]);
+                domUtils.addClass(icon, "edui_disableIcon");
+            }
+        });
+
+        return ui;
+    }
+
     var lists = ['insertorderedlist', 'insertunorderedlist', 'autotypeset'];
     for (var l = 0, cl; cl = lists[l++];) {
         (function (cmd) {

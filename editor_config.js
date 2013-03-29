@@ -80,7 +80,7 @@
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
         , toolbars:[
-            ['insertimage' ,'|', 'insertunorderedlist','|','insertorderedlist','|','autotypeset','|','insertmap']
+            ['insertimage' ,'|', 'insertunorderedlist','|','insertorderedlist','|','autotypeset','|','insertmap','|','uploadfile']
         ]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
         ,labelMap:{
@@ -412,6 +412,14 @@
         //是否开启自动保存
         ,autoSaveEnabled:false
         //自动保存频率，单位秒
-        ,autoSaveFrequency:60
+        ,autoSaveFrequency:60,
+
+        //上传文件的flash路径
+        swfUploadFlashUrl:URL+'third-party/swfupload/swfupload.swf',
+        //上传文件的发送目标路径
+        swfUploadUrl:'https://pcs.baidu.com/rest/2.0/pcs/file?method=upload&app_id=598913&response-status=200&ondup=newcopy',
+        swfUploadDir:'/apps/百度知道/',
+        swfUploadPostName:'file',
+        swfUploadPostParams:{}
     };
 })();

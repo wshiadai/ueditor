@@ -1,4 +1,4 @@
-/* for zhidao */
+/* for insertimage */
 .edui-default .edui-for-insertimage {
     height: 22px;
     font-size: 12px;
@@ -7,7 +7,7 @@
     _display: inline !important;
 }
 
-.edui-default .edui-for-insertimage .ue_flash{
+.edui-default .edui-for-insertimage .ue_flash {
     position: relative;
     z-index: 9999;
     top: -25px;
@@ -24,7 +24,7 @@
     background: url(../images/zhidao.png) 4px -66px no-repeat;
 }
 
-/*解决ie6下文字图标对不起问题*/
+/*解决ie6下文字图标对不齐问题*/
 .edui-default .edui-for-insertimage .edui-label {
     _position: relative;
     _top: 2px;
@@ -126,4 +126,26 @@
 
 .edui-default .deletemap .edui-button-body{
     width: 73px;
+}
+
+/* for uploadfile */
+.edui-default .edui-for-uploadfile {
+    _display: inline !important;
+}
+
+.edui-default .edui-for-uploadfile .edui-icon {
+    background: url(../images/zhidao.png) -25px -68px no-repeat;
+}
+
+.edui-default .edui-for-uploadfile .edui_disableIcon {
+    background: url(../images/zhidao.png) -25px -68px no-repeat;
+}
+
+.edui-default .edui-for-uploadfile .ue_flash{
+    position: relative;
+    z-index: 9999;
+    top: -25px;
+    top: -22 px\0;
+    width: 48px;
+    height: 22px;
 }

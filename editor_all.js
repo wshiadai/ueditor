@@ -4021,8 +4021,8 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             focusInEnd:true,
             initialFrameWidth:1000,
             initialFrameHeight:me.options.minFrameHeight || 320, //兼容老版本配置项
-            minFrameWidth:800,
-            minFrameHeight:220,
+            minFrameWidth:100,
+            minFrameHeight:100,
             autoClearEmptyNode:true,
             fullscreen:false,
             readonly:false,
@@ -6504,157 +6504,6 @@ UE.plugins['image'] = function(){
 };
 
 ///import core
-///commands 超链接,取消链接
-///commandsName  Link,Unlink
-///commandsTitle  超链接,取消链接
-///commandsDialog  dialogs\link
-/**
- * 超链接
- * @function
- * @name baidu.editor.execCommand
- * @param   {String}   cmdName     link插入超链接
- * @param   {Object}  options         url地址，title标题，target是否打开新页
- * @author zhanyi
- */
-/**
- * 取消链接
- * @function
- * @name baidu.editor.execCommand
- * @param   {String}   cmdName     unlink取消链接
- * @author zhanyi
- */
-
-UE.plugins['link'] = function(){
-    function optimize( range ) {
-        var start = range.startContainer,end = range.endContainer;
-
-        if ( start = domUtils.findParentByTagName( start, 'a', true ) ) {
-            range.setStartBefore( start );
-        }
-        if ( end = domUtils.findParentByTagName( end, 'a', true ) ) {
-            range.setEndAfter( end );
-        }
-    }
-
-
-    UE.commands['unlink'] = {
-        execCommand : function() {
-            var range = this.selection.getRange(),
-                bookmark;
-            if(range.collapsed && !domUtils.findParentByTagName( range.startContainer, 'a', true )){
-                return;
-            }
-            bookmark = range.createBookmark();
-            optimize( range );
-            range.removeInlineStyle( 'a' ).moveToBookmark( bookmark ).select();
-        },
-        queryCommandState : function(){
-            return !this.highlight && this.queryCommandValue('link') ?  0 : -1;
-        }
-
-    };
-    function doLink(range,opt,me){
-        var rngClone = range.cloneRange(),
-            link = me.queryCommandValue('link');
-        optimize( range = range.adjustmentBoundary() );
-        var start = range.startContainer;
-        if(start.nodeType == 1 && link){
-            start = start.childNodes[range.startOffset];
-            if(start && start.nodeType == 1 && start.tagName == 'A' && /^(?:https?|ftp|file)\s*:\s*\/\//.test(start[browser.ie?'innerText':'textContent'])){
-                start[browser.ie ? 'innerText' : 'textContent'] =  utils.html(opt.textValue||opt.href);
-
-            }
-        }
-        if( !rngClone.collapsed || link){
-            range.removeInlineStyle( 'a' );
-            rngClone = range.cloneRange();
-        }
-
-        if ( rngClone.collapsed ) {
-            var a = range.document.createElement( 'a'),
-                text = '';
-            if(opt.textValue){
-
-                text =   utils.html(opt.textValue);
-                delete opt.textValue;
-            }else{
-                text =   utils.html(opt.href);
-
-            }
-            domUtils.setAttributes( a, opt );
-            start =  domUtils.findParentByTagName( rngClone.startContainer, 'a', true );
-            if(start && domUtils.isInNodeEndBoundary(rngClone,start)){
-                range.setStartAfter(start).collapse(true);
-
-            }
-            a[browser.ie ? 'innerText' : 'textContent'] = text;
-            range.insertNode(a).selectNode( a );
-        } else {
-            range.applyInlineStyle( 'a', opt );
-
-        }
-    }
-    UE.commands['link'] = {
-        execCommand : function( cmdName, opt ) {
-            var range;
-            opt._href && (opt._href = utils.unhtml(opt._href,/[<">]/g));
-            opt.href && (opt.href = utils.unhtml(opt.href,/[<">]/g));
-            opt.textValue && (opt.textValue = utils.unhtml(opt.textValue,/[<">]/g));
-            doLink(range=this.selection.getRange(),opt,this);
-            //闭合都不加占位符，如果加了会在a后边多个占位符节点，导致a是图片背景组成的列表，出现空白问题
-            range.collapse().select(true);
-
-        },
-        queryCommandValue : function() {
-            var range = this.selection.getRange(),
-                node;
-            if ( range.collapsed ) {
-//                    node = this.selection.getStart();
-                //在ie下getstart()取值偏上了
-                node = range.startContainer;
-                node = node.nodeType == 1 ? node : node.parentNode;
-
-                if ( node && (node = domUtils.findParentByTagName( node, 'a', true )) && ! domUtils.isInNodeEndBoundary(range,node)) {
-
-                    return node;
-                }
-            } else {
-                //trace:1111  如果是<p><a>xx</a></p> startContainer是p就会找不到a
-                range.shrinkBoundary();
-                var start = range.startContainer.nodeType  == 3 || !range.startContainer.childNodes[range.startOffset] ? range.startContainer : range.startContainer.childNodes[range.startOffset],
-                    end =  range.endContainer.nodeType == 3 || range.endOffset == 0 ? range.endContainer : range.endContainer.childNodes[range.endOffset-1],
-                    common = range.getCommonAncestor();
-                node = domUtils.findParentByTagName( common, 'a', true );
-                if ( !node && common.nodeType == 1){
-
-                    var as = common.getElementsByTagName( 'a' ),
-                        ps,pe;
-
-                    for ( var i = 0,ci; ci = as[i++]; ) {
-                        ps = domUtils.getPosition( ci, start ),pe = domUtils.getPosition( ci,end);
-                        if ( (ps & domUtils.POSITION_FOLLOWING || ps & domUtils.POSITION_CONTAINS)
-                            &&
-                            (pe & domUtils.POSITION_PRECEDING || pe & domUtils.POSITION_CONTAINS)
-                            ) {
-                            node = ci;
-                            break;
-                        }
-                    }
-                }
-                return node;
-            }
-
-        },
-        queryCommandState : function() {
-            //判断如果是视频的话连接不可用
-            //fix 853
-            var img = this.selection.getRange().getClosedNode(),
-                flag = img && (img.className == "edui-faked-video");
-            return flag ? -1 : 0;
-        }
-    };
-};
-///import core
 ///commands 全选
 ///commandsName  SelectAll
 ///commandsTitle  全选
@@ -8642,111 +8491,6 @@ UE.plugins['fiximgclick'] = function() {
     }
 };
 ///import core
-///commands 为非ie浏览器自动添加a标签
-///commandsName  AutoLink
-///commandsTitle  自动增加链接
-/**
- * @description 为非ie浏览器自动添加a标签
- * @author zhanyi
- */
-    UE.plugins['autolink'] = function() {
-        var cont = 0;
-        if (browser.ie) {
-            return;
-        }
-        var me = this;
-        me.addListener('reset',function(){
-           cont = 0;
-        });
-        me.addListener('keydown', function(type, evt) {
-            var keyCode = evt.keyCode || evt.which;
-
-            if (keyCode == 32 || keyCode == 13) {
-
-                var sel = me.selection.getNative(),
-                    range = sel.getRangeAt(0).cloneRange(),
-                    offset,
-                    charCode;
-
-                var start = range.startContainer;
-                while (start.nodeType == 1 && range.startOffset > 0) {
-                    start = range.startContainer.childNodes[range.startOffset - 1];
-                    if (!start){
-                        break;
-                    }
-                    range.setStart(start, start.nodeType == 1 ? start.childNodes.length : start.nodeValue.length);
-                    range.collapse(true);
-                    start = range.startContainer;
-                }
-
-                do{
-                    if (range.startOffset == 0) {
-                        start = range.startContainer.previousSibling;
-
-                        while (start && start.nodeType == 1) {
-                            start = start.lastChild;
-                        }
-                        if (!start || domUtils.isFillChar(start)){
-                            break;
-                        }
-                        offset = start.nodeValue.length;
-                    } else {
-                        start = range.startContainer;
-                        offset = range.startOffset;
-                    }
-                    range.setStart(start, offset - 1);
-                    charCode = range.toString().charCodeAt(0);
-                } while (charCode != 160 && charCode != 32);
-
-                if (range.toString().replace(new RegExp(domUtils.fillChar, 'g'), '').match(/(?:https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)/i)) {
-                    while(range.toString().length){
-                        if(/^(?:https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|www\.)/i.test(range.toString())){
-                            break;
-                        }
-                        try{
-                            range.setStart(range.startContainer,range.startOffset+1);
-                        }catch(e){
-                            //trace:2121
-                            var start = range.startContainer;
-                            while(!(next = start.nextSibling)){
-                                if(domUtils.isBody(start)){
-                                    return;
-                                }
-                                start = start.parentNode;
-
-                            }
-                            range.setStart(next,0);
-
-                        }
-
-                    }
-                    //range的开始边界已经在a标签里的不再处理
-                    if(domUtils.findParentByTagName(range.startContainer,'a',true)){
-                        return;
-                    }
-                    var a = me.document.createElement('a'),text = me.document.createTextNode(' '),href;
-
-                    me.undoManger && me.undoManger.save();
-                    a.appendChild(range.extractContents());
-                    a.href = a.innerHTML = a.innerHTML.replace(/<[^>]+>/g,'');
-                    href = a.getAttribute("href").replace(new RegExp(domUtils.fillChar,'g'),'');
-                    href = /^(?:https?:\/\/)/ig.test(href) ? href : "http://"+ href;
-                    a.setAttribute('_src',utils.html(href));
-                    a.href = utils.html(href);
-
-                    range.insertNode(a);
-                    a.parentNode.insertBefore(text, a.nextSibling);
-                    range.setStart(text, 0);
-                    range.collapse(true);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                    me.undoManger && me.undoManger.save();
-                }
-            }
-        });
-    };
-
-///import core
 ///commands 当输入内容超过编辑器高度时，编辑器自动增高
 ///commandsName  AutoHeight,autoHeightEnabled
 ///commandsTitle  自动增高
@@ -8851,6 +8595,92 @@ UE.plugins['autoheight'] = function () {
 };
 
 
+/**
+ * @description 纯文本粘贴
+ * @name puretxtpaste
+ * @author zhanyi
+ */
+
+UE.plugins['pasteplain'] = function(){
+    var me = this;
+    me.setOpt({
+        'pasteplain':false,
+        'filterTxtRules' : function(){
+            function transP(node){
+                node.tagName = 'p';
+                node.setStyle();
+            }
+            return {
+                //直接删除及其字节点内容
+                '-' : 'script style object iframe embed input select',
+                'p': {$:{}},
+                'br':{$:{}},
+                div: function (node) {
+                    var tmpNode, p = UE.uNode.createElement('p');
+                    while (tmpNode = node.firstChild()) {
+                        if (tmpNode.type == 'text' || !UE.dom.dtd.$block[tmpNode.tagName]) {
+                            p.appendChild(tmpNode);
+                        } else {
+                            if (p.firstChild()) {
+                                node.parentNode.insertBefore(p, node);
+                                p = UE.uNode.createElement('p');
+                            } else {
+                                node.parentNode.insertBefore(tmpNode, node);
+                            }
+                        }
+                    }
+                    if (p.firstChild()) {
+                        node.parentNode.insertBefore(p, node);
+                    }
+                    node.parentNode.removeChild(node);
+                },
+                ol: function (node) {
+                    node.parentNode.removeChild(node,true)
+                },
+                ul: function (node) {
+                    node.parentNode.removeChild(node,true)
+                },
+
+                dl:function(node){
+                    node.parentNode.removeChild(node,true)
+                },
+                dt:function(node){
+                    node.parentNode.removeChild(node,true)
+                },
+                dd:function(node){
+                    node.parentNode.removeChild(node,true)
+                },
+                'li': function(node){
+                    node.parentNode.removeChild(node,true)
+                },
+                'caption':transP,
+                'th':transP,
+                'tr':transP,
+                'h1':transP,'h2':transP,'h3':transP,'h4':transP,'h5':transP,'h6':transP,
+                'td':function(node){
+                    //没有内容的td直接删掉
+                    var txt = !!node.innerText();
+                    if(txt){
+                         node.parentNode.insertAfter(UE.uNode.createText(' &nbsp; &nbsp;'),node);
+                    }
+                    node.parentNode.removeChild(node,node.innerText())
+                }
+            }
+        }()
+    });
+    //暂时这里支持一下老版本的属性
+    var pasteplain = me.options.pasteplain;
+
+    me.commands['pasteplain'] = {
+        queryCommandState: function (){
+            return pasteplain;
+        },
+        execCommand: function (){
+            pasteplain = !pasteplain|0;
+        },
+        notNeedUndo : 1
+    };
+};
 var baidu = baidu || {};
 baidu.editor = baidu.editor || {};
 baidu.editor.ui = {};
@@ -9194,6 +9024,26 @@ baidu.editor.ui = {};
         }
     };
     utils.inherits(UIBase, EventBase);
+})();
+
+(function (){
+    var utils = baidu.editor.utils,
+        UIBase = baidu.editor.ui.UIBase,
+        Separator = baidu.editor.ui.Separator = function (options){
+            this.initOptions(options);
+            this.initSeparator();
+        };
+    Separator.prototype = {
+        uiName: 'separator',
+        initSeparator: function (){
+            this.initUIBase();
+        },
+        getHtmlTpl: function (){
+            return '<div id="##" class="edui-box %%"></div>';
+        }
+    };
+    utils.inherits(Separator, UIBase);
+
 })();
 
 ///import core
@@ -9899,139 +9749,9 @@ baidu.editor.ui = {};
 //那个按钮弹出是dialog，是下拉筐等都是在这个js中配置
 //自己写的ui也要在这里配置，放到baidu.editor.ui下边，当编辑器实例化的时候会根据editor_config中的toolbars找到相应的进行实例化
 (function () {
-    var utils = baidu.editor.utils,
-        domUtils = baidu.editor.dom.domUtils,
-        editorui = baidu.editor.ui,
-        _Dialog = editorui.Dialog;
+    var domUtils = baidu.editor.dom.domUtils,
+        editorui = baidu.editor.ui;
     editorui.buttons = {};
-
-    editorui.Dialog = function (options) {
-        var dialog = new _Dialog(options);
-        dialog.addListener('hide', function () {
-
-            if (dialog.editor) {
-                var editor = dialog.editor;
-                try {
-                    if (browser.gecko) {
-                        var y = editor.window.scrollY,
-                            x = editor.window.scrollX;
-                        editor.body.focus();
-                        editor.window.scrollTo(x, y);
-                    } else {
-                        editor.focus();
-                    }
-
-
-                } catch (ex) {
-                }
-            }
-        });
-        return dialog;
-    };
-
-    var iframeUrlMap = {
-        'link':'~/dialogs/link/link.html',
-        'insertvideo':'~/dialogs/video/video.html'
-    };
-    var dialogBtns = {
-        noOk:[],
-        ok:['link','insertvideo']
-    };
-    for (var p in dialogBtns) {
-        (function (type, vals) {
-            for (var i = 0, ci; ci = vals[i++];) {
-                //todo opera下存在问题
-                if (browser.opera && ci === "searchreplace") {
-                    continue;
-                }
-                (function (cmd) {
-                    editorui[cmd] = function (editor, iframeUrl, title) {
-                        iframeUrl = iframeUrl || (editor.options.iframeUrlMap || {})[cmd] || iframeUrlMap[cmd];
-                        title = editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '';
-
-                        var dialog;
-                        //没有iframeUrl不创建dialog
-                        if (iframeUrl) {
-                            dialog = new editorui.Dialog(utils.extend({
-                                iframeUrl:editor.ui.mapUrl(iframeUrl),
-                                editor:editor,
-                                className:'edui-for-' + cmd,
-                                title:title,
-                                closeDialog:editor.getLang("closeDialog")
-                            }, type == 'ok' ? {
-                                buttons:[
-                                    {
-                                        className:'edui-okbutton',
-                                        label:editor.getLang("ok"),
-                                        editor:editor,
-                                        onclick:function () {
-                                            dialog.close(true);
-                                        }
-                                    },
-                                    {
-                                        className:'edui-cancelbutton',
-                                        label:editor.getLang("cancel"),
-                                        editor:editor,
-                                        onclick:function () {
-                                            dialog.close(false);
-                                        }
-                                    }
-                                ]
-                            } : {}));
-
-                            editor.ui._dialogs[cmd + "Dialog"] = dialog;
-                        }
-
-                        var ui = new editorui.Button({
-                            className:'edui-for-' + cmd,
-                            title:title,
-                            onclick:function () {
-                                if (dialog) {
-                                    switch (cmd) {
-                                        case "wordimage":
-                                            editor.execCommand("wordimage", "word_img");
-                                            if (editor.word_img) {
-                                                dialog.render();
-                                                dialog.open();
-                                            }
-                                            break;
-                                        case "scrawl":
-                                            if (editor.queryCommandState("scrawl") != -1) {
-                                                dialog.render();
-                                                dialog.open();
-                                            }
-
-                                            break;
-                                        default:
-                                            dialog.render();
-                                            dialog.open();
-                                    }
-                                }
-                            },
-                            theme:editor.options.theme,
-                            disabled:cmd == 'scrawl' && editor.queryCommandState("scrawl") == -1
-                        });
-                        editorui.buttons[cmd] = ui;
-                        editor.addListener('selectionchange', function () {
-                            //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
-                            var unNeedCheckState = {'edittable':1};
-                            if (cmd in unNeedCheckState)return;
-
-                            var state = editor.queryCommandState(cmd);
-                            if (ui.getDom()) {
-                                ui.setDisabled(state == -1);
-                                ui.setChecked(state);
-                            }
-
-                        });
-
-                        return ui;
-                    };
-                })(ci.toLowerCase())
-            }
-        })(p, dialogBtns[p])
-    }
-
 
     /*
     * ----------------分界线----------------------
@@ -10326,6 +10046,180 @@ baidu.editor.ui = {};
         return ui;
     };
 
+    editorui['uploadfile'] = function (editor) {
+        var cmd = 'uploadfile',
+            timestamp = +new Date(),
+            placeholderId = 'swfUploadPlaceholder' + timestamp,
+            uploadProgressId = 'swfUploadUploadProgress' + timestamp,
+            flashContainerId = 'swfUploadflashContainerId' + timestamp,
+            title = '上传',
+            hoverTitle = '登录后才能使用功能';
+
+        var ui = new editorui.Button({
+            className:'edui-for-' + cmd,
+            title:hoverTitle,
+            label:title,
+            showText:true,
+            getHtmlTpl:function () {
+                return '<div id="##" class="edui-box %%">' +
+                    '<div id="##_state" stateful>' +
+                    '<div class="%%-wrap"><div id="##_body" unselectable="on" ' + (this.title ? 'title="' + this.title + '"' : '') +
+                    ' class="%%-body" onmousedown="return false;" onclick="return $$._onClick();">' +
+                    (this.showIcon ? '<div class="edui-box edui-icon"></div>' : '') +
+                    (this.showText ? '<div class="edui-box edui-label">' + this.label + '</div>' : '') +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="ue_flash" id="' + flashContainerId + '"><div id="' + placeholderId + '"></div></div>' +
+                    '</div>' +
+                    '</div>';
+            }
+        });
+
+        editor.addListener('ready', function () {
+            var div = document.createElement("div");
+            div.id = uploadProgressId;
+            div.innerHTML = '<div class="progressWrapper" style="display:none;">' +
+                '<div class="fileIcon icon_file_default"></div>' +
+                '<div class="progressName textClip"></div>' +
+                '<div class="progressSize"></div>' +
+                '<div class="progressRename">' +
+                '<input class="progressRenameValue" type="text">' +
+                '<a class="btn btn-20-green progressRenameBtn" rel="nofollow"><em><b>确定</b></em></a>' +
+                '</div>' +
+                '<div class="progressMessage"></div>' +
+                '<div class="progressBarWrapper">' +
+                '<div class="progressBar"></div>' +
+                '<span class="progressBarText"></span>' +
+                '</div>' +
+                '<a class="progressCancel" href="#">取消</a>' +
+                '<div class="progressFileOperator">' +
+                '<a href="#" class="rename">重命名</a>' +
+                '<a href="#" class="remove">删除</a>' +
+                '</div>' +
+                '</div>';
+            editor.ui.getDom().insertBefore(div, this.ui.getDom("iframeholder"));
+            editor.uploadFile = {fileInfo:null, backFileInfo:null, status:'ready', errorCode:null};
+            editor.swfupload = new SWFUpload({
+                flash_url:editor.options.swfUploadFlashUrl,
+                upload_url:editor.options.swfUploadUrl,
+                file_post_name:editor.options.swfUploadPostName,
+                post_params:editor.options.swfUploadPostParams,
+                file_types:"*.*",
+                file_types_description:"All Files",
+                file_queue_limit:0,
+                file_size_limit : "2 GB",
+                custom_settings:{                                         //自定义设置，用户可在此向服务器传递自定义变量
+                    progressTarget:uploadProgressId,
+                    swfUploadUrl:editor.options.swfUploadUrl,
+                    swfUploadDir:editor.options.swfUploadDir,
+                    isLogin:editor.options.isLogin,
+                    isEditorFile:false,
+                    isUploading:false,
+                    successCount:0,
+                    currentFile:null,
+                    getBindUploadFile:function () {
+                        return editor.uploadFile.fileInfo;
+                    },
+                    setBindUploadFile:function (a, b) {
+                        if (a == null) {
+                            editor.uploadFile.fileInfo = null;
+                        } else if (typeof a == "object") {
+                            editor.uploadFile.fileInfo = a;
+                        } else if (typeof a == "string") {
+                            if (editor.uploadFile.fileInfo == null) {
+                                editor.uploadFile.fileInfo = {};
+                            }
+                            editor.uploadFile.fileInfo[a] = b;
+                        }
+                    },
+                    setBindUploadStatus:function (state, errorCode) {
+                        editor.uploadFile.status = state;
+                        if (state == 'error') editor.uploadFile.errorCode = errorCode;
+                        else editor.uploadFile.errorCode = null;
+                        // ready    就绪，未上传
+                        // uploading上传中
+                        // finish   上传结束等待文件检查
+                        // complete 检查完成，上传成功
+                        // error    上传出错
+                    },
+                    setBindBackupFile:function (a, b) {
+                        if (a == null) {
+                            editor.uploadFile.backFileInfo = null;
+                        } else if (typeof a == "object") {
+                            editor.uploadFile.backFileInfo = a;
+                        } else if (typeof a == "string") {
+                            if (editor.uploadFile.backFileInfo == null) {
+                                editor.uploadFile.backFileInfo = {};
+                            }
+                            editor.uploadFile.backFileInfo[a] = b;
+                        }
+                    },
+                    setEditorStatusBar:function(msg){
+                        if (T('.f-red', editor.container).length){
+                            T(".edui-editor-wordcount", editor.container).eq(0).html(msg);
+                        }
+                    }
+                },
+                // 按钮设置
+                button_action:SWFUpload.BUTTON_ACTION.SELECT_FILE,
+                button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+                button_cursor: SWFUpload.CURSOR.HAND,
+                button_placeholder_id : placeholderId,
+                button_width:51,
+                button_height: 24,
+                // SWFupload对象加载设置
+                minimum_flash_version:"9.0.28",
+                swfupload_pre_load_handler:swfUploadPreLoad,
+                swfupload_loaded_handler:swfUploadLoaded,
+                swfupload_load_failed_handler:swfUploadLoadFailed,
+                // 上传流程回调函数
+                file_dialog_complete_handler:swfUploadFileDialogComplete,
+                file_queued_handler:swfUploadFileQueued,
+                file_queue_error_handler:swfUploadFileQueueError,
+                queue_complete_handler:swfUploadQueueComplete,
+                upload_start_handler:swfUploadSendStart,
+                upload_progress_handler:swfUploadSendProgress,
+                upload_success_handler:swfUploadSendSuccess,
+                upload_error_handler:swfUploadSendError,
+                upload_complete_handler:swfUploadSendComplete
+            });
+            editor.setUploadFile = function (fileInfo) {
+                editorSetUploadFile(fileInfo, editor);
+            };
+            editor.uploadAction = function (method, callback) {
+                editorSubmitUploadFile(method, editor, callback);
+            };
+            //Flash插件版本过低提示
+            var flashContainer = $(flashContainerId);
+            if (flashContainer.children[0].nodeName!='OBJECT') {
+                flashContainer.title = "您的Flash插件版本过低，请更新后再尝试！";
+            }
+        });
+
+
+        ui.addListener("renderReady", function () {
+            //鼠标mouseover/mouseout上传按钮事件
+            domUtils.on(ui.getDom(), "mouseover", function (e) {
+                ui.addState("hover");
+            });
+            domUtils.on(ui.getDom(), "mouseout", function (e) {
+                ui.removeState("hover");
+            });
+            //未登录提示
+            if (!editor.options.isLogin) {
+                var dom = ui.getDom(),
+                    label = $(dom.id + "_body").children[1];
+                label.style.color = "#999";
+                dom.setAttribute("title", hoverTitle);
+                var icon = $(dom.id + "_body").children[0];
+                domUtils.removeClasses(icon, ["edui-icon"]);
+                domUtils.addClass(icon, "edui_disableIcon");
+            }
+        });
+
+        return ui;
+    }
+
     var lists = ['insertorderedlist', 'insertunorderedlist', 'autotypeset'];
     for (var l = 0, cl; cl = lists[l++];) {
         (function (cmd) {
@@ -10471,13 +10365,17 @@ baidu.editor.ui = {};
             editor.addListener("afterpaste", function () {
                 if(editor.queryCommandState('pasteplain'))
                     return;
-                pastePop = new baidu.editor.ui.Popup({
-                    content:new baidu.editor.ui.PastePicker({editor:editor}),
-                    editor:editor,
-                    className:'edui-wordpastepop'
-                });
-                pastePop.render();
-                isPaste = true;
+                try{
+                    pastePop = new baidu.editor.ui.Popup({
+                        content:new baidu.editor.ui.PastePicker({editor:editor}),
+                        editor:editor,
+                        className:'edui-wordpastepop'
+                    });
+                    pastePop.render();
+                    isPaste = true;
+                }catch(e){
+
+                }
             });
 
             editor.addListener("afterinserthtml", function () {

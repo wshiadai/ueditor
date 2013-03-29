@@ -22,3 +22,5 @@
 @import "dialog.css";
     /*分隔线*/
 @import "_separtor.css";
+    /*上传进度条*/
+@import "_progress.css";
