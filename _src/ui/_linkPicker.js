@@ -44,7 +44,7 @@
         },
 
         _showDialog:function (evt) {
-            this.editor.getDialog("link").open();
+            fireEvent("linkeditclick");
             Popup.postHide(evt);
         },
         _onClick:function (evt) {
