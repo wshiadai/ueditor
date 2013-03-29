@@ -492,44 +492,48 @@ window.swfUploadSendComplete = function () {
 //修改问题，设置之前上传的文件
 window.editorSetUploadFile = function (data, editor) {
     var swfupload = editor.swfupload;
-    if (data && !data.error && data.data.length) {
-        var fileinfo = data.data[0];
-        fileinfo.path = decodeURIComponent(fileinfo.path);
-        var filename = fileinfo.path.substr(fileinfo.path.lastIndexOf('/')+1),
-            filesize = fileinfo.size,
-            tmpArr = fileinfo.path.match(/(\.[^\.]*)$/),
-            filetype = tmpArr ? tmpArr[1] : '.',
-            createTime = new Date(fileinfo.ctime),
-            modifyTime = new Date(fileinfo.ctime);
-
-        editor.uploadFile.fileInfo = fileinfo;
-        editor.uploadFile.backFileInfo = fileinfo;
-        swfupload.customSettings.isEditorFile = true;
-        swfupload.customSettings.successCount = 1;
-        swfupload.customSettings.currentFile = {
-            id:"SWFUpload_0_EDIT",
-            name:filename || '',
-            size:filesize || 0,
-            type:filetype || '',
-            filestatus:-4,
-            index:1,
-            creationdate:createTime || +new Date(),
-            modificationdate:modifyTime || +new Date()
-        };
-        swfupload.progress = new FileProgress(swfupload.customSettings.currentFile, swfupload);
-        swfupload.progress.setStatus('setfilesuccess');
-        swfupload.progress.setFileInfo(filename, filesize);
+    if(swfupload.customSettings.successCount>0 && !confirm('即将删除上一个附件,确定吗？')){
+        return;
     } else {
-        editor.uploadFile.fileInfo = null;
-        editor.uploadFile.backFileInfo = null;
-        swfupload.customSettings.isEditorFile = true;
-        swfupload.customSettings.successCount = 0;
-        swfupload.customSettings.currentFile = {
-            id:"SWFUpload_0_NULL", name:'', size:0, type:'', filestatus:-4, index:1, creationdate:0, modificationdate:0
-        };
-        swfupload.progress = new FileProgress(swfupload.customSettings.currentFile, swfupload);
-        swfupload.progress.setStatus('setfileerror', '<span style="padding-left:5px;">很抱歉，您上传的附件已失效，请重新上传或</span>');
-        swfupload.progress.setFileInfo('', 0);
+        if (data && !data.error && data.data.length) {
+            var fileinfo = data.data[0];
+            fileinfo.path = decodeURIComponent(fileinfo.path);
+            var filename = fileinfo.path.substr(fileinfo.path.lastIndexOf('/')+1),
+                filesize = fileinfo.size,
+                tmpArr = fileinfo.path.match(/(\.[^\.]*)$/),
+                filetype = tmpArr ? tmpArr[1] : '.',
+                createTime = new Date(fileinfo.ctime),
+                modifyTime = new Date(fileinfo.ctime);
+
+            editor.uploadFile.fileInfo = fileinfo;
+            editor.uploadFile.backFileInfo = fileinfo;
+            swfupload.customSettings.isEditorFile = true;
+            swfupload.customSettings.successCount = 1;
+            swfupload.customSettings.currentFile = {
+                id:"SWFUpload_0_EDIT",
+                name:filename || '',
+                size:filesize || 0,
+                type:filetype || '',
+                filestatus:-4,
+                index:1,
+                creationdate:createTime || +new Date(),
+                modificationdate:modifyTime || +new Date()
+            };
+            swfupload.progress = new FileProgress(swfupload.customSettings.currentFile, swfupload);
+            swfupload.progress.setStatus('setfilesuccess');
+            swfupload.progress.setFileInfo(filename, filesize);
+        } else {
+            editor.uploadFile.fileInfo = null;
+            editor.uploadFile.backFileInfo = null;
+            swfupload.customSettings.isEditorFile = true;
+            swfupload.customSettings.successCount = 0;
+            swfupload.customSettings.currentFile = {
+                id:"SWFUpload_0_NULL", name:'', size:0, type:'', filestatus:-4, index:1, creationdate:0, modificationdate:0
+            };
+            swfupload.progress = new FileProgress(swfupload.customSettings.currentFile, swfupload);
+            swfupload.progress.setStatus('setfileerror', '<span style="padding-left:5px;">很抱歉，您上传的附件已失效，请重新上传或</span>');
+            swfupload.progress.setFileInfo('', 0);
+        }
     }
 };
 

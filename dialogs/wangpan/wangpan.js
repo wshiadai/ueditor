@@ -1,17 +1,22 @@
 
 var InsertFile, SelectedFsId, WangPanData = {}, FileListData = {};
+function getFileSize(filesize) {
+    var units = ["B", "K", "M", "G", "T"];
+    var p = Math.min(Math.max(Math.floor(Math.log(filesize) / Math.LN2 / 10), 1), 5);
+    return Math.round(filesize * 100 / Math.pow(2, p * 10)) / 100 + units[p]
+}
 function setFileList(clickTarget, data, isFromServer) {
     var file, treeNodeHtml = '', fileListHtml = '';
     for (var i in data.list) {
         file = data.list[i];
         if (file.isdir) {
             treeNodeHtml += '<li>' +
-                '<div class="treeNode" data-path="' + file.path + '">' + file.server_filename + '</div>' +
+                '<div class="treeNode" data-path="' + file.path + '">+' + file.server_filename + '</div>' +
                 '<ul></ul>' +
                 '</li>';
         } else {
             fileListHtml += '<li>' +
-                '<div class="fileItem" data-path="' + file.path + '" data-fs_id="' + file.fs_id + '">' + file.server_filename + '</div>' +
+                '<div class="fileItem" data-path="' + file.path + '" data-fs_id="' + file.fs_id + '">' + file.server_filename + ' (' + getFileSize(file.size) + ')</div>' +
                 '</li>';
             if (isFromServer) {
                 FileListData[file.fs_id] = file;

@@ -485,7 +485,7 @@
             iframeUrl: editor.options.UEDITOR_HOME_URL + url,
             editor:editor,
             className:'edui-for-wangpan',
-            title:title,
+            title:'从百度网盘插入文件',
             closeDialog: '关闭'
         }, {
             buttons:[
