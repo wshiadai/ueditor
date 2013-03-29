@@ -1,0 +1,43 @@
+.wrapper {
+    margin: 10px auto;
+    position: relative
+}
+.panel{
+    width: 515px;
+    margin: 0 auto;
+}
+.panel table td {
+    vertical-align: middle;
+}
+
+#videoUrl {
+    width: 439px;
+    height: 23px;
+    line-height: 23px;
+    margin: 8px 5px;
+    background: #FFF;
+    border: 1px solid #d7d7d7;
+}
+#preview {
+    width: 440px;
+    margin:5px 0 0 65px;
+    height: 365px;
+    background-color: #ddd;
+}
+
+fieldset input.txt {
+    width: 65px;
+    height: 21px;
+    line-height: 21px;
+    margin: 8px 5px;
+    background: #FFF;
+    border: 1px solid #d7d7d7;
+}
+.tip{
+    margin-left: 64px;
+}
+.tip a{
+    text-decoration: none;
+    color: #2d64b3;
+    margin: 0 5px;
+}

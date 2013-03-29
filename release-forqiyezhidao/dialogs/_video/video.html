@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <script type="text/javascript" src="../internal.js"></script>
+    <link rel="stylesheet" type="text/css" href="video.css" />
+</head>
+<body>
+<div class="wrapper">
+    <div id="videoTab">
+        <div id="video" class="panel">
+           <table>
+               <tr>
+                   <td><label for="videoUrl" class="url"><var id="lang_video_url"></var></label></td>
+                   <td><input id="videoUrl" type="text"></td>
+               </tr>
+               <tr>
+                   <td colspan="2"><label class="tip">目前仅支持<a href="http://www.youku.com" target="_blank">优酷网</a>的视频播放页链接</label></td>
+               </tr>
+           </table>
+           <div id="preview"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="video.js"></script>
+<script type="text/javascript">
+    window.onload = function(){
+        video.init();
+        $focus($G("videoUrl"));
+    };
+</script>
+</body>
+</html>

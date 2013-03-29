@@ -1,0 +1,735 @@
+/*基础UI构建
+*/
+/* common layer */
+.edui-default .edui-box {
+    border: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.edui-default a.edui-box {
+    display: block;
+    text-decoration: none;
+    color: black;
+}
+
+.edui-default a.edui-box:hover {
+    text-decoration: none;
+}
+
+.edui-default a.edui-box:active {
+    text-decoration: none;
+}
+
+.edui-default table.edui-box {
+    border-collapse: collapse;
+}
+
+.edui-default ul.edui-box {
+    list-style-type: none;
+}
+
+div.edui-box {
+    position: relative;
+    display: -moz-inline-box !important;
+    display: inline-block !important;
+    vertical-align: top;
+}
+
+.edui-default .edui-clearfix {
+    zoom: 1
+}
+
+.edui-default .edui-clearfix:after {
+    content: '\20';
+    display: block;
+    clear: both;
+}
+
+ * html div.edui-box {
+    display: inline !important;
+}
+
+*:first-child+html div.edui-box {
+    display: inline !important;
+}
+
+/* control layout */
+.edui-default .edui-button-body, .edui-splitbutton-body, .edui-menubutton-body, .edui-combox-body {
+    position: relative;
+}
+
+.edui-default .edui-popup {
+    position: absolute;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+.edui-default .edui-popup .edui-shadow {
+    position: absolute;
+    z-index: -1;
+}
+
+.edui-default .edui-popup .edui-bordereraser {
+    position: absolute;
+    overflow: hidden;
+}
+
+.edui-default .edui-tablepicker .edui-canvas {
+    position: relative;
+}
+
+.edui-default .edui-tablepicker .edui-canvas .edui-overlay {
+    position: absolute;
+}
+
+.edui-default .edui-dialog-modalmask, .edui-dialog-dragmask {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.edui-default .edui-toolbar {
+    position: relative;
+}
+
+/*
+ * default theme
+ */
+.edui-default .edui-label {
+    cursor: default;
+    color:#133db6;
+}
+
+.edui-default span.edui-clickable {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.edui-default span.edui-unclickable {
+    color: gray;
+    cursor: default;
+}
+/* 工具栏 */
+.edui-default .edui-toolbar {
+    cursor: default;
+    font-size: 12px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    padding: 1px;
+    overflow: hidden; /*全屏下单独一行不占位*/
+    zoom: 1;
+}
+
+.edui-default .edui-toolbar .edui-button,
+.edui-default .edui-toolbar .edui-splitbutton,
+.edui-default .edui-toolbar .edui-menubutton,
+.edui-default .edui-toolbar .edui-combox {
+    margin: 1px;
+}
+/*UI工具栏、编辑区域、底部*/
+.edui-default .edui-editor {
+    border: 1px solid #cedec1;
+    background-color: white;
+    position: relative;
+    overflow: visible;
+}
+
+.edui-default .edui-editor-toolbarbox {
+    position: relative;
+    zoom: 1;
+}
+
+.edui-default .edui-editor-toolbarboxouter {
+    background: white url(../images/toolbar_bg.png) repeat-x bottom left;
+    height: 31px;
+}
+
+.edui-default .edui-editor-toolbarboxinner {
+    padding: 2px;
+}
+
+.edui-default .edui-editor-iframeholder {
+    position: relative;
+    /*for fix ie6 toolbarmsg under iframe bug. relative -> static */
+    /*_position: static !important;*/
+}
+
+.edui-default .edui-editor-iframeholder textarea {
+    font-family: consolas, "Courier New", "lucida console", monospace;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.edui-default .edui-editor-bottombar {
+    /*border-top: 1px solid #ccc;*/
+    /*height: 20px;*/
+    /*width: 40%;*/
+    /*float: left;*/
+    /*overflow: hidden;*/
+}
+
+.edui-default .edui-editor-bottomContainer {
+    overflow: hidden;
+}
+
+.edui-default .edui-editor-bottomContainer table {
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    border-spacing: 0;
+}
+
+.edui-default .edui-editor-bottomContainer td {
+    white-space: nowrap;
+    border-top: 1px solid #ccc;
+    line-height: 20px;
+    font-size: 12px;
+    font-family: Arial, Helvetica, Tahoma, Verdana, Sans-Serif;
+}
+
+.edui-default .edui-editor-wordcount {
+    text-align: right;
+    margin-right: 5px;
+    color: #aaa;
+}
+.edui-default .edui-editor-scale {
+    width: 12px;
+}
+.edui-default .edui-editor-scale .edui-editor-icon {
+    float: right;
+    width: 100%;
+    height: 12px;
+    margin-top: 10px;
+    background: url(../images/scale.png) no-repeat;
+    cursor: se-resize;
+}
+.edui-default .edui-editor-breadcrumb {
+    margin: 2px 0 0 3px;
+}
+
+.edui-default .edui-editor-breadcrumb span {
+    cursor: pointer;
+    text-decoration: underline;
+    color: blue;
+}
+
+.edui-default .edui-toolbar .edui-for-fullscreen {
+    float: right;
+}
+
+.edui-default .edui-bubble .edui-popup-content {
+    border: 1px solid #DCAC6C;
+    background-color: #fff6d9;
+    padding: 5px;
+    font-size: 10pt;
+    font-family: "宋体";
+}
+
+.edui-default .edui-bubble .edui-shadow {
+    box-shadow: 1px 1px 3px #818181;
+    -webkit-box-shadow: 2px 2px 3px #818181;
+    -moz-box-shadow: 2px 2px 3px #818181;
+    filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius = '2', MakeShadow = 'true', ShadowOpacity = '0.5');
+}
+
+.edui-default .edui-editor-toolbarmsg {
+    background-color: #FFF6D9;
+    border-bottom: 1px solid #ccc;
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    z-index: 1009;
+    width: 99.9%;
+}
+
+.edui-default .edui-editor-toolbarmsg-upload {
+    font-size: 14px;
+    color: blue;
+    width: 100px;
+    height: 16px;
+    line-height: 16px;
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    left: 350px;
+}
+
+.edui-default .edui-editor-toolbarmsg-label {
+    font-size: 12px;
+    line-height: 16px;
+    padding: 4px;
+}
+
+.edui-default .edui-editor-toolbarmsg-close {
+    float: right;
+    width: 20px;
+    height: 16px;
+    line-height: 16px;
+    cursor: pointer;
+    color: red;
+}
+/*普通按钮样式及状态*/
+.edui-default .edui-toolbar .edui-button {
+    height: 24px;
+    line-height: 24px;
+    width: 52px;
+}
+.edui-default .edui-toolbar .edui-button .edui-icon {
+    height: 20px !important;
+    width: 23px !important;
+    cursor: pointer;
+}
+
+.edui-default .edui-toolbar .edui-button .edui_disableIcon {
+    _display: inline !important;
+    height: 20px !important;
+    width: 23px !important;
+}
+.edui-default .edui-toolbar .edui-button .edui-button-wrap {
+    position: relative;
+}
+
+.edui-default .edui-toolbar .edui-button .edui-state-hover .edui-button-wrap {
+    padding: 0;
+    background: url(../images/zhidao.png) -1px -120px no-repeat;
+    height: 24px;
+}
+
+.edui-default .edui-toolbar .edui-button .edui-state-checked .edui-button-wrap {
+    background: url(../images/zhidao.png) -1px -150px no-repeat;
+    padding: 0;
+}
+
+.edui-default .edui-toolbar .edui-button .edui-state-active .edui-button-wrap {
+    background: url(../images/zhidao.png) -1px -120px no-repeat;
+    padding: 0;
+}
+.edui-default .edui-toolbar .edui-state-disabled .edui-label {
+    color: #ccc;
+}
+.edui-default .edui-toolbar .edui-state-disabled .edui-icon {
+    opacity: 0.3;
+    filter: alpha(opacity = 30);
+}
+/* for zhidao */
+.edui-default .edui-for-insertimage {
+    height: 22px;
+    font-size: 12px;
+    line-height: 20px;
+    cursor: pointer;
+    _display: inline !important;
+}
+
+.edui-default .edui-for-insertimage .ue_flash{
+    position: relative;
+    z-index: 9999;
+    top: -25px;
+    top: -22 px\0;
+    width: 48px;
+    height: 22px;
+}
+
+.edui-default .edui-for-insertimage .edui-icon {
+    background: url(../images/zhidao.png) 4px -66px no-repeat;
+}
+
+.edui-default .edui-for-insertimage .edui_disableIcon {
+    background: url(../images/zhidao.png) 4px -66px no-repeat;
+}
+
+/*解决ie6下文字图标对不起问题*/
+.edui-default .edui-for-insertimage .edui-label {
+    _position: relative;
+    _top: 2px;
+    cursor: pointer;
+    _display: inline !important;
+}
+/*for insertorderedlist*/
+.edui-default .edui-for-insertorderedlist {
+    _display: inline !important;
+}
+
+.edui-default .insertorderedlist .edui-icon {
+    background: url(../images/zhidao.png) 4px 5px no-repeat;
+}
+
+.edui-default .insertorderedlist .edui_disableIcon {
+    background: url(../images/zhidao.png) 4px 5px no-repeat;
+}
+
+.edui-default .insertorderedlist .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .insertorderedlist .edui-button-body {
+    width: 48px;
+}
+
+/*for insertunorderedlist*/
+.edui-default .edui-for-insertunorderedlist {
+    _display: inline !important;
+}
+
+.edui-default .insertunorderedlist .edui-icon {
+    background: url(../images/zhidao.png) 5px -19px no-repeat;
+}
+
+.edui-default .insertunorderedlist .edui_disableIcon {
+    background: url(../images/zhidao.png) 5px -19px no-repeat;
+}
+
+.edui-default .insertunorderedlist .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .insertunorderedlist .edui-button-body {
+    width: 48px;
+}
+
+/*for autotypeset*/
+.edui-default .edui-for-autotypeset {
+    _display: inline !important;
+}
+
+.edui-default .autotypeset .edui-icon {
+    background: url(../images/zhidao.png) 3px -45px no-repeat;
+}
+
+.edui-default .autotypeset .edui_disableIcon {
+    background: url(../images/zhidao.png) 3px -45px no-repeat;
+}
+
+.edui-default .autotypeset .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .autotypeset .edui-button-body {
+    width: 48px;
+}
+
+/*for map*/
+.edui-default .edui-for-insertmap {
+    _display: inline !important;
+}
+
+.edui-default .insertmap .edui-icon {
+    background: url(../images/zhidao.png) 2px -91px no-repeat;
+}
+
+.edui-default .insertmap .edui_disableIcon {
+    background: url(../images/zhidao.png) 2px -91px no-repeat;
+}
+
+.edui-default .deletemap .edui-icon {
+    background: url(../images/zhidao.png) -26px -45px no-repeat;
+}
+
+.edui-default .deletemap .edui-label,
+.edui-default .insertmap .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .insertmap .edui-button-body {
+    width: 48px;
+}
+
+.edui-default .deletemap .edui-button-body{
+    width: 73px;
+}
+/*for link*/
+.edui-default .edui-for-link {
+    _display: inline !important;
+}
+
+.edui-default .edui-for-link .edui-icon {
+    background:url(../images/zhidao.png) -24px 7px no-repeat
+}
+
+.edui-default .edui-for-link .edui_disableIcon {
+    background:url(../images/zhidao.png) -24px 7px no-repeat
+}
+
+.edui-default .edui-for-link .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .edui-for-link .edui-button-body {
+    width: 62px;
+}
+.edui-default .edui-button.edui-for-link {
+    width: 66px;
+}
+.edui-default .edui-toolbar .edui-button.edui-for-link .edui-state-hover .edui-button-wrap {
+    background: url(../images/zhidao.png) 0 -210px no-repeat;
+}
+/*for insertvideo*/
+.edui-default .edui-for-insertvideo {
+    _display: inline !important;
+}
+
+.edui-default .edui-for-insertvideo .edui-icon {
+    background:url(../images/zhidao.png) -60px 6px no-repeat
+}
+
+.edui-default .edui-for-insertvideo .edui_disableIcon {
+    background:url(../images/zhidao.png) -60px 6px no-repeat
+}
+
+.edui-default .edui-for-insertvideo .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .edui-for-insertvideo .edui-button-body {
+    width: 90px;
+}
+.edui-default .edui-button.edui-for-insertvideo {
+    width: 94px;
+}
+.edui-default .edui-toolbar .edui-button.edui-for-insertvideo .edui-state-hover .edui-button-wrap {
+    background: url(../images/zhidao.png) 0 -181px no-repeat;
+}
+
+/* 弹出菜单 */
+.edui-default .edui-popup {
+    z-index: 3000;
+}
+
+.edui-default .edui-popup-content {
+    border: 1px solid #c6ccc2;
+    background-color: #fafcf7;
+}
+
+.edui-default .edui-popup .edui-bordereraser {
+    background-color: white;
+    height: 3px;
+}
+
+.edui-default .edui-menu .edui-bordereraser {
+    height: 3px;
+}
+
+.edui-default .edui-anchor-topleft .edui-bordereraser {
+    left: 1px;
+    top: -2px;
+}
+
+.edui-default .edui-anchor-topright .edui-bordereraser {
+    right: 1px;
+    top: -2px;
+}
+
+.edui-default .edui-anchor-bottomleft .edui-bordereraser {
+    left: 0;
+    bottom: -6px;
+    height: 7px;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+}
+
+.edui-default .edui-anchor-bottomright .edui-bordereraser {
+    right: 0;
+    bottom: -6px;
+    height: 7px;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+}
+
+/* 弹出对话框按钮和对话框大小 */
+.edui-default .edui-dialog {
+    z-index: 2000;
+    position: absolute;
+}
+
+.edui-default .edui-dialog-wrap {
+    margin-right: 6px;
+    margin-bottom: 6px;
+    border: 2px solid #3daa11;
+}
+
+.edui-default .edui-dialog-body {
+    position: relative;
+    background-color: white;
+    _zoom: 1;
+}
+
+.edui-default .edui-dialog-shadow {
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    box-shadow: 3px 3px 5px #999999;
+    -webkit-box-shadow: 3px 3px 5px #999999;
+    -moz-box-shadow: 3px 3px 5px #999999;
+    filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius = '3', MakeShadow = 'true', ShadowOpacity = '0.5');
+}
+
+.edui-default .edui-dialog-foot {
+    background-color: white;
+}
+
+.edui-default .edui-dialog-titlebar {
+    height: 47px;
+    position: relative;
+    cursor: move;
+}
+.edui-default .edui-dialog-caption {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    line-height: 47px;
+    padding-left: 10px;
+}
+
+.edui-default .edui-dialog-draghandle {
+    height: 26px;
+}
+
+.edui-default .edui-dialog-closebutton {
+    position: absolute !important;
+    right: 5px;
+    top: 3px;
+}
+
+.edui-default .edui-dialog-closebutton .edui-button-body {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    background: url("../images/dialog.gif") no-repeat 0 -92px;
+}
+
+.edui-default .edui-dialog-foot {
+    margin-top: 15px;
+    height: 40px;
+}
+
+.edui-default .edui-dialog-buttons {
+    width: 210px;
+    margin: 0 auto;
+}
+
+.edui-default .edui-dialog-buttons .edui-button {
+    margin-right: 10px;
+}
+
+.edui-default .edui-dialog-buttons .edui-okbutton .edui-button-body {
+    background: url("../images/dialog.gif") no-repeat;
+    height: 31px;
+    width: 94px;
+    font-size: 12px;
+    line-height: 31px;
+    text-align: center;
+    cursor: default;
+}
+.edui-default .edui-dialog-buttons .edui-okbutton .edui-state-hover .edui-button-body {
+    background: url("../images/dialog.gif") no-repeat -167px 0;
+}
+.edui-default .edui-dialog-buttons .edui-okbutton .edui-label{
+     color: #ffffff;
+ }
+.edui-default .edui-dialog-buttons .edui-cancelbutton .edui-button-body {
+    background: url("../images/dialog.gif") no-repeat 0 -50px ;
+    height: 31px;
+    width: 94px;
+    font-size: 12px;
+    line-height: 31px;
+    text-align: center;
+    cursor: default;
+    color: #000;
+}
+
+.edui-default .edui-dialog-buttons .edui-cancelbutton .edui-state-hover .edui-button-body {
+    background: url("../images/dialog.gif") no-repeat -167px -50px;
+}
+.edui-default .edui-dialog-buttons .edui-cancelbutton .edui-label{
+    color: #333;
+}
+.edui-default .edui-dialog iframe {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    vertical-align: top;
+}
+
+.edui-default .edui-dialog-modalmask {
+    opacity: 0.3;
+    filter: alpha(opacity = 30);
+    background-color: #ccc;
+    position: absolute;
+    /*z-index: 1999;*/
+}
+
+.edui-default .edui-dialog-dragmask {
+    position: absolute;
+    /*z-index: 2001;*/
+    background-color: transparent;
+    cursor: move;
+}
+
+.edui-default .edui-dialog-content {
+    position: relative;
+    border-top: 2px solid #3daa11;
+    border-bottom: 1px solid #eeeeee;
+    margin: 0 20px;
+}
+
+.edui-default .dialogcontmask {
+    cursor: move;
+    visibility: hidden;
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+}
+/*link-dialog*/
+.edui-default .edui-for-link .edui-dialog-content {
+    width: 400px;
+    height: 120px;
+}
+/*video-dialog*/
+.edui-default .edui-for-insertvideo .edui-dialog-content {
+    width: 550px;
+    height: 470px;
+}
+
+/*分隔线*/
+.edui-default .edui-toolbar .edui-separator {
+    width: 1px;
+    height: 14px;
+    margin: 5px 4px 0 4px;
+    background: #dfe7d8;
+}
+
+/*链接弹出菜单*/
+.edui-default .edui-linkpicker .edui-linkpicker-body {
+    width: 120px;
+    font-size: 12px;
+    cursor: default;
+    overflow-y: auto;
+}
+.edui-default .edui-linkpicker-item {
+    padding:5px 10px;
+    cursor: pointer;
+}
+.edui-default .edui-linkpicker-edit {
+    color: #133db6;
+    font-size: 12px;
+}
+.edui-default .edui-linkpicker-body .edui-linkpicker-item.edui-state-hover {
+    background-color: #ebf6e6;
+}
