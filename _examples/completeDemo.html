@@ -16,7 +16,9 @@
 </script>
 <script type="text/javascript">
     //编辑器实例化
-    var editor = UE.getEditor('editor');
+    var editor = UE.getEditor('editor',{
+
+    });
     //            debugger
     //            editor.focus();
 
@@ -43,6 +45,7 @@
     editor.addListener("isLogout",function(){
 //                debugger
     });
+
     //            editor.addListener("flashClicked",function(){
     //                            console.log(1);
     //                        });
@@ -66,8 +69,9 @@
     });
 
     //插入链接后
-    editor.addListener("beforeinsertlink",function(type,opt){
+    editor.addListener("beforeinsertlink",function(type){
     });
+
     //服务器端输出格式
     //1、成功保存
     // '<script type="text/javascript">parent.baidu.editor.success({"index":"'.$index.'","url":"'.$url.'"})<\/script>';
