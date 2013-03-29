@@ -236,6 +236,7 @@
         });
         return ui;
     };
+
     editorui.insertmap = function (editor) {
         var iframeUrl = editor.options.buttonConfig["insertmap"],
             title = iframeUrl.title,
@@ -449,6 +450,7 @@
             }
         });
 
+
         ui.addListener("renderReady", function () {
             //鼠标mouseover/mouseout上传按钮事件
             domUtils.on(ui.getDom(), "mouseover", function (e) {
@@ -471,6 +473,53 @@
 
         return ui;
     }
+
+
+    editorui.wangpan = function (editor) {
+        var title = '网盘',
+            unTitle = '登录后才能使用功能',
+            url = 'dialogs/wangpan/wangpan.html',
+            hoverTitle = '网盘文件共分享，插入附件更方便';
+
+        var dialog = new editorui.Dialog(utils.extend({
+            iframeUrl: editor.options.UEDITOR_HOME_URL + url,
+            editor:editor,
+            className:'edui-for-wangpan',
+            title:title,
+            closeDialog: '关闭'
+        }, {
+            buttons:[
+                {
+                    className:'edui-okbutton',
+                    label: '确定',
+                    editor:editor,
+                    onclick:function () {
+                        dialog.close(true);
+                    }
+                },
+                {
+                    className:'edui-cancelbutton',
+                    label: '取消',
+                    editor:editor,
+                    onclick:function () {
+                        dialog.close(false);
+                    }
+                }
+            ]
+        }));
+        dialog.render();
+        var ui = new editorui.Button({
+            className:'edui-for-insertmap insertmap',
+            title:hoverTitle,
+            label:title,
+            onclick:function () {
+                dialog.reset();
+                dialog.showAtCenter();
+            },
+            showText:true
+        });
+        return ui;
+    };
 
     var lists = ['insertorderedlist', 'insertunorderedlist', 'autotypeset'];
     for (var l = 0, cl; cl = lists[l++];) {

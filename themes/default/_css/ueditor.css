@@ -19,7 +19,7 @@
 
 /*-------独立按钮样式，按需加载-------*/
     /*弹出对话框样式*/
-@import "dialog.css";
+@import "_dialog.css";
     /*分隔线*/
 @import "_separtor.css";
     /*上传进度条*/

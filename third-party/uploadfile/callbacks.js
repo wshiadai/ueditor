@@ -285,7 +285,7 @@ window.swfUploadLoaded = function () {
                     swfupload.customSettings.setBindBackupFile('rename', pathto);
                     progress.setFileInfo(newname);
                     progress.setStatus('renamecomplete');
-                } else if (newname != "" && T.trim(newname) != showName.substr(showName.lastIndexOf('.')+1) && newname != showName && pathto != pathfrom) {
+                } else if (newname != "" && newname != showName.substr(showName.lastIndexOf('.')+1) && newname != showName && pathto != pathfrom) {
                     // 新文件名 不为空 && 不等于之前的后缀名 && 有修改过文本框 && 不与实际文件名相同
                     T.ajax({
                         url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=move&app_id=598913&response-status=200&from=' + pathfrom + '&to=' + pathto),

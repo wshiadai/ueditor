@@ -1,0 +1,73 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <script type="text/javascript" src="../internal.js"></script>
+    <script type="text/javascript" src="../../tangram.js"></script>
+    <style type="text/css">
+        .wrapper {
+            width: 540px;
+            height: 400px;
+            margin: 10px auto;
+        }
+
+        #treeRoot_WangPan {
+            background-color: #FFFFFF;
+            float: left;
+            width: 200px;
+            border: 1px solid #CCCCCC;
+            height: 430px;
+            margin-right: 20px;
+        }
+
+        #treeRoot_WangPan ul {
+            margin: 0px;
+            list-style: none;
+            padding-left: 15px;
+        }
+
+        #treeRoot_WangPan ul li {
+            margin: 0px;
+            list-style: none;
+        }
+
+        #fileList {
+            background-color: #FFFFFF;
+            border: 1px solid #CCCCCC;
+            height: 430px
+        }
+
+        .treeNode {
+            background: #FFFFFF;
+            cursor: pointer;
+        }
+
+        .treeNode_selected {
+            background: #DDDDDD;
+        }
+
+        .fileItem {
+            border-bottom: 1px solid #CCCCCC;
+            cursor: pointer;
+            height:30px;
+        }
+
+        .fileItem_selected {
+            background:#DDDDDD;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div id="treeRoot_WangPan" onselectstart="return false">
+        <div class="treeNode" data-path="/apps/百度知道">百度知道</div>
+        <ul></ul>
+    </div>
+    <div id="fileList"></div>
+</div>
+<script type="text/javascript" src="wangpan.js"></script>
+<script type="text/javascript">
+</script>
+</body>
+</html>

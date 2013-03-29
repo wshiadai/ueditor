@@ -38,7 +38,7 @@
         //图片上传配置区
         ,imageUrl:URL+"php/_imageUp.php"             //图片上传提交地址
         ,imagePath:URL + "php/"                     //图片修正地址，引用了fixedImagePath,如有特殊需求，可自行配置
-       ,imageFieldName:"upfile"                   //图片数据的key,若此处修改，需要在后台对应文件修改对应参数
+        ,imageFieldName:"upfile"                   //图片数据的key,若此处修改，需要在后台对应文件修改对应参数
         //,compressSide:0                            //等比压缩的基准，确定maxImageSideLength参数的参照对象。0为按照最长边，1为按照宽度，2为按照高度
         //,maxImageSideLength:900                    //上传图片最大允许的边长，超过会自动等比缩放,不缩放就设置一个比较大的值，更多设置在image.html中
 
@@ -80,7 +80,7 @@
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
         , toolbars:[
-            ['insertimage' ,'|', 'insertunorderedlist','|','insertorderedlist','|','autotypeset','|','insertmap','|','uploadfile']
+            ['insertimage' ,'|', 'insertunorderedlist','|','insertorderedlist','|','autotypeset','|','insertmap','|','uploadfile','|','wangpan']
         ]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
         ,labelMap:{
@@ -416,10 +416,13 @@
 
         //上传文件的flash路径
         swfUploadFlashUrl:URL+'third-party/swfupload/swfupload.swf',
-        //上传文件的发送目标路径
+        //上传文件的发送目标uri
         swfUploadUrl:'https://pcs.baidu.com/rest/2.0/pcs/file?method=upload&app_id=598913&response-status=200&ondup=newcopy',
+        //上传文件的在网盘保存的路径
         swfUploadDir:'/apps/百度知道/',
+        //发送文件的文件表单名称
         swfUploadPostName:'file',
-        swfUploadPostParams:{}
+
+        //插入网盘
     };
 })();

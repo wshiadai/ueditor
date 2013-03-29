@@ -144,3 +144,8 @@
     width: 590px;
     height: 390px;
 }
+/*wangpan-dialog*/
+.edui-default .edui-for-wangpan .edui-dialog-content {
+    width: 570px;
+    height: 450px;
+}
