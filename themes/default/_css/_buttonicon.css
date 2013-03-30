@@ -16,10 +16,7 @@
     height: 22px;
 }
 
-.edui-default .edui-for-insertimage .edui-icon {
-    background: url(../images/zhidao.png) 4px -66px no-repeat;
-}
-
+.edui-default .edui-for-insertimage .edui-icon,
 .edui-default .edui-for-insertimage .edui_disableIcon {
     background: url(../images/zhidao.png) 4px -66px no-repeat;
 }
@@ -36,12 +33,9 @@
     _display: inline !important;
 }
 
-.edui-default .insertorderedlist .edui-icon {
-    background: url(../images/zhidao.png) 4px 5px no-repeat;
-}
-
-.edui-default .insertorderedlist .edui_disableIcon {
-    background: url(../images/zhidao.png) 4px 5px no-repeat;
+.edui-default .insertorderedlist .edui-icon,
+.edui-default .insertorderedlist .edui_disableIcon{
+    background: url(../images/zhidao.png) 5px -19px no-repeat;
 }
 
 .edui-default .insertorderedlist .edui-label {
@@ -58,12 +52,10 @@
     _display: inline !important;
 }
 
-.edui-default .insertunorderedlist .edui-icon {
-    background: url(../images/zhidao.png) 5px -19px no-repeat;
-}
-
-.edui-default .insertunorderedlist .edui_disableIcon {
-    background: url(../images/zhidao.png) 5px -19px no-repeat;
+.edui-default .insertunorderedlist .edui-icon,
+.edui-default .insertunorderedlist .edui_disableIcon
+{
+    background: url(../images/zhidao.png) 4px 5px no-repeat;
 }
 
 .edui-default .insertunorderedlist .edui-label {
@@ -80,11 +72,8 @@
     _display: inline !important;
 }
 
-.edui-default .autotypeset .edui-icon {
-    background: url(../images/zhidao.png) 3px -45px no-repeat;
-}
-
-.edui-default .autotypeset .edui_disableIcon {
+.edui-default .autotypeset .edui-icon,
+.edui-default .autotypeset .edui_disableIcon{
     background: url(../images/zhidao.png) 3px -45px no-repeat;
 }
 
@@ -132,11 +121,8 @@
     _display: inline !important;
 }
 
-.edui-default .edui-for-link .edui-icon {
-    background:url(../images/zhidao.png) -24px 7px no-repeat
-}
-
-.edui-default .edui-for-link .edui_disableIcon {
+.edui-default .edui-for-link .edui-icon
+,.edui-default .edui-for-link .edui_disableIcon {
     background:url(../images/zhidao.png) -24px 7px no-repeat
 }
 
@@ -154,30 +140,52 @@
 .edui-default .edui-toolbar .edui-button.edui-for-link .edui-state-hover .edui-button-wrap {
     background: url(../images/zhidao.png) 0 -210px no-repeat;
 }
-/*for insertvideo*/
-.edui-default .edui-for-insertvideo {
+
+/*for more*/
+.edui-default .edui-for-more {
     _display: inline !important;
 }
 
-.edui-default .edui-for-insertvideo .edui-icon {
-    background:url(../images/zhidao.png) -60px 6px no-repeat
+.edui-default .edui-for-more .edui-icon
+,.edui-default .edui-for-more .edui_disableIcon {
+    background:url(../images/zhidao.png) -24px -20px no-repeat
 }
 
-.edui-default .edui-for-insertvideo .edui_disableIcon {
-    background:url(../images/zhidao.png) -60px 6px no-repeat
-}
-
-.edui-default .edui-for-insertvideo .edui-label {
+.edui-default .edui-for-more .edui-label {
     _top: 2px;
     cursor: pointer;
 }
 
-.edui-default .edui-for-insertvideo .edui-button-body {
-    width: 90px;
+.edui-default .edui-for-more .edui-button-body {
+    width: 62px;
 }
-.edui-default .edui-button.edui-for-insertvideo {
-    width: 94px;
+.edui-default .edui-button.edui-for-more {
+    width: 66px;
 }
-.edui-default .edui-toolbar .edui-button.edui-for-insertvideo .edui-state-hover .edui-button-wrap {
+.edui-default .edui-toolbar .edui-button.edui-for-more .edui-state-hover .edui-button-wrap {
+    background:url(../images/zhidao.png) 1px -240px no-repeat
+}
+/*for media*/
+.edui-default .edui-for-media {
+    _display: inline !important;
+}
+
+.edui-default .edui-for-media .edui-icon,
+.edui-default .edui-for-media .edui_disableIcon {
+    background:url(../images/zhidao.png) -61px -22px no-repeat
+}
+
+.edui-default .edui-for-media .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .edui-for-media .edui-button-body {
+    width: 84px;
+}
+.edui-default .edui-button.edui-for-media {
+    width: 88px;
+}
+.edui-default .edui-toolbar .edui-button.edui-for-media .edui-state-hover .edui-button-wrap {
     background: url(../images/zhidao.png) 0 -181px no-repeat;
 }

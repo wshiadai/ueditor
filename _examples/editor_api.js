@@ -42,6 +42,7 @@
             'ui/stateful.js',
             'ui/_button.js',
             'ui/_linkPicker.js',
+            'ui/_morePicker.js',
             'ui/_toolbar.js',
             'ui/dialog.js',
             'ui/_editorui.js',
