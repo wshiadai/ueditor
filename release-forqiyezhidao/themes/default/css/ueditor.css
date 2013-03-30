@@ -334,10 +334,7 @@ div.edui-box {
     height: 22px;
 }
 
-.edui-default .edui-for-insertimage .edui-icon {
-    background: url(../images/zhidao.png) 4px -66px no-repeat;
-}
-
+.edui-default .edui-for-insertimage .edui-icon,
 .edui-default .edui-for-insertimage .edui_disableIcon {
     background: url(../images/zhidao.png) 4px -66px no-repeat;
 }
@@ -354,12 +351,9 @@ div.edui-box {
     _display: inline !important;
 }
 
-.edui-default .insertorderedlist .edui-icon {
-    background: url(../images/zhidao.png) 4px 5px no-repeat;
-}
-
-.edui-default .insertorderedlist .edui_disableIcon {
-    background: url(../images/zhidao.png) 4px 5px no-repeat;
+.edui-default .insertorderedlist .edui-icon,
+.edui-default .insertorderedlist .edui_disableIcon{
+    background: url(../images/zhidao.png) 5px -19px no-repeat;
 }
 
 .edui-default .insertorderedlist .edui-label {
@@ -376,12 +370,10 @@ div.edui-box {
     _display: inline !important;
 }
 
-.edui-default .insertunorderedlist .edui-icon {
-    background: url(../images/zhidao.png) 5px -19px no-repeat;
-}
-
-.edui-default .insertunorderedlist .edui_disableIcon {
-    background: url(../images/zhidao.png) 5px -19px no-repeat;
+.edui-default .insertunorderedlist .edui-icon,
+.edui-default .insertunorderedlist .edui_disableIcon
+{
+    background: url(../images/zhidao.png) 4px 5px no-repeat;
 }
 
 .edui-default .insertunorderedlist .edui-label {
@@ -398,11 +390,8 @@ div.edui-box {
     _display: inline !important;
 }
 
-.edui-default .autotypeset .edui-icon {
-    background: url(../images/zhidao.png) 3px -45px no-repeat;
-}
-
-.edui-default .autotypeset .edui_disableIcon {
+.edui-default .autotypeset .edui-icon,
+.edui-default .autotypeset .edui_disableIcon{
     background: url(../images/zhidao.png) 3px -45px no-repeat;
 }
 
@@ -450,11 +439,8 @@ div.edui-box {
     _display: inline !important;
 }
 
-.edui-default .edui-for-link .edui-icon {
-    background:url(../images/zhidao.png) -24px 7px no-repeat
-}
-
-.edui-default .edui-for-link .edui_disableIcon {
+.edui-default .edui-for-link .edui-icon
+,.edui-default .edui-for-link .edui_disableIcon {
     background:url(../images/zhidao.png) -24px 7px no-repeat
 }
 
@@ -472,34 +458,55 @@ div.edui-box {
 .edui-default .edui-toolbar .edui-button.edui-for-link .edui-state-hover .edui-button-wrap {
     background: url(../images/zhidao.png) 0 -210px no-repeat;
 }
-/*for insertvideo*/
-.edui-default .edui-for-insertvideo {
+
+/*for more*/
+.edui-default .edui-for-more {
     _display: inline !important;
 }
 
-.edui-default .edui-for-insertvideo .edui-icon {
-    background:url(../images/zhidao.png) -60px 6px no-repeat
+.edui-default .edui-for-more .edui-icon
+,.edui-default .edui-for-more .edui_disableIcon {
+    background:url(../images/zhidao.png) -24px -20px no-repeat
 }
 
-.edui-default .edui-for-insertvideo .edui_disableIcon {
-    background:url(../images/zhidao.png) -60px 6px no-repeat
-}
-
-.edui-default .edui-for-insertvideo .edui-label {
+.edui-default .edui-for-more .edui-label {
     _top: 2px;
     cursor: pointer;
 }
 
-.edui-default .edui-for-insertvideo .edui-button-body {
-    width: 90px;
+.edui-default .edui-for-more .edui-button-body {
+    width: 62px;
 }
-.edui-default .edui-button.edui-for-insertvideo {
-    width: 94px;
+.edui-default .edui-button.edui-for-more {
+    width: 66px;
 }
-.edui-default .edui-toolbar .edui-button.edui-for-insertvideo .edui-state-hover .edui-button-wrap {
-    background: url(../images/zhidao.png) 0 -181px no-repeat;
+.edui-default .edui-toolbar .edui-button.edui-for-more .edui-state-hover .edui-button-wrap {
+    background:url(../images/zhidao.png) 1px -240px no-repeat
+}
+/*for media*/
+.edui-default .edui-for-media {
+    _display: inline !important;
 }
 
+.edui-default .edui-for-media .edui-icon,
+.edui-default .edui-for-media .edui_disableIcon {
+    background:url(../images/zhidao.png) -61px -22px no-repeat
+}
+
+.edui-default .edui-for-media .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .edui-for-media .edui-button-body {
+    width: 84px;
+}
+.edui-default .edui-button.edui-for-media {
+    width: 88px;
+}
+.edui-default .edui-toolbar .edui-button.edui-for-media .edui-state-hover .edui-button-wrap {
+    background: url(../images/zhidao.png) 0 -181px no-repeat;
+}
 /* 弹出菜单 */
 .edui-default .edui-popup {
     z-index: 3000;
@@ -731,5 +738,41 @@ div.edui-box {
     font-size: 12px;
 }
 .edui-default .edui-linkpicker-body .edui-linkpicker-item.edui-state-hover {
+    background-color: #ebf6e6;
+}
+/*链接弹出菜单*/
+.edui-default .edui-morepicker .edui-morepicker-body {
+    width: 100px;
+    font-size: 12px;
+    cursor: default;
+    overflow-y: auto;
+}
+.edui-default .edui-morepicker-item {
+    padding:5px;
+    cursor: pointer;
+    overflow: hidden;
+}
+.edui-default .edui-morepicker-item .edui-icon{
+    height: 20px !important;
+    width: 23px !important;
+    background-image: url(../images/zhidao.png);
+    float: left;
+}
+.edui-default .edui-morepicker-item .edui-label{
+    float: left;
+}
+.edui-default .edui-answertemplate .edui-icon{
+    background-position: -30px -50px
+}
+.edui-default .edui-insertvideo  .edui-icon{
+    background-position: -63px 0;
+}
+
+
+.edui-default .edui-morepicker-edit {
+    color: #133db6;
+    font-size: 12px;
+}
+.edui-default .edui-morepicker-body .edui-morepicker-item.edui-state-hover {
     background-color: #ebf6e6;
 }

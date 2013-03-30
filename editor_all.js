@@ -9846,6 +9846,58 @@ baidu.editor.ui = {};
 
 
 
+///import core
+///import uicore
+(function () {
+    var utils = baidu.editor.utils,
+        Popup = baidu.editor.ui.Popup,
+        Stateful = baidu.editor.ui.Stateful,
+        UIBase = baidu.editor.ui.UIBase;
+
+    var MorePicker = baidu.editor.ui.MorePicker = function (options) {
+        this.initOptions(options);
+        this.initMorePicker();
+    };
+    MorePicker.prototype = {
+        initMorePicker:function () {
+            this.initUIBase();
+            this.Stateful_init();
+        },
+        getHtmlTpl:function () {
+            return '<div id="##" class="edui-morepicker %%">' +
+                '<div class="edui-morepicker-body">' +
+                    '<div onclick="$$._onClickTemplate(event);" class="edui-morepicker-item edui-answertemplate" stateful>' +
+                        '<div class="edui-icon"></div><div class="edui-label">回答模板</div>' +
+                    '</div>' +
+                    '<div onclick="$$._onClickVideo(event);" class="edui-morepicker-item  edui-insertvideo" stateful>' +
+                        '<div class="edui-icon"></div><div class="edui-label">插入视频</div>' +
+                    '</div>'+
+                '</div>'+
+                '</div>';
+        },
+        getStateDom:function () {
+            return this.target;
+        },
+        _onClickTemplate:function (evt) {
+            this.editor.fireEvent("answertemplateclick");
+            Popup.postHide(evt);
+        },
+        _onClickVideo:function (evt) {
+            if(!this.editor.getDialog("insertvideo")){
+                UE.ui.insertvideo(this.editor);
+            }
+            this.editor.getDialog("insertvideo").open();
+            Popup.postHide(evt);
+        },
+        _UIBase_render:UIBase.prototype.render
+    };
+    utils.inherits(MorePicker, UIBase);
+    utils.extend(MorePicker.prototype, Stateful, true);
+})();
+
+
+
+
 (function (){
     var utils = baidu.editor.utils,
         uiUtils = baidu.editor.ui.uiUtils,
@@ -10244,8 +10296,9 @@ baidu.editor.ui = {};
                     className:'edui-for-' + cmd,
                     title:hovertitle,
                     label:title || '',
-                    onmouseover:cmd == "link" ? function () {
+                    onmouseover:cmd == "link" ? function (evt) {
                         if (editor.options.isLogin) {
+                            UE.ui.Popup.postHide(evt);
                             var linkPop = new baidu.editor.ui.Popup({
                                 content:new baidu.editor.ui.LinkPicker({editor:editor}),
                                 editor:editor,
@@ -10298,7 +10351,7 @@ baidu.editor.ui = {};
     }
 
 
-    editorui.insertimage = function (editor) {
+    editorui["insertimage"] = function (editor) {
         var iframeUrl = editor.options.buttonConfig["insertimage"],
             title = iframeUrl['title'],
             hovertitle = iframeUrl['hoverTitle'],
@@ -10324,6 +10377,7 @@ baidu.editor.ui = {};
             showText:true
         });
 
+        editorui.buttons["insertimage"] = ui;
 
         ui.addListener("renderReady", function () {
             domUtils.on(ui.getDom(), "mouseover", function (e) {
@@ -10512,7 +10566,7 @@ baidu.editor.ui = {};
         });
         return ui;
     };
-    editorui.insertmap = function (editor) {
+    editorui["insertmap"] = function (editor) {
         var iframeUrl = editor.options.buttonConfig["insertmap"],
             title = iframeUrl.title,
             unTitle = iframeUrl.unTitle,
@@ -10532,6 +10586,7 @@ baidu.editor.ui = {};
             setState(ui, hovertitle);
         });
 
+        editorui.buttons["insertmap"] = ui;
         editor.addListener('selectionchange', function () {
             var state = editor.queryCommandState("insertmap"),
                 dom = ui.getDom(),
@@ -10566,6 +10621,106 @@ baidu.editor.ui = {};
         });
         return ui;
     };
+    editorui["media"] = function (editor) {
+        var cmd="media";
+        var iframeUrl = editor.options.buttonConfig[cmd],
+            title = iframeUrl['title'],
+            hoverTitle = iframeUrl.hoverTitle;
+        var ui = new editorui.Button({
+            className:'edui-for-' + cmd + ' ' + cmd,
+            title:hoverTitle,
+            label:title || '',
+            onclick: function () {
+                if (editor.options.isLogin) {
+                    editor.fireEvent("mediaclick")
+                }
+            },
+            showText:true
+        });
+        editorui.buttons[cmd] = ui;
+        ui.addListener("renderReady", function () {
+            setState(ui, hoverTitle);
+        });
+        editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
+            var state = editor.queryCommandState(cmd),
+                dom = ui.getDom(),
+                label = $(dom.id + "_body").children[1];
+
+            if (!editor.options.isLogin) {
+                label.style.color = "#999";
+                dom.setAttribute("title", hoverTitle);
+
+                var icon = $(dom.id + "_body").children[0];
+                domUtils.removeClasses(icon, ["edui-icon"]);
+                domUtils.addClass(icon, "edui_disableIcon");
+                return;
+            }
+            if (state == -1) {
+                ui.setDisabled(true);
+                ui.setChecked(false);
+            } else {
+                if (!uiReady) {
+                    ui.setDisabled(false);
+                    ui.setChecked(state);
+                }
+            }
+        });
+        return ui;
+    };
+    editorui["more"] = function (editor) {
+        var cmd="more";
+        var iframeUrl = editor.options.buttonConfig[cmd],
+            title = iframeUrl['title'],
+            hoverTitle = iframeUrl.hoverTitle;
+        var ui = new editorui.Button({
+            className:'edui-for-' + cmd + ' ' + cmd,
+            title:hoverTitle,
+            label:title || '',
+            onmouseover: function (evt) {
+                if (editor.options.isLogin) {
+                    UE.ui.Popup.postHide(evt);
+                    var morePop = new baidu.editor.ui.Popup({
+                        content:new baidu.editor.ui.MorePicker({editor:editor}),
+                        editor:editor,
+                        className:'edui-morePop'
+                    });
+                    morePop.render();
+                    morePop.showAnchor(this.getDom());
+                }
+            },
+            showText:true
+        });
+        editorui.buttons[cmd] = ui;
+        ui.addListener("renderReady", function () {
+            setState(ui, hoverTitle);
+        });
+
+        editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
+            var state = editor.queryCommandState(cmd),
+                dom = ui.getDom(),
+                label = $(dom.id + "_body").children[1];
+
+            if (!editor.options.isLogin) {
+                label.style.color = "#999";
+                dom.setAttribute("title", hoverTitle);
+
+                var icon = $(dom.id + "_body").children[0];
+                domUtils.removeClasses(icon, ["edui-icon"]);
+                domUtils.addClass(icon, "edui_disableIcon");
+                return;
+            }
+            if (state == -1) {
+                ui.setDisabled(true);
+                ui.setChecked(false);
+            } else {
+                if (!uiReady) {
+                    ui.setDisabled(false);
+                    ui.setChecked(state);
+                }
+            }
+        });
+        return ui;
+    };
 
     var lists = ['insertorderedlist', 'insertunorderedlist', 'autotypeset'];
     for (var l = 0, cl; cl = lists[l++];) {
@@ -10586,10 +10741,10 @@ baidu.editor.ui = {};
                     },
                     showText:true
                 });
+                editorui.buttons[cmd] = ui;
                 ui.addListener("renderReady", function () {
                     setState(ui, hoverTitle);
                 });
-
                 editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
                     var state = editor.queryCommandState(cmd),
                         dom = ui.getDom(),
