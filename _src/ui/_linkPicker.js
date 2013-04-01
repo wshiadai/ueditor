@@ -52,7 +52,7 @@
             obj["href"] = target.getAttribute("_href");
             obj["_href"] = target.getAttribute("_href");
             obj["textValue"] = target.getAttribute("_title");
-            editor.execCommand('link', obj);
+            this.editor.execCommand('link', obj);
             Popup.postHide(evt);
 
         },
