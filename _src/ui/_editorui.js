@@ -98,6 +98,7 @@
                     editor.ui._dialogs[cmd + "Dialog"] = dialog;
                 }
 
+                var linkPop=null;
                 var ui = new editorui.Button({
                     className:'edui-for-' + cmd,
                     title:hovertitle,
@@ -105,7 +106,10 @@
                     onmouseover:cmd == "link" ? function (evt) {
                         if (editor.options.isLogin) {
                             UE.ui.Popup.postHide(evt);
-                            var linkPop = new baidu.editor.ui.Popup({
+                            if(linkPop){
+                                linkPop.dispose();
+                            }
+                            linkPop = new baidu.editor.ui.Popup({
                                 content:new baidu.editor.ui.LinkPicker({editor:editor}),
                                 editor:editor,
                                 className:'edui-linkPop'
@@ -478,6 +482,7 @@
         var iframeUrl = editor.options.buttonConfig[cmd],
             title = iframeUrl['title'],
             hoverTitle = iframeUrl.hoverTitle;
+        var morePop=null;
         var ui = new editorui.Button({
             className:'edui-for-' + cmd + ' ' + cmd,
             title:hoverTitle,
@@ -485,12 +490,14 @@
             onmouseover: function (evt) {
                 if (editor.options.isLogin) {
                     UE.ui.Popup.postHide(evt);
-                    var morePop = new baidu.editor.ui.Popup({
-                        content:new baidu.editor.ui.MorePicker({editor:editor}),
-                        editor:editor,
-                        className:'edui-morePop'
-                    });
-                    morePop.render();
+                    if(!morePop){
+                        morePop = new baidu.editor.ui.Popup({
+                            content:new baidu.editor.ui.MorePicker({editor:editor}),
+                            editor:editor,
+                            className:'edui-morePop'
+                        });
+                        morePop.render();
+                    }
                     morePop.showAnchor(this.getDom());
                 }
             },
