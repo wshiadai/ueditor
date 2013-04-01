@@ -44,7 +44,7 @@
     var $ = function (id) {
         return document.getElementById(id);
     };
-    var setState = function (ui, hovertitle) {
+    var setState = function (editor,ui, hovertitle) {
         if (!editor.options.isLogin) {
             var dom = ui.getDom(),
                 label = $(dom.id + "_body").children[1];
@@ -129,7 +129,7 @@
                 });
                 editorui.buttons[cmd] = ui;
                 ui.addListener("renderReady", function () {
-                    setState(ui, hovertitle)
+                    setState(editor,ui, hovertitle)
                 });
                 editor.addListener('selectionchange', function () {
                     //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
@@ -246,7 +246,7 @@
                 }
             }
 
-            setState(ui, hovertitle);
+            setState(editor,ui, hovertitle);
 
             window[checkupload] = function () {
                 //获取当前是否登录状态
@@ -393,7 +393,7 @@
             showText:true
         });
         ui.addListener("renderReady", function () {
-            setState(ui, hovertitle);
+            setState(editor,ui, hovertitle);
         });
 
         editorui.buttons["insertmap"] = ui;
@@ -449,7 +449,7 @@
         });
         editorui.buttons[cmd] = ui;
         ui.addListener("renderReady", function () {
-            setState(ui, hoverTitle);
+            setState(editor,ui, hoverTitle);
         });
         editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
             var state = editor.queryCommandState(cmd),
@@ -505,7 +505,7 @@
         });
         editorui.buttons[cmd] = ui;
         ui.addListener("renderReady", function () {
-            setState(ui, hoverTitle);
+            setState(editor,ui, hoverTitle);
         });
 
         editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
@@ -556,7 +556,7 @@
                 });
                 editorui.buttons[cmd] = ui;
                 ui.addListener("renderReady", function () {
-                    setState(ui, hoverTitle);
+                    setState(editor,ui, hoverTitle);
                 });
                 editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
                     var state = editor.queryCommandState(cmd),
