@@ -483,6 +483,10 @@ UE.I18N['zh-cn'] = {
         'static':{
         }
     },
+    'wangpan':{
+        'static':{
+        }
+    },
     'wordimage':{
         'static':{
             lang_resave:"转存步骤",

@@ -226,7 +226,8 @@ window.swfUploadLoaded = function () {
             if (swfupload.customSettings.isEditorFile) { //编辑回答的时候，假删除原来的文件
                 swfupload.customSettings.setBindBackupFile('delete', true);
             } else {
-                if (fileinfo) {
+                var swfUploadDir = swfupload.customSettings.swfUploadDir;
+                if (fileinfo && fileinfo.path.substr(0, swfUploadDir.length)==swfUploadDir && !swfupload.customSettings.isInsertFromWangPan) {
                     T.ajax({
                         url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileinfo.fs_id),
                         dataType:'jsonp',
@@ -358,7 +359,8 @@ window.swfUploadFileQueued = function (file) {
                 if (swfupload.customSettings.isEditorFile) { //编辑回答的时候，假删除原来的文件
                     swfupload.customSettings.setBindBackupFile('delete', true);
                 } else {
-                    if (fileinfo) {
+                    var swfUploadDir = swfupload.customSettings.swfUploadDir;
+                    if (fileinfo && fileinfo.path.substr(0, swfUploadDir.length)==swfUploadDir && !swfupload.customSettings.isInsertFromWangPan) {
                         T.ajax({
                             url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileinfo.fs_id),
                             dataType:'jsonp',
@@ -419,6 +421,7 @@ window.swfUploadSendStart = function (file) {
 
         swfupload.customSettings.isUploading = false;
         swfupload.customSettings.isEditorFile = false;
+        swfupload.customSettings.isInsertFromWangPan = false;
         swfupload.customSettings.currentFile = file;
         if (!bduss) {
             progress.setStatus('error', '您尚未登录');
@@ -480,8 +483,8 @@ window.swfUploadSendError = function (file, errorCode, message) {
     try {
         var swfupload = this, progress = swfupload.progress;
         if (errorCode != SWFUpload.UPLOAD_ERROR.FILE_CANCELLED) {
-            swfupload.customSettings.setBindUploadStatus('error', -1);
-            progress.setStatus('error', '上传失败请重试或');
+                swfupload.customSettings.setBindUploadStatus('error', -1);
+                progress.setStatus('error', '上传失败请重试或');
         }
     } catch (ex) {}
 };
@@ -490,67 +493,73 @@ window.swfUploadSendComplete = function () {
 };
 
 //修改问题，设置之前上传的文件
-window.editorSetUploadFile = function (data, editor) {
+window.editorSetUploadFile = function (data, isInsertFromWangPan, editor) {
     var swfupload = editor.swfupload;
-    if(swfupload.customSettings.successCount>0 && !confirm('即将删除上一个附件,确定吗？')){
-        return;
-    } else {
-        if (data && !data.error && data.data.length) {
-            var fileinfo = data.data[0];
-            fileinfo.path = decodeURIComponent(fileinfo.path);
-            var filename = fileinfo.path.substr(fileinfo.path.lastIndexOf('/')+1),
-                filesize = fileinfo.size,
-                tmpArr = fileinfo.path.match(/(\.[^\.]*)$/),
-                filetype = tmpArr ? tmpArr[1] : '.',
-                createTime = new Date(fileinfo.ctime),
-                modifyTime = new Date(fileinfo.ctime);
 
-            editor.uploadFile.fileInfo = fileinfo;
-            editor.uploadFile.backFileInfo = fileinfo;
-            swfupload.customSettings.isEditorFile = true;
-            swfupload.customSettings.successCount = 1;
-            swfupload.customSettings.currentFile = {
-                id:"SWFUpload_0_EDIT",
-                name:filename || '',
-                size:filesize || 0,
-                type:filetype || '',
-                filestatus:-4,
-                index:1,
-                creationdate:createTime || +new Date(),
-                modificationdate:modifyTime || +new Date()
-            };
-            swfupload.progress = new FileProgress(swfupload.customSettings.currentFile, swfupload);
-            swfupload.progress.setStatus('setfilesuccess');
-            swfupload.progress.setFileInfo(filename, filesize);
-        } else {
-            editor.uploadFile.fileInfo = null;
-            editor.uploadFile.backFileInfo = null;
-            swfupload.customSettings.isEditorFile = true;
-            swfupload.customSettings.successCount = 0;
-            swfupload.customSettings.currentFile = {
-                id:"SWFUpload_0_NULL", name:'', size:0, type:'', filestatus:-4, index:1, creationdate:0, modificationdate:0
-            };
-            swfupload.progress = new FileProgress(swfupload.customSettings.currentFile, swfupload);
-            swfupload.progress.setStatus('setfileerror', '<span style="padding-left:5px;">很抱歉，您上传的附件已失效，请重新上传或</span>');
-            swfupload.progress.setFileInfo('', 0);
-        }
+    if(swfupload.customSettings.successCount>0) {
+        //TODO 假如已有上传成功的文件，要先删除，有些情况需要假删除
+    }
+
+    if (data && !data.error && data.data.length) {
+        var fileinfo = data.data[0];
+        fileinfo.path = decodeURIComponent(fileinfo.path);
+        var filename = fileinfo.path.substr(fileinfo.path.lastIndexOf('/')+1),
+            filesize = fileinfo.size,
+            tmpArr = fileinfo.path.match(/(\.[^\.]*)$/),
+            filetype = tmpArr ? tmpArr[1] : '.',
+            createTime = new Date(fileinfo.ctime),
+            modifyTime = new Date(fileinfo.ctime);
+
+        editor.uploadFile.fileInfo = fileinfo;
+        editor.uploadFile.backFileInfo = fileinfo;
+        swfupload.customSettings.isEditorFile = true;
+        swfupload.customSettings.isInsertFromWangPan = isInsertFromWangPan;
+        swfupload.customSettings.successCount = 1;
+        swfupload.customSettings.currentFile = {
+            id:"SWFUpload_0_EDIT",
+            name:filename || '',
+            size:filesize || 0,
+            type:filetype || '',
+            filestatus:-4,
+            index:1,
+            creationdate:createTime || +new Date(),
+            modificationdate:modifyTime || +new Date()
+        };
+        swfupload.progress = new FileProgress(swfupload.customSettings.currentFile, swfupload);
+        swfupload.progress.setStatus('setfilesuccess');
+        swfupload.progress.setFileInfo(filename, filesize);
+    } else {
+        editor.uploadFile.fileInfo = null;
+        editor.uploadFile.backFileInfo = null;
+        swfupload.customSettings.isEditorFile = true;
+        swfupload.customSettings.successCount = 0;
+        swfupload.customSettings.currentFile = {
+            id:"SWFUpload_0_NULL", name:'', size:0, type:'', filestatus:-4, index:1, creationdate:0, modificationdate:0
+        };
+        swfupload.progress = new FileProgress(swfupload.customSettings.currentFile, swfupload);
+        swfupload.progress.setStatus('setfileerror', '<span style="padding-left:5px;">很抱歉，您上传的附件已失效，请重新上传或</span>');
+        swfupload.progress.setFileInfo('', 0);
     }
 };
 
 //修改问题，设置之前上传的文件
 window.editorSubmitUploadFile = function (method, editor) {
     var fileInfo = editor.uploadFile.fileInfo,
-        backFileInfo = editor.uploadFile.backFileInfo;
+        backFileInfo = editor.uploadFile.backFileInfo,
+        swfupload = editor.swfupload,
+        swfUploadDir = swfupload.customSettings.swfUploadDir;
 
     switch (method) {
         case 'submit':
             if (backFileInfo && backFileInfo['delete']) {
-                T.ajax({
-                    url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + backFileInfo.fs_id),
-                    dataType:'jsonp',
-                    success:function (response) {
-                    }
-                });
+                if (backFileInfo.path.substr(0, swfUploadDir.length)==swfUploadDir && !swfupload.customSettings.isInsertFromWangPan) {
+                    T.ajax({
+                        url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + backFileInfo.fs_id),
+                        dataType:'jsonp',
+                        success:function (response) {
+                        }
+                    });
+                }
             } else if (backFileInfo && backFileInfo.rename && backFileInfo.path != backFileInfo.rename) {
                 T.ajax({
                     url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=move&app_id=598913&response-status=200&from=' + backFileInfo.path + '&to=' + backFileInfo.rename),
@@ -563,12 +572,14 @@ window.editorSubmitUploadFile = function (method, editor) {
         case 'cancel':
             if ((fileInfo && !backFileInfo) || (fileInfo && backFileInfo && fileInfo.fs_id != backFileInfo.fs_id)) {
                 //当前文件不是上次的文件，才删除
-                T.ajax({
-                    url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileInfo.fs_id),
-                    dataType:'jsonp',
-                    success:function (response) {
-                    }
-                });
+                if (fileInfo.path.substr(0, swfUploadDir.length)==swfUploadDir && !swfupload.customSettings.isInsertFromWangPan) {
+                    T.ajax({
+                        url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileInfo.fs_id),
+                        dataType:'jsonp',
+                        success:function (response) {
+                        }
+                    });
+                }
             }
             editor.uploadFile.fileInfo = backFileInfo;
             break;

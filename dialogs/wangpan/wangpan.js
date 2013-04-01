@@ -24,7 +24,7 @@ function setFileList(clickTarget, data, isFromServer) {
         }
     }
     T.dom(clickTarget).next('ul').html(treeNodeHtml);
-    T.dom('#fileList').html('<ul>' + (fileListHtml != '' ? fileListHtml : '文件夹下没有文件') + '</ul>');
+    T.dom('#fileList').html('<ul>' + (fileListHtml != '' ? fileListHtml : '<div class="noFile">该文件夹下没有文件</div>') + '</ul>');
 }
 T.dom('#treeRoot_WangPan').delegate('.treeNode', 'click', function (e) {
     var me = e.target, requestPath = T(me).attr('data-path');
@@ -58,7 +58,16 @@ T.dom('#fileList').delegate('.fileItem', 'click', function (e) {
     T(e.target).addClass('fileItem_selected');
 });
 dialog.onok = function(){
-    editor.setUploadFile({data:[FileListData[SelectedFsId]],error:false});
+    var file = FileListData[SelectedFsId];
+    if (!file) {
+        return false;
+    } else if (/\.((jpg)|(jpeg)|(gif)|(bmp)|(png)|(jpe)|(cur)|(tif)|(tiff)|(ico))$/.test(file.path.substr(file.path.lastIndexOf('.')))) {
+        alert('插入图片请使用图片功能！');
+        return false;
+    } else {
+        editor.setUploadFile({data:[file],error:false}, true);
+        return true;
+    }
 };
 dialog.oncancel = function(){
     InsertFile = SelectedFsId = WangPanData = FileListData = null;

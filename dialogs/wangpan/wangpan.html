@@ -54,6 +54,10 @@
             cursor: pointer;
         }
 
+        .treeNode:hover {
+            background:#EAEAEA;
+        }
+
         .treeNode_selected {
             background: #EAEAEA;
         }
@@ -64,7 +68,21 @@
             padding:8px;
         }
 
+        .fileItem:hover {
+            background:#F0F8FD;
+        }
+
         .fileItem_selected {
+            background:#F0F8FD;
+        }
+
+        .noFile{
+            margin-top:100px;
+            text-align: center;
+            color: #FF4500;
+        }
+
+        #errorMsg{
             background:#F0F8FD;
         }
     </style>
@@ -78,6 +96,7 @@
     <div id="fileListContenter">
         <div id="fileList"></div>
     </div>
+    <div id="errorMsg"></div>
 </div>
 <script type="text/javascript" src="wangpan.js"></script>
 <script type="text/javascript">

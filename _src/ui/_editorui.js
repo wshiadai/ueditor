@@ -367,6 +367,7 @@
                     swfUploadUrl:editor.options.swfUploadUrl,
                     swfUploadDir:editor.options.swfUploadDir,
                     isLogin:editor.options.isLogin,
+                    isInsertFromWangPan:false,
                     isEditorFile:false,
                     isUploading:false,
                     successCount:0,
@@ -437,8 +438,9 @@
                 upload_error_handler:swfUploadSendError,
                 upload_complete_handler:swfUploadSendComplete
             });
-            editor.setUploadFile = function (fileInfo) {
-                editorSetUploadFile(fileInfo, editor);
+            editor.setUploadFile = function (fileInfo, isInsertFromWangPan) {
+                if(!isInsertFromWangPan) isInsertFromWangPan=false;
+                editorSetUploadFile(fileInfo, isInsertFromWangPan, editor);
             };
             editor.uploadAction = function (method, callback) {
                 editorSubmitUploadFile(method, editor, callback);
@@ -513,8 +515,12 @@
             title:hoverTitle,
             label:title,
             onclick:function () {
-                dialog.reset();
-                dialog.showAtCenter();
+                if (editor.swfupload && editor.swfupload.customSettings.successCount>0 && !confirm('即将删除上一个附件,确定吗？')) {
+                    return false;
+                } else {
+                    dialog.reset();
+                    dialog.showAtCenter();
+                }
             },
             showText:true
         });
