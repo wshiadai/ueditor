@@ -13,6 +13,8 @@
     var $ = function (id) {
         return document.getElementById(id);
     };
+
+
     editorui.insertimage = function (editor) {
         var iframeUrl = editor.options.buttonConfig["insertimage"],
             title = iframeUrl['title'],
@@ -300,7 +302,7 @@
         return ui;
     };
 
-    editorui['uploadfile'] = function (editor) {
+    editorui.uploadfile = function (editor) {
         var cmd = 'uploadfile',
             timestamp = +new Date(),
             placeholderId = 'swfUploadPlaceholder' + timestamp,
@@ -452,7 +454,6 @@
             }
         });
 
-
         ui.addListener("renderReady", function () {
             //鼠标mouseover/mouseout上传按钮事件
             domUtils.on(ui.getDom(), "mouseover", function (e) {
@@ -475,7 +476,6 @@
 
         return ui;
     }
-
 
     editorui.wangpan = function (editor) {
         var title = '网盘',

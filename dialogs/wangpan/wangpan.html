@@ -5,98 +5,24 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <script type="text/javascript" src="../internal.js"></script>
     <script type="text/javascript" src="../../tangram.js"></script>
-    <style type="text/css">
-        .wrapper {
-            width: 510px;
-            height: 270px;
-            margin: 10px auto;
-            padding:15px;
-        }
-
-        #treeRoot_WangPan {
-            background-color: #FFFFFF;
-            float: left;
-            border: 1px solid #CCCCCC;
-            width: 150px;
-            height: 290px;
-            margin-right: 15px;
-            overflow-y: scroll;
-            padding:5px 0px 5px 5px;
-        }
-
-        #treeRoot_WangPan ul {
-            margin: 0px;
-            list-style: none;
-            padding-left: 15px;
-        }
-
-        #treeRoot_WangPan ul li {
-            margin: 0px;
-            list-style: none;
-        }
-
-        #fileListContenter {
-        }
-
-        #fileList {
-            background-color: #FFFFFF;
-            border: 1px solid #CCCCCC;
-            height: 300px;
-            overflow-y: scroll;
-        }
-
-        #fileList ul{
-            padding: 0px;
-        }
-
-        .treeNode {
-            background: #FFFFFF;
-            cursor: pointer;
-        }
-
-        .treeNode:hover {
-            background:#EAEAEA;
-        }
-
-        .treeNode_selected {
-            background: #EAEAEA;
-        }
-
-        .fileItem {
-            border-bottom: 1px solid #D2D2D2;
-            cursor: pointer;
-            padding:8px;
-        }
-
-        .fileItem:hover {
-            background:#F0F8FD;
-        }
-
-        .fileItem_selected {
-            background:#F0F8FD;
-        }
-
-        .noFile{
-            margin-top:100px;
-            text-align: center;
-            color: #FF4500;
-        }
-
-        #errorMsg{
-            background:#F0F8FD;
-        }
-    </style>
+    <link rel="stylesheet" href="wangpan.css"/>
 </head>
 <body>
 <div class="wrapper">
-    <div id="treeRoot_WangPan" onselectstart="return false">
-        <div class="treeNode" data-path="/apps/百度知道">+百度知道</div>
-        <ul></ul>
+    <div id="treeContenter" onselectstart="return false">
+        <div id="treeRoot" onselectstart="return false">
+            <div class="treeNode nodeToOpen" data-path="/apps/百度知道">
+                <span class="nodeExpand"></span>
+                <span class="nodeFolder"></span>
+                <span class="nodeName">百度知道</span>
+            </div>
+            <ul></ul>
+        </div>
     </div>
-    <div id="fileListContenter">
+    <div id="listContenter">
         <div id="fileList"></div>
     </div>
-    <div id="errorMsg"></div>
+    <div id="errorMsg" class="clearfix"></div>
 </div>
 <script type="text/javascript" src="wangpan.js"></script>
 <script type="text/javascript">

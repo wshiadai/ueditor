@@ -1,0 +1,158 @@
+@charset "utf-8";
+.wrapper {
+    width: 510px;
+    height: 300px;
+    margin: 0px auto;
+    padding:15px;
+}
+#treeContenter {
+    float: left;
+    width: 170px;
+    height: 300px;
+    margin-bottom: 5px;
+}
+#listContenter {
+    float: right;
+    width: 330px;
+    height: 300px;
+}
+#treeRoot{
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    margin-right: 15px;
+    overflow-y: auto;
+}
+#treeRoot ul {
+    margin: 0px;
+    list-style: none;
+    padding-left: 15px;
+}
+#treeRoot ul li {
+    margin: 0px;
+    list-style: none;
+}
+#fileList {
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    overflow-y: auto;
+}
+#fileList ul,
+#fileList ul li{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+.treeNode {
+    heigth: 20px;
+    clear: both;
+    background: #FFFFFF;
+}
+.treeNode:hover {
+    background:#EAEAEA;
+}
+.fileItem {
+    border-bottom: 1px solid #D2D2D2;
+    cursor: pointer;
+    clear: both;
+    height:37px;
+}
+.fileItem:hover {
+    background:#F0F8FD;
+}
+.fileItem_selected {
+    background:#F0F8FD;
+}
+.noFile{
+    margin-top:100px;
+    text-align: center;
+    color: #FF4500;
+}
+.clearfix{
+    clear: both;
+    height: 0px;
+}
+#errorMsg{
+    height: 16px;
+    color: #EE5757;
+    font-size: 12px;
+    text-align: right;
+}
+
+.nodeExpand,
+.nodeFolder,
+.nodeName{
+    overflow: hidden;
+    float: left;
+    display: block;
+    cursor: pointer;
+}
+.nodeFolder{
+    margin: 2px 2px 0px 0px;
+    width: 15px;
+    height: 13px;
+    background: url("../../themes/default/images/fileTree.png");
+}
+.nodeToClose .nodeFolder{
+    background: url("../../themes/default/images/fileTree.png") 0px -13px;
+}
+.nodeName{
+}
+.nodeExpand{
+    margin: 2px 2px 2px 2px;
+    width: 11px;
+    height: 11px;
+    background: url("../../themes/default/images/fileTree.png");
+}
+.nodeToOpen .nodeExpand{
+    background-position: 0px -26px;
+}
+.nodeToClose .nodeExpand{
+    background-position: 0px -37px;
+}
+.nodeEnd .nodeExpand{
+    background-position: 0px -48px;
+}
+
+.fileName,
+.fileSize,
+.fileSize{
+    overflow: hidden;
+}
+.fileName{
+    margin-top: 9px;
+    float: left;
+    width: 190px;
+    height: 21px;
+}
+.fileSize {
+    margin-top: 9px;
+    float: right;
+    width: 60px;
+    height: 21px;
+}
+.fileIcon {
+    margin: 7px 10px 0px 15px;
+    float: left;
+    width: 26px;
+    height: 21px;
+    background: url("../../themes/default/images/fileIcon.gif") -416px 0px;
+}
+.icon_file_image {background-position: 0px 0px; }
+.icon_file_visio {background-position: -32px 0px; }
+.icon_file_pdf {background-position: -64px 0px; }
+.icon_file_word {background-position: -96px 0px; }
+.icon_file_excel {background-position: -128px 0px; }
+.icon_file_text {background-position: -160px 0px; }
+.icon_file_music {background-position: -192px 0px; }
+.icon_file_video {background-position: -224px 0px; }
+.icon_file_powerpoint {background-position: -256px 0px; }
+.icon_file_ipa {background-position: -288px 0px; }
+.icon_file_exe{background-position: -320px 0px; }
+.icon_file_zip {background-position: -352px 0px; }
+.icon_file_apk {background-position: -384px 0px; }
+.icon_file_default {background-position: -416px 0px; }
+.icon_file_torrent{background-position: -448px 0px; }

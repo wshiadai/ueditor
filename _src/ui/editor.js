@@ -29,6 +29,7 @@
                 editor.getDialog = function (name) {
                     return editor.ui._dialogs[name + "Dialog"];
                 };
+
                 domUtils.on(editor.window, 'scroll', function (evt) {
                     baidu.editor.ui.Popup.postHide(evt);
                 });
