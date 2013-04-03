@@ -34,7 +34,7 @@
             'plugins/serialize.js',
             'plugins/video.js',
             'plugins/basestyle.js',
-            'plugins/heading.js',
+            'plugins/_heading.js',
             'ui/ui.js',
             'ui/uiutils.js',
             'ui/uibase.js',
@@ -43,15 +43,10 @@
             'ui/popup.js',
             'ui/stateful.js',
             'ui/button.js',
-            'ui/splitbutton.js',
             'ui/toolbar.js',
-            'ui/menu.js',
-            'ui/combox.js',
             'ui/dialog.js',
-            'ui/menubutton.js',
             'ui/editorui.js',
-            'ui/editor.js',
-            'ui/multiMenu.js'
+            'ui/editor.js'
         ],
         baseURL = '../_src/';
     for (var i=0,pi;pi = paths[i++];) {

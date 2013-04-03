@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>expdemo</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" charset="utf-8" src="../editor_config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="editor_api.js"></script>
+    <!--<script type="text/javascript" charset="utf-8" src="../editor_all.js"></script>-->
+
+</head>
+<body>
+<div>
+    <script  id="editor" type="text/plain"></script>
+</div>
+<script type="text/javascript">
+    var ed = UE.getEditor("editor");
+    ed.addListener("beforegetcontent",function(){
+        var links = domUtils.getElementsByTagName(this.document,"a");
+        for(var i= 0,link;link=links[i++];){
+            UE.dom.domUtils.remove(link,true)
+        }
+    });
+    //    ed.addListener("keydown",function(){
+    //        var start = this.selection.getStart(),
+    //                range = this.selection.getRange();
+    //        if(start.tagName.toLowerCase() == "img"&&range.collapsed){
+    //            if(range.startOffset == 0 && range.endOffset == 0){
+    //                alert(1)
+    //            }
+    //            if(range.startOffset ==1 && range.endOffset ==1){
+    //                alert(2)
+    //            }
+    //        }
+    ////        if(start)
+    //    });
+    function submit(){
+        var hlist = domUtils.getElementsByTagName(ed.document,"h2"),
+                uiutils = baidu.editor.ui.uiUtils;
+
+        utils.each(hlist,function(node){
+            var txt = node.innerHTML.replace(/[^\x00-\xff]/g, 'ci');
+            if(txt.length>40){
+                console.log(uiutils.getViewportRect());
+                console.log(uiutils.getClientRect(node));
+            }
+        });
+    }
+</script>
+</body>
+</html>
