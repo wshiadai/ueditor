@@ -4,6 +4,7 @@
     height: 300px;
     margin: 0px auto;
     padding:15px;
+    overflow: hidden;
 }
 #treeContenter {
     float: left;
@@ -129,6 +130,10 @@
     width: 17px;
     height: 12px;
     background-position: 0px 0px;
+}
+.nodeLoading .nodeFolder {
+    background-image: url(../../themes/default/images/uploading.gif);
+    background-position: 0px -2px;
 }
 
 .fileName,

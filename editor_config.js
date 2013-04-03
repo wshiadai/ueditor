@@ -421,7 +421,7 @@
         //上传文件的在网盘保存的路径
         swfUploadDir:'/apps/百度知道/',
         //发送文件的文件表单名称
-        swfUploadPostName:'file',
+        swfUploadPostName:'file'
 
         //插入网盘
     };

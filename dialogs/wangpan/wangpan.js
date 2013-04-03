@@ -13,7 +13,7 @@
     var SelectedFsId, SelectedPath, WangPanData = {};
     function showFileTree(treeNode, data) {
         var file, treeNodeHtml = '', treeNodeTDom = T(treeNode);
-        if (!treeNodeTDom.hasClass('nodeEnd')) {
+        if (data && !treeNodeTDom.hasClass('nodeEnd')) {
             for (var i in data.list) {
                 file = data.list[i];
                 if (file.isdir) {
@@ -34,22 +34,26 @@
 
     function showFileList(data, isInsertAfter) {
         var file, fileListHtml = '';
-        for (var i in data.list) {
-            file = data.list[i];
-            if (!file.isdir) {
-                fileListHtml += '<li>' +
-                    '<div class="fileItem" data-path="' + file.path + '" data-fs_id="' + file.fs_id + '">' +
-                    '<span class="fileIcon ' + editor.getIconName(file.server_filename.substr(file.server_filename.lastIndexOf('.')+1)) + '"></span>' +
-                    '<span class="fileName">' + editor.getShortName(file.server_filename, 32) + '</span>' +
-                    '<span class="fileSize">' + editor.getFileSize(file.size) + '</span>' +
-                    '</div>' +
-                    '</li>';
+        if (data) {
+            for (var i in data.list) {
+                file = data.list[i];
+                if (!file.isdir) {
+                    fileListHtml += '<li>' +
+                        '<div class="fileItem" data-path="' + file.path + '" data-fs_id="' + file.fs_id + '">' +
+                        '<span class="fileIcon ' + editor.getIconName(file.server_filename.substr(file.server_filename.lastIndexOf('.')+1)) + '"></span>' +
+                        '<span class="fileName">' + editor.getShortName(file.server_filename, 32) + '</span>' +
+                        '<span class="fileSize">' + editor.getFileSize(file.size) + '</span>' +
+                        '</div>' +
+                        '</li>';
+                }
             }
-        }
-        if(!isInsertAfter) {
-            T('#fileList').html('<ul>' + (fileListHtml != '' ? fileListHtml : '<div class="noFile">该文件夹下没有文件</div>') + '</ul>');
+            if(!isInsertAfter) {
+                T('#fileList').html('<ul>' + (fileListHtml != '' ? fileListHtml : '<div class="noFile">该文件夹下没有文件</div>') + '</ul>');
+            } else {
+                T('#fileList ul').append(fileListHtml);
+            }
         } else {
-            T('#fileList ul').append(fileListHtml);
+            T('#fileList').html('<ul><div class="noFile">文件列表获取失败</div></ul>');
         }
     }
 
@@ -60,6 +64,7 @@
         if (isOpen) {
             if (isEmpty) {
                 getFileList(treeNode, function(data){
+                    treeNodeTDom.removeClass('nodeLoading');
                     showFileTree(treeNode, data);
                 });
             }
@@ -76,6 +81,7 @@
         if (WangPanData[requestPath]) {
             callback(WangPanData[requestPath]);
         } else {
+            T(treeNode).addClass('nodeLoading');
             pullFileList(requestPath, 0, callback);
         }
     }
@@ -94,31 +100,39 @@
 
     function pullFileList(path, page, callback) {
         var start = PAGESIZE*page, end = PAGESIZE*(page+1);
-        T.ajax({
-            url: 'https://pcs.baidu.com/rest/2.0/pcs/file',
-            dataType: 'jsonp',
-            data: {
-                'method': 'list',
-                'app_id': 598913,
-                'response-status': 200,
-                'dir': path,
-                'by': 'time',
-                'order': 'asc',
-                'limit': start + '-' + end,
-                'BDUSS': 'BiWGZ3UGZ-Tnc0WC0zZ3BzZUVob0YyVk9oZU14SWRwc1NQUHFlMTY2ZHhUNE5SQVFBQUFBJCQAAAAAAAAAAAEAAABvw0MYc25zYXBpNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHCW1FxwltRfj'
-            },
-            success: function (data) {
-                if (page==0) {
-                    WangPanData[path] = data;
-                } else {
-                    for (var i in data.list) {
-                        WangPanData[path].list.push(data.list[i]);
+        try{
+            T.ajax({
+                url: 'https://pcs.baidu.com/rest/2.0/pcs/file',
+                dataType: 'jsonp',
+                data: {
+                    'method': 'list',
+                    'app_id': 598913,
+                    'response-status': 200,
+                    'dir': path,
+                    'by': 'time',
+                    'order': 'asc',
+                    'limit': start + '-' + end,
+                    'BDUSS': 'BiWGZ3UGZ-Tnc0WC0zZ3BzZUVob0YyVk9oZU14SWRwc1NQUHFlMTY2ZHhUNE5SQVFBQUFBJCQAAAAAAAAAAAEAAABvw0MYc25zYXBpNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHCW1FxwltRfj'
+                },
+                success: function (data) {
+                    if (data.list) {
+                        if (page==0) {
+                            WangPanData[path] = data;
+                        } else {
+                            for (var i in data.list) {
+                                WangPanData[path].list.push(data.list[i]);
+                            }
+                        }
+                        WangPanData[path].isEnd = (data.list.length<PAGESIZE ? true:false);
+                        callback(data);
+                    } else {
+                        callback(null);
                     }
                 }
-                WangPanData[path].isEnd = (data.list.length<PAGESIZE ? true:false);
-                callback(data);
-            }
-        });
+            });
+        }catch(ex){
+            callback(null);
+        }
     }
 
     T('#treeRoot').delegate('.treeNode>*', 'click', function (e) {
@@ -138,6 +152,7 @@
         } else {
             //直接获取文件列表
             getFileList(treeNode, function(data){
+                treeNodeTDom.removeClass('nodeLoading');
                 showFileTree(treeNode, data);
                 showFileList(data);
                 //expandFileTree(treeNode, true);
@@ -169,7 +184,7 @@
         var me = T(this), page, listdata;
         if (this.scrollHeight - me.height() - me.scrollTop() <= 50 ) {
             listdata = WangPanData[SelectedPath];
-            if (listdata && !listdata.isEnd) {
+            if (listdata && !listdata.isEnd && listdata.list) {
                 page = Math.ceil(listdata.list.length/PAGESIZE);
                 pullFileList(SelectedPath, page, function(data){
                     showFileList(data, true);

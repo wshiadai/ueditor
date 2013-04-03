@@ -449,7 +449,7 @@
             };
             //Flash插件版本过低提示
             var flashContainer = $(flashContainerId);
-            if (flashContainer.children[0].nodeName!='OBJECT') {
+            if (!/^[\s]*<((object)|(OBJECT))/.test(flashContainer.innerHTML)) {
                 flashContainer.title = "您的Flash插件版本过低，请更新后再尝试！";
             }
         });
