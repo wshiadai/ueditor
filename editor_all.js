@@ -10311,7 +10311,11 @@ baidu.editor.ui = {};
                             linkPop.render();
                             linkPop.showAnchor(this.getDom());
                         }
-                    } : null,
+                    } : function(evt){
+                        if (editor.options.isLogin) {
+                            UE.ui.Popup.postHide(evt);
+                        }
+                    },
                     onclick:function () {
                         if (editor.options.isLogin && dialog) {
                             dialog.render();
@@ -10365,6 +10369,11 @@ baidu.editor.ui = {};
             className:'edui-for-insertimage',
             title:hovertitle || '',
             label:title || '',
+            onmouseover: function (evt) {
+                if (editor.options.isLogin) {
+                    UE.ui.Popup.postHide(evt);
+                }
+            },
             getHtmlTpl:function () {
                 return '<div id="##" class="edui-box %%" ' + (this.title ? 'title="' + this.title + '"' : '') + '>' +
                     '<div id="##_state" stateful>' +
@@ -10579,6 +10588,11 @@ baidu.editor.ui = {};
             className:'edui-for-insertmap insertmap',
             title:hovertitle,
             label:title,
+            onmouseover: function (evt) {
+                if (editor.options.isLogin) {
+                    UE.ui.Popup.postHide(evt);
+                }
+            },
             onclick:function () {
                 if (editor.options.isLogin) {
                     ik.qb.neweditor.showMap(editor);
@@ -10634,6 +10648,11 @@ baidu.editor.ui = {};
             className:'edui-for-' + cmd + ' ' + cmd,
             title:hoverTitle,
             label:title || '',
+            onmouseover: function (evt) {
+                if (editor.options.isLogin) {
+                    UE.ui.Popup.postHide(evt);
+                }
+            },
             onclick: function () {
                 if (editor.options.isLogin) {
                     editor.fireEvent("mediaclick")
@@ -10740,6 +10759,11 @@ baidu.editor.ui = {};
                     className:'edui-for-' + cmd + ' ' + cmd,
                     title:hoverTitle,
                     label:title || '',
+                    onmouseover: function (evt) {
+                        if (editor.options.isLogin) {
+                            UE.ui.Popup.postHide(evt);
+                        }
+                    },
                     onclick:function () {
                         editor.fireEvent("beforeexeccmd", cmd);
                         if (editor.options.isLogin) {
