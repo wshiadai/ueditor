@@ -4786,6 +4786,35 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             }
         },
 
+        expSubmit:function(){
+            var me = this,
+                hlist = domUtils.getElementsByTagName(me.document,"h2"),
+                state="",
+                flag = true,
+                uiutils = baidu.editor.ui.uiUtils;
+            for(var i = 0,node;node=hlist[i++];){
+                var txt= node.innerHTML.replace(domUtils.fillChar,"");
+                if(domUtils.isEmptyNode(node)){
+                    state = "标题为空";
+                }
+                if(txt.replace(/[^\x00-\xff]/g, 'ci').length>40){
+                    state = "标题要小于40个字符";
+                }
+                if(state){
+                    var top = (document.body.scrollTop||document.documentElement.scrollTop) + uiutils.getClientRect(node).top-60;
+                    window.scrollTo(0,top);
+                    window.edSimShowStepPop(uiutils.getClientRect(node).top,state);
+                    if(!node.firstChild){
+                        node.innerHTML = domUtils.fillChar;
+                    }
+                    me.selection.getRange().selectNode(node.firstChild).setCursor(true);
+                    flag = false;
+                    break;
+                }
+            }
+            return flag;
+        },
+
         /**
          * 让编辑器获得焦点，toEnd确定focus位置
          * @name focus
@@ -6888,12 +6917,10 @@ UE.commands['insertimage'] = {
 
             } else {
                 for (var i = 0; ci = opt[i++];) {
-                    ci['floatStyle'] = 'center';
-                    str = '<p><img  style = "float: none; display: block; margin: 0px auto;" src="' + ci.src + '" ' +
+                    str = '<p><img  src="' + ci.src + '" ' +
                         (ci.width ? 'width="' + ci.width + '" ' : '') + (ci._src ? ' _src="' + ci._src + '" ' : '') +
                         (ci.height ? ' height="' + ci.height + '" ' : '') +
-                        ' style="' + (ci['floatStyle'] && ci['floatStyle'] != 'center' ? 'float:' + ci['floatStyle'] + ';' : '') +
-                        (ci.border || '') + '" ' +
+                        ' style="float: none; display: block; margin: 0px auto;" ' +
                         (ci.title ? ' title="' + ci.title + '"' : '') + ' /></p>';
                     html.push(str);
                 }
@@ -8712,9 +8739,6 @@ UE.plugins['enterkey'] = function() {
     });
 };
 
-/*
- *   处理特殊键的兼容性问题
- */
 UE.plugins['keystrokes'] = function() {
     var me = this;
 
@@ -8763,13 +8787,15 @@ UE.plugins['keystrokes'] = function() {
         if (keyCode == 8) {//|| keyCode == 46
             var start,end;
             //避免按两次删除才能生效的问题
-            if(rng.inFillChar()){
+            if(rng.collapsed && rng.inFillChar()){
                 start = rng.startContainer;
-                rng.setStartBefore(start).shrinkBoundary(true).collapse(true);
                 if(domUtils.isFillChar(start)){
+                    rng.setStartBefore(start).shrinkBoundary(true).collapse(true);
                     domUtils.remove(start)
                 }else{
                     start.nodeValue = start.nodeValue.replace(new RegExp('^' + domUtils.fillChar ),'');
+                    rng.startOffset--;
+                    rng.collapse(true).select(true)
                 }
             }
 
@@ -8925,20 +8951,18 @@ UE.plugins['autoheight'] = function () {
         if(isFullscreen)return;
         timer = setTimeout(function () {
 
-            if (me.queryCommandState && me.queryCommandState('source') != 1) {
+        if (me.queryCommandState && me.queryCommandState('source') != 1) {
                 if (!span) {
                     span = me.document.createElement('span');
                     //trace:1764
-                    span.style.cssText = 'display:block;width:0;margin:0;padding:0;border:0;clear:both;';
+                    span.style.cssText = 'display:block;width:0;height:0;margin:0;padding:0;border:0;clear:both;';
                     span.innerHTML = '.';
                 }
                 tmpNode = span.cloneNode(true);
                 me.body.appendChild(tmpNode);
-
                 currentHeight = Math.max(domUtils.getXY(tmpNode).y + tmpNode.offsetHeight,Math.max(options.minFrameHeight, options.initialFrameHeight));
 
                 if (currentHeight != lastHeight) {
-
                     me.setHeight(currentHeight);
 
                     lastHeight = currentHeight;
@@ -8947,7 +8971,7 @@ UE.plugins['autoheight'] = function () {
                 domUtils.remove(tmpNode);
 
             }
-        }, 50);
+        }, 0);
     }
     var isFullscreen;
     me.addListener('fullscreenchanged',function(cmd,f){
@@ -10260,13 +10284,13 @@ UE.plugins['heading'] = function () {
 //                range.setStartAfter(node);
 //                domUtils.remove(node)
 //            }
-            if (!collapsed) {
-                node = range.endContainer;
-                if (node.nodeType == 1 && domUtils.isEmptyNode(node) && !domUtils.isBody(node)) {
+//            if (!collapsed) {
+//                node = range.endContainer;
+//                if (node.nodeType == 1 && domUtils.isEmptyNode(node) && !domUtils.isBody(node)) {
 //                    range.setEndBefore(node);
 //                    domUtils.remove(node)
-                }
-            }
+//                }
+//            }
 
 
             range.collapse(false);
@@ -10329,9 +10353,9 @@ UE.plugins['heading'] = function () {
                     }
 
                 }
-                if (domUtils.isEmptyBlock(hi)) {
-                    hi.innerHTML = domUtils.fillChar;
-                }
+//                if (domUtils.isEmptyBlock(hi)) {
+//                    hi.innerHTML = domUtils.fillChar;
+//                }
 
             }
             if (bm.start) {
@@ -11166,94 +11190,6 @@ baidu.editor.ui = {};
 
 })();
 
-///import core
-///import uicore
-///import ui/stateful.js
-(function (){
-    var utils = baidu.editor.utils,
-        uiUtils = baidu.editor.ui.uiUtils,
-        domUtils = baidu.editor.dom.domUtils,
-        UIBase = baidu.editor.ui.UIBase,
-        Stateful = baidu.editor.ui.Stateful,
-        SplitButton = baidu.editor.ui.SplitButton = function (options){
-            this.initOptions(options);
-            this.initSplitButton();
-        };
-    SplitButton.prototype = {
-        popup: null,
-        uiName: 'splitbutton',
-        title: '',
-        initSplitButton: function (){
-            this.initUIBase();
-            this.Stateful_init();
-            var me = this;
-            if (this.popup != null) {
-                var popup = this.popup;
-                this.popup = null;
-                this.setPopup(popup);
-            }
-        },
-        _UIBase_postRender: UIBase.prototype.postRender,
-        postRender: function (){
-            this.Stateful_postRender();
-            this._UIBase_postRender();
-        },
-        setPopup: function (popup){
-            if (this.popup === popup) return;
-            if (this.popup != null) {
-                this.popup.dispose();
-            }
-            popup.addListener('show', utils.bind(this._onPopupShow, this));
-            popup.addListener('hide', utils.bind(this._onPopupHide, this));
-            popup.addListener('postrender', utils.bind(function (){
-                popup.getDom('body').appendChild(
-                    uiUtils.createElementByHtml('<div id="' +
-                        this.popup.id + '_bordereraser" class="edui-bordereraser edui-background" style="width:' +
-                        (uiUtils.getClientRect(this.getDom()).width - 2) + 'px"></div>')
-                    );
-                popup.getDom().className += ' ' + this.className;
-            }, this));
-            this.popup = popup;
-        },
-        _onPopupShow: function (){
-            this.addState('opened');
-        },
-        _onPopupHide: function (){
-            this.removeState('opened');
-        },
-        getHtmlTpl: function (){
-            return '<div id="##" class="edui-box %%">' +
-                '<div '+ (this.title ? 'title="' + this.title + '"' : '') +' id="##_state" stateful><div class="%%-body">' +
-                '<div id="##_button_body" class="edui-box edui-button-body" onclick="$$._onButtonClick(event, this);">' +
-                '<div class="edui-box edui-icon"></div>' +
-                '</div>' +
-                '<div class="edui-box edui-splitborder"></div>' +
-                '<div class="edui-box edui-arrow" onclick="$$._onArrowClick();"></div>' +
-                '</div></div></div>';
-        },
-        showPopup: function (){
-            // 当popup往上弹出的时候，做特殊处理
-            var rect = uiUtils.getClientRect(this.getDom());
-            rect.top -= this.popup.SHADOW_RADIUS;
-            rect.height += this.popup.SHADOW_RADIUS;
-            this.popup.showAnchorRect(rect);
-        },
-        _onArrowClick: function (event, el){
-            if (!this.isDisabled()) {
-                this.showPopup();
-            }
-        },
-        _onButtonClick: function (){
-            if (!this.isDisabled()) {
-                this.fireEvent('buttonclick');
-            }
-        }
-    };
-    utils.inherits(SplitButton, UIBase);
-    utils.extend(SplitButton.prototype, Stateful, true);
-
-})();
-
 (function (){
     var utils = baidu.editor.utils,
         uiUtils = baidu.editor.ui.uiUtils,
@@ -11293,363 +11229,6 @@ baidu.editor.ui = {};
     };
     utils.inherits(Toolbar, UIBase);
 
-})();
-
-///import core
-///import uicore
-///import ui\popup.js
-///import ui\stateful.js
-(function () {
-    var utils = baidu.editor.utils,
-        domUtils = baidu.editor.dom.domUtils,
-        uiUtils = baidu.editor.ui.uiUtils,
-        UIBase = baidu.editor.ui.UIBase,
-        Popup = baidu.editor.ui.Popup,
-        Stateful = baidu.editor.ui.Stateful,
-        CellAlignPicker = baidu.editor.ui.CellAlignPicker,
-        Menu = baidu.editor.ui.Menu = function (options) {
-            this.initOptions(options);
-            this.initMenu();
-        };
-
-    var menuSeparator = {
-        renderHtml:function () {
-            return '<div class="edui-menuitem edui-menuseparator"><div class="edui-menuseparator-inner"></div></div>';
-        },
-        postRender:function () {
-        },
-        queryAutoHide:function () {
-            return true;
-        }
-    };
-    Menu.prototype = {
-        items:null,
-        uiName:'menu',
-        initMenu:function () {
-            this.items = this.items || [];
-            this.initPopup();
-            this.initItems();
-        },
-        initItems:function () {
-            for (var i = 0; i < this.items.length; i++) {
-                var item = this.items[i];
-                if (item == '-') {
-                    this.items[i] = this.getSeparator();
-                } else if (!(item instanceof MenuItem)) {
-                    item.editor = this.editor;
-                    item.theme = this.editor.options.theme;
-                    this.items[i] = this.createItem(item);
-                }
-            }
-        },
-        getSeparator:function () {
-            return menuSeparator;
-        },
-        createItem:function (item) {
-            return new MenuItem(item);
-        },
-        _Popup_getContentHtmlTpl:Popup.prototype.getContentHtmlTpl,
-        getContentHtmlTpl:function () {
-            if (this.items.length == 0) {
-                return this._Popup_getContentHtmlTpl();
-            }
-            var buff = [];
-            for (var i = 0; i < this.items.length; i++) {
-                var item = this.items[i];
-                buff[i] = item.renderHtml();
-            }
-            return ('<div class="%%-body">' + buff.join('') + '</div>');
-        },
-        _Popup_postRender:Popup.prototype.postRender,
-        postRender:function () {
-            var me = this;
-            for (var i = 0; i < this.items.length; i++) {
-                var item = this.items[i];
-                item.ownerMenu = this;
-                item.postRender();
-            }
-            domUtils.on(this.getDom(), 'mouseover', function (evt) {
-                evt = evt || event;
-                var rel = evt.relatedTarget || evt.fromElement;
-                var el = me.getDom();
-                if (!uiUtils.contains(el, rel) && el !== rel) {
-                    me.fireEvent('over');
-                }
-            });
-            this._Popup_postRender();
-        },
-        queryAutoHide:function (el) {
-            if (el) {
-                if (uiUtils.contains(this.getDom(), el)) {
-                    return false;
-                }
-                for (var i = 0; i < this.items.length; i++) {
-                    var item = this.items[i];
-                    if (item.queryAutoHide(el) === false) {
-                        return false;
-                    }
-                }
-            }
-        },
-        clearItems:function () {
-            for (var i = 0; i < this.items.length; i++) {
-                var item = this.items[i];
-                clearTimeout(item._showingTimer);
-                clearTimeout(item._closingTimer);
-                if (item.subMenu) {
-                    item.subMenu.destroy();
-                }
-            }
-            this.items = [];
-        },
-        destroy:function () {
-            if (this.getDom()) {
-                domUtils.remove(this.getDom());
-            }
-            this.clearItems();
-        },
-        dispose:function () {
-            this.destroy();
-        }
-    };
-    utils.inherits(Menu, Popup);
-
-    var MenuItem = baidu.editor.ui.MenuItem = function (options) {
-        this.initOptions(options);
-        this.initUIBase();
-        this.Stateful_init();
-        if (this.subMenu && !(this.subMenu instanceof Menu)) {
-            if (options.className && options.className.indexOf("aligntd") != -1) {
-                var me = this;
-                this.subMenu = new Popup({
-                    content:new CellAlignPicker(this.subMenu),
-                    parentMenu:me,
-                    editor:me.editor,
-                    destroy:function () {
-                        if (this.getDom()) {
-                            domUtils.remove(this.getDom());
-                        }
-                    }
-                });
-                this.subMenu.addListener("postRenderAfter", function () {
-                    domUtils.on(this.getDom(), "mouseover", function () {
-                        me.addState('opened');
-                    });
-                });
-            } else {
-                this.subMenu = new Menu(this.subMenu);
-            }
-        }
-    };
-    MenuItem.prototype = {
-        label:'',
-        subMenu:null,
-        ownerMenu:null,
-        uiName:'menuitem',
-        alwalysHoverable:true,
-        getHtmlTpl:function () {
-            return '<div id="##" class="%%" stateful onclick="$$._onClick(event, this);">' +
-                '<div class="%%-body">' +
-                this.renderLabelHtml() +
-                '</div>' +
-                '</div>';
-        },
-        postRender:function () {
-            var me = this;
-            this.addListener('over', function () {
-                me.ownerMenu.fireEvent('submenuover', me);
-                if (me.subMenu) {
-                    me.delayShowSubMenu();
-                }
-            });
-            if (this.subMenu) {
-                this.getDom().className += ' edui-hassubmenu';
-                this.subMenu.render();
-                this.addListener('out', function () {
-                    me.delayHideSubMenu();
-                });
-                this.subMenu.addListener('over', function () {
-                    clearTimeout(me._closingTimer);
-                    me._closingTimer = null;
-                    me.addState('opened');
-                });
-                this.ownerMenu.addListener('hide', function () {
-                    me.hideSubMenu();
-                });
-                this.ownerMenu.addListener('submenuover', function (t, subMenu) {
-                    if (subMenu !== me) {
-                        me.delayHideSubMenu();
-                    }
-                });
-                this.subMenu._bakQueryAutoHide = this.subMenu.queryAutoHide;
-                this.subMenu.queryAutoHide = function (el) {
-                    if (el && uiUtils.contains(me.getDom(), el)) {
-                        return false;
-                    }
-                    return this._bakQueryAutoHide(el);
-                };
-            }
-            this.getDom().style.tabIndex = '-1';
-            uiUtils.makeUnselectable(this.getDom());
-            this.Stateful_postRender();
-        },
-        delayShowSubMenu:function () {
-            var me = this;
-            if (!me.isDisabled()) {
-                me.addState('opened');
-                clearTimeout(me._showingTimer);
-                clearTimeout(me._closingTimer);
-                me._closingTimer = null;
-                me._showingTimer = setTimeout(function () {
-                    me.showSubMenu();
-                }, 250);
-            }
-        },
-        delayHideSubMenu:function () {
-            var me = this;
-            if (!me.isDisabled()) {
-                me.removeState('opened');
-                clearTimeout(me._showingTimer);
-                if (!me._closingTimer) {
-                    me._closingTimer = setTimeout(function () {
-                        if (!me.hasState('opened')) {
-                            me.hideSubMenu();
-                        }
-                        me._closingTimer = null;
-                    }, 400);
-                }
-            }
-        },
-        renderLabelHtml:function () {
-            return '<div class="edui-arrow"></div>' +
-                '<div class="edui-box edui-icon"></div>' +
-                '<div class="edui-box edui-label %%-label">' + (this.label || '') + '</div>';
-        },
-        getStateDom:function () {
-            return this.getDom();
-        },
-        queryAutoHide:function (el) {
-            if (this.subMenu && this.hasState('opened')) {
-                return this.subMenu.queryAutoHide(el);
-            }
-        },
-        _onClick:function (event, this_) {
-            if (this.hasState('disabled')) return;
-            if (this.fireEvent('click', event, this_) !== false) {
-                if (this.subMenu) {
-                    this.showSubMenu();
-                } else {
-                    Popup.postHide(event);
-                }
-            }
-        },
-        showSubMenu:function () {
-            var rect = uiUtils.getClientRect(this.getDom());
-            rect.right -= 5;
-            rect.left += 2;
-            rect.width -= 7;
-            rect.top -= 4;
-            rect.bottom += 4;
-            rect.height += 8;
-            this.subMenu.showAnchorRect(rect, true, true);
-        },
-        hideSubMenu:function () {
-            this.subMenu.hide();
-        }
-    };
-    utils.inherits(MenuItem, UIBase);
-    utils.extend(MenuItem.prototype, Stateful, true);
-})();
-
-///import core
-///import uicore
-///import ui/menu.js
-///import ui/splitbutton.js
-(function (){
-    // todo: menu和item提成通用list
-    var utils = baidu.editor.utils,
-        uiUtils = baidu.editor.ui.uiUtils,
-        Menu = baidu.editor.ui.Menu,
-        SplitButton = baidu.editor.ui.SplitButton,
-        Combox = baidu.editor.ui.Combox = function (options){
-            this.initOptions(options);
-            this.initCombox();
-        };
-    Combox.prototype = {
-        uiName: 'combox',
-        initCombox: function (){
-            var me = this;
-            this.items = this.items || [];
-            for (var i=0; i<this.items.length; i++) {
-                var item = this.items[i];
-                item.uiName = 'listitem';
-                item.index = i;
-                item.onclick = function (){
-                    me.selectByIndex(this.index);
-                };
-            }
-            this.popup = new Menu({
-                items: this.items,
-                uiName: 'list',
-                editor:this.editor
-            });
-            this.initSplitButton();
-        },
-        _SplitButton_postRender: SplitButton.prototype.postRender,
-        postRender: function (){
-            this._SplitButton_postRender();
-            this.setLabel(this.label || '');
-            this.setValue(this.initValue || '');
-        },
-        showPopup: function (){
-            var rect = uiUtils.getClientRect(this.getDom());
-            rect.top += 1;
-            rect.bottom -= 1;
-            rect.height -= 2;
-            this.popup.showAnchorRect(rect);
-        },
-        getValue: function (){
-            return this.value;
-        },
-        setValue: function (value){
-            var index = this.indexByValue(value);
-            if (index != -1) {
-                this.selectedIndex = index;
-                this.setLabel(this.items[index].label);
-                this.value = this.items[index].value;
-            } else {
-                this.selectedIndex = -1;
-                this.setLabel(this.getLabelForUnknowValue(value));
-                this.value = value;
-            }
-        },
-        setLabel: function (label){
-            this.getDom('button_body').innerHTML = label;
-            this.label = label;
-        },
-        getLabelForUnknowValue: function (value){
-            return value;
-        },
-        indexByValue: function (value){
-            for (var i=0; i<this.items.length; i++) {
-                if (value == this.items[i].value) {
-                    return i;
-                }
-            }
-            return -1;
-        },
-        getItem: function (index){
-            return this.items[index];
-        },
-        selectByIndex: function (index){
-            if (index < this.items.length && this.fireEvent('select', index) !== false) {
-                this.selectedIndex = index;
-                this.value = this.items[index].value;
-                this.setLabel(this.items[index].label);
-            }
-        }
-    };
-    utils.inherits(Combox, SplitButton);
 })();
 
 ///import core
@@ -11905,46 +11484,6 @@ baidu.editor.ui = {};
     utils.inherits(Dialog, UIBase);
 })();
 
-///import core
-///import uicore
-///import ui/menu.js
-///import ui/splitbutton.js
-(function (){
-    var utils = baidu.editor.utils,
-        Menu = baidu.editor.ui.Menu,
-        SplitButton = baidu.editor.ui.SplitButton,
-        MenuButton = baidu.editor.ui.MenuButton = function (options){
-            this.initOptions(options);
-            this.initMenuButton();
-        };
-    MenuButton.prototype = {
-        initMenuButton: function (){
-            var me = this;
-            this.uiName = "menubutton";
-            this.popup = new Menu({
-                items: me.items,
-                className: me.className,
-                editor:me.editor
-            });
-            this.popup.addListener('show', function (){
-                var list = this;
-                for (var i=0; i<list.items.length; i++) {
-                    list.items[i].removeState('checked');
-                    if (list.items[i].value == me._value) {
-                        list.items[i].addState('checked');
-                        this.value = me._value;
-                    }
-                }
-            });
-            this.initSplitButton();
-        },
-        setValue : function(value){
-            this._value = value;
-        }
-        
-    };
-    utils.inherits(MenuButton, SplitButton);
-})();
 //ui跟编辑器的适配層
 //那个按钮弹出是dialog，是下拉筐等都是在这个js中配置
 //自己写的ui也要在这里配置，放到baidu.editor.ui下边，当编辑器实例化的时候会根据editor_config中的toolbars找到相应的进行实例化
@@ -13416,44 +12955,4 @@ baidu.editor.ui = {};
             delete instances[id]
         }
     }
-})();
-///import core
-///import uicore
- ///commands 表情
-(function(){
-    var utils = baidu.editor.utils,
-        Popup = baidu.editor.ui.Popup,
-        SplitButton = baidu.editor.ui.SplitButton,
-        MultiMenuPop = baidu.editor.ui.MultiMenuPop = function(options){
-            this.initOptions(options);
-            this.initMultiMenu();
-        };
-
-    MultiMenuPop.prototype = {
-        initMultiMenu: function (){
-            var me = this;
-            this.popup = new Popup({
-                content: '',
-                editor : me.editor,
-                iframe_rendered: false,
-                onshow: function (){
-                    if (!this.iframe_rendered) {
-                        this.iframe_rendered = true;
-                        this.getDom('content').innerHTML = '<iframe id="'+me.id+'_iframe" src="'+ me.iframeUrl +'" frameborder="0"></iframe>';
-                        me.editor.container.style.zIndex && (this.getDom().style.zIndex = me.editor.container.style.zIndex * 1 + 1);
-                    }
-                }
-               // canSideUp:false,
-               // canSideLeft:false
-            });
-            this.onbuttonclick = function(){
-                this.showPopup();
-            };
-            this.initSplitButton();
-        }
-
-    };
-
-    utils.inherits(MultiMenuPop, SplitButton);
-})();
-})();
+})();})();
