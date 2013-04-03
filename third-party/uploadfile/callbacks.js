@@ -1,8 +1,10 @@
-/* Copy From fileprogress.js
- * Constructor
- * file is a SWFUpload file object
- * targetID is the HTML element id attribute that the FileProgress HTML structure will be added to.
- * Instantiating a new FileProgress object with an existing file will reuse/update the existing DOM elements
+/**
+ * @file
+ * @name callbacks for uploadfile
+ * @desc FileProgress and callbacks for uploadfile
+ * @user: xujinquan
+ * @date: 13-4-1
+ * @time: 下午15:35
  */
 function FileProgress(file, swfupload) {
     this.swfupload = swfupload;
@@ -229,7 +231,7 @@ window.swfUploadLoaded = function () {
                 var swfUploadDir = swfupload.customSettings.swfUploadDir;
                 if (fileinfo && fileinfo.path.substr(0, swfUploadDir.length)==swfUploadDir && !swfupload.customSettings.isInsertFromWangPan) {
                     T.ajax({
-                        url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileinfo.fs_id),
+                        url:encodeURI('http://10.215.7.17/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileinfo.fs_id),
                         dataType:'jsonp',
                         success:function (response) {
                         }
@@ -289,7 +291,7 @@ window.swfUploadLoaded = function () {
                 } else if (newname != "" && newname != showName.substr(showName.lastIndexOf('.')+1) && newname != showName && pathto != pathfrom) {
                     // 新文件名 不为空 && 不等于之前的后缀名 && 有修改过文本框 && 不与实际文件名相同
                     T.ajax({
-                        url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=move&app_id=598913&response-status=200&from=' + pathfrom + '&to=' + pathto),
+                        url:encodeURI('http://10.215.7.17/rest/2.0/pcs/file?method=move&app_id=598913&response-status=200&from=' + pathfrom + '&to=' + pathto),
                         dataType:'jsonp',
                         success:function (response) {
                             if (response.error_code) {
@@ -362,7 +364,7 @@ window.swfUploadFileQueued = function (file) {
                     var swfUploadDir = swfupload.customSettings.swfUploadDir;
                     if (fileinfo && fileinfo.path.substr(0, swfUploadDir.length)==swfUploadDir && !swfupload.customSettings.isInsertFromWangPan) {
                         T.ajax({
-                            url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileinfo.fs_id),
+                            url:encodeURI('http://10.215.7.17/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileinfo.fs_id),
                             dataType:'jsonp',
                             success:function (response) {
                             }

@@ -17,12 +17,12 @@
     height: 300px;
 }
 #treeRoot{
-    width: 100%;
     height: 100%;
+    /*width: 100%;*/
     background-color: #FFFFFF;
     border: 1px solid #CCCCCC;
     margin-right: 15px;
-    overflow-y: auto;
+    overflow: auto;
 }
 #treeRoot ul {
     margin: 0px;
@@ -47,12 +47,18 @@
     list-style: none;
 }
 .treeNode {
-    heigth: 20px;
+    margin-bottom: 4px;
+    line-height: 17px;
+    height: 17px;
     clear: both;
     background: #FFFFFF;
+    white-space:nowrap;
 }
 .treeNode:hover {
     background:#EAEAEA;
+}
+.pathRoot {
+    margin: 4px 0px 4px 3px;
 }
 .fileItem {
     border-bottom: 1px solid #D2D2D2;
@@ -61,8 +67,8 @@
     height:37px;
 }
 .fileItem:hover {
-    background:#F0F8FD;
-}
+     background:#F0F8FD;
+ }
 .fileItem_selected {
     background:#F0F8FD;
 }
@@ -85,36 +91,44 @@
 .nodeExpand,
 .nodeFolder,
 .nodeName{
-    overflow: hidden;
-    float: left;
-    display: block;
+    display: inline-block;
     cursor: pointer;
 }
-.nodeFolder{
-    margin: 2px 2px 0px 0px;
-    width: 15px;
-    height: 13px;
-    background: url("../../themes/default/images/fileTree.png");
-}
-.nodeToClose .nodeFolder{
-    background: url("../../themes/default/images/fileTree.png") 0px -13px;
-}
-.nodeName{
-}
 .nodeExpand{
-    margin: 2px 2px 2px 2px;
+    margin: 0px 2px 0px 3px;
     width: 11px;
     height: 11px;
-    background: url("../../themes/default/images/fileTree.png");
+    vertical-align: text-bottom;
+    background: url("../../themes/default/images/fileTree.png") 0px -38px;
+}
+.nodeFolder{
+    margin-right: 3px;
+    width: 15px;
+    height: 13px;
+    vertical-align: text-top;
+    background-image: url("../../themes/default/images/fileTree.png");
+    background-position: 0px -13px;
+}
+.nodeName{
+    margin-right: 2px;
+    vertical-align: middle;
 }
 .nodeToOpen .nodeExpand{
-    background-position: 0px -26px;
+    background-position: 0px -39px;
 }
 .nodeToClose .nodeExpand{
-    background-position: 0px -37px;
+    background-position: 0px -50px;
 }
 .nodeEnd .nodeExpand{
-    background-position: 0px -48px;
+    background-position: 0px -50px;
+}
+.nodeToClose .nodeFolder{
+    background-position: 0px -26px;
+}
+.pathRoot .nodeFolder {
+    width: 17px;
+    height: 12px;
+    background-position: 0px 0px;
 }
 
 .fileName,
