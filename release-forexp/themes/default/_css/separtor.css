@@ -1,8 +1,0 @@
-/*分隔线*/
-.edui-default .edui-toolbar .edui-separator {
-    width: 2px;
-    height: 29px;
-    margin: 4px 4px 0px 3px;
-    background: url(../images/exp-icon.png) -490px 0;
-    background: url(../images/exp-icon.gif) -490px 0 \9;
-}
