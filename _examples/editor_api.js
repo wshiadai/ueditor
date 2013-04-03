@@ -31,7 +31,6 @@
             'plugins/fiximgclick.js',
             'plugins/autoheight.js',
             'plugins/autofloat.js',  //依赖UEditor UI,在IE6中，会覆盖掉body的背景图属性
-            'plugins/serialize.js',
             'plugins/video.js',
             'plugins/basestyle.js',
             'plugins/_heading.js',
