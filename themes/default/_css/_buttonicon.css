@@ -189,3 +189,51 @@
 .edui-default .edui-toolbar .edui-button.edui-for-media .edui-state-hover .edui-button-wrap {
     background: url(../images/zhidao.png) 0 -181px no-repeat;
 }
+/*for insertvideo*/
+.edui-default .edui-for-insertvideo {
+    _display: inline !important;
+}
+
+.edui-default .edui-for-insertvideo .edui-icon,
+.edui-default .edui-for-insertvideo .edui_disableIcon {
+    background:url(../images/zhidao.png) -61px 5px no-repeat
+}
+
+.edui-default .edui-for-insertvideo .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .edui-for-insertvideo .edui-button-body {
+    width: 84px;
+}
+.edui-default .edui-button.edui-for-insertvideo {
+    width: 88px;
+}
+.edui-default .edui-toolbar .edui-button.edui-for-insertvideo .edui-state-hover .edui-button-wrap {
+    background: url(../images/zhidao.png) 0 -181px no-repeat;
+}
+/*for answertemplate*/
+.edui-default .edui-for-answertemplate {
+    _display: inline !important;
+}
+
+.edui-default .edui-for-answertemplate .edui-icon,
+.edui-default .edui-for-answertemplate .edui_disableIcon {
+    background:url(../images/zhidao.png) -26px -45px no-repeat
+}
+
+.edui-default .edui-for-answertemplate .edui-label {
+    _top: 2px;
+    cursor: pointer;
+}
+
+.edui-default .edui-for-answertemplate .edui-button-body {
+    width: 84px;
+}
+.edui-default .edui-button.edui-for-answertemplate {
+    width: 88px;
+}
+.edui-default .edui-toolbar .edui-button.edui-for-answertemplate .edui-state-hover .edui-button-wrap {
+    background: url(../images/zhidao.png) 0 -181px no-repeat;
+}

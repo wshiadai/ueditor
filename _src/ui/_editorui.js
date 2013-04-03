@@ -445,57 +445,64 @@
         });
         return ui;
     };
-    editorui["media"] = function (editor) {
-        var cmd="media";
-        var iframeUrl = editor.options.buttonConfig[cmd],
-            title = iframeUrl['title'],
-            hoverTitle = iframeUrl.hoverTitle;
-        var ui = new editorui.Button({
-            className:'edui-for-' + cmd + ' ' + cmd,
-            title:hoverTitle,
-            label:title || '',
-            onmouseover: function (evt) {
-                if (editor.options.isLogin) {
-                    UE.ui.Popup.postHide(evt);
-                }
-            },
-            onclick: function () {
-                if (editor.options.isLogin) {
-                    editor.fireEvent("mediaclick")
-                }
-            },
-            showText:true
-        });
-        editorui.buttons[cmd] = ui;
-        ui.addListener("renderReady", function () {
-            setState(editor,ui, hoverTitle);
-        });
-        editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
-            var state = editor.queryCommandState(cmd),
-                dom = ui.getDom(),
-                label = $(dom.id + "_body").children[1];
 
-            if (!editor.options.isLogin) {
-                label.style.color = "#999";
-                dom.setAttribute("title", hoverTitle);
 
-                var icon = $(dom.id + "_body").children[0];
-                domUtils.removeClasses(icon, ["edui-icon"]);
-                domUtils.addClass(icon, "edui_disableIcon");
-                return;
-            }
-            if (state == -1) {
-                ui.setDisabled(true);
-                ui.setChecked(false);
-            } else {
-                if (!uiReady) {
-                    ui.setDisabled(false);
-                    ui.setChecked(state);
-                }
-            }
-        });
-        return ui;
-    };
+    var btns=["media","answertemplate"];
+    for (var k = 0, ml; ml = btns[k++];){
+        (function(cmd){
+            editorui[cmd]=function (editor) {
+                var iframeUrl = editor.options.buttonConfig[cmd],
+                    title = iframeUrl['title'],
+                    hoverTitle = iframeUrl.hoverTitle;
+                var ui = new editorui.Button({
+                    className:'edui-for-' + cmd + ' ' + cmd,
+                    title:hoverTitle,
+                    label:title || '',
+                    onmouseover: function (evt) {
+                        if (editor.options.isLogin) {
+                            UE.ui.Popup.postHide(evt);
+                        }
+                    },
+                    onclick: function () {
+                        if (editor.options.isLogin) {
+                            editor.fireEvent(cmd+"click");
+                        }
+                    },
+                    showText:true
+                });
+                editorui.buttons[cmd] = ui;
+                ui.addListener("renderReady", function () {
+                    setState(editor,ui, hoverTitle);
+                });
+                editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
+                    var state = editor.queryCommandState(cmd),
+                        dom = ui.getDom(),
+                        label = $(dom.id + "_body").children[1];
+
+                    if (!editor.options.isLogin) {
+                        label.style.color = "#999";
+                        dom.setAttribute("title", hoverTitle);
+
+                        var icon = $(dom.id + "_body").children[0];
+                        domUtils.removeClasses(icon, ["edui-icon"]);
+                        domUtils.addClass(icon, "edui_disableIcon");
+                        return;
+                    }
+                    if (state == -1) {
+                        ui.setDisabled(true);
+                        ui.setChecked(false);
+                    } else {
+                        if (!uiReady) {
+                            ui.setDisabled(false);
+                            ui.setChecked(state);
+                        }
+                    }
+                });
+                return ui;
+            };
+        })(ml);
+    }
+
     editorui["more"] = function (editor) {
         var cmd="more";
         var iframeUrl = editor.options.buttonConfig[cmd],
