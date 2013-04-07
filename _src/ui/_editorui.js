@@ -116,6 +116,7 @@
                             });
                             linkPop.render();
                             linkPop.showAnchor(this.getDom());
+                            editor.fireEvent("afterlinkmouseover");
                         }
                     } : function(evt){
                         if (editor.options.isLogin) {
@@ -525,6 +526,7 @@
                         morePop.render();
                     }
                     morePop.showAnchor(this.getDom());
+                    editor.fireEvent("aftermoremouseover");
                 }
             },
             showText:true
