@@ -331,5 +331,10 @@
         //  },
         //填写过滤规则
         //filterRules : {}
+
+        /*-----------forexp-------*/
+        ,basicinfoUrl:{
+            'food':URL+'dialogs/_basicinfo/food.html'
+        }
     };
 })();
