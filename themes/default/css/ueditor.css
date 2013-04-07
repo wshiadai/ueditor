@@ -898,7 +898,7 @@ div.fieldset span.legend {
     width: 24px;
     margin-left: 5px;
     padding: 0 10px;
-    background: url(./images/btn-bg.png) 0px -1008px repeat-x;
+    background: url(../images/btn-bg.png) 0px -1008px repeat-x;
 }
 .progressRenameBtn:hover {
     background-position: 0px -1058px;

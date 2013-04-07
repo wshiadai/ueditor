@@ -68,6 +68,7 @@ function FileProgress(file, swfupload) {
     this.progressBar = T('.progressBar', this.fileProgressWrapper)[0];
     this.progressBarText = T('.progressBarText', this.fileProgressWrapper)[0];
     this.progressCancel = T('.progressCancel', this.fileProgressWrapper)[0];
+    this.progressWealth = T('.progressWealth', this.fileOperator)[0];
     this.fileOperator = T('.progressFileOperator', this.fileProgressWrapper)[0];
     this.fileOperatorRename = T('a.rename', this.fileOperator)[0];
     this.fileOperatorDelete = T('a.remove', this.fileOperator)[0];
@@ -102,7 +103,7 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
     switch (status) {
         case 'ready':
             swfupload.customSettings.setBindUploadStatus('ready');
-            displayCode = '1,1,1,0,0,0,0,1,1';
+            displayCode = '1,1,1,0,0,0,0,1,1,1';
             swfupload.setButtonDisabled(false);
             break;
         case 'uploading':
@@ -114,14 +115,14 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             this.progressBar.className = "progressBar";
             this.fileProgressWrapper.className = "progressWrapper";
             swfupload.customSettings.setBindUploadStatus('uploading');
-            displayCode = '1,1,1,0,0,1,1,0,0';
+            displayCode = '1,1,1,0,0,1,1,0,0,0';
             swfupload.setButtonDisabled(true);
             break;
         case 'finish':
             this.progressBar.style.width = "99%";
             this.progressBarText.innerHTML = "99%";
             swfupload.customSettings.setBindUploadStatus('finish');
-            displayCode = '1,1,1,0,0,1,1,0,0';
+            displayCode = '1,1,1,0,0,1,1,0,0,0';
             swfupload.setButtonDisabled(true);
             break;
         case 'complete':
@@ -129,7 +130,7 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             this.progressBarText.innerHTML = "100%";
             this.progressBar.className = "progressBar progressBarComplete";
             swfupload.customSettings.setBindUploadStatus('complete');
-            displayCode = '1,1,1,0,0,1,0,1,1';
+            displayCode = '1,1,1,0,0,1,0,1,1,1';
             swfupload.setButtonDisabled(false);
             break;
         case 'error':
@@ -140,7 +141,7 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             } else {
                 swfupload.customSettings.setBindUploadStatus('error', -1);
             }
-            displayCode = '1,1,1,0,1,0,0,0,1';
+            displayCode = '1,1,1,0,1,0,0,0,0,1';
             swfupload.setButtonDisabled(false);
             break;
         case 'setfilesuccess':
@@ -148,28 +149,28 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             this.progressBarText.innerHTML = "100%";
             this.progressBar.className = "progressBar";
             swfupload.customSettings.setBindUploadStatus('complete');
-            displayCode = '1,1,1,0,0,1,0,1,1';
+            displayCode = '1,1,1,0,0,1,0,1,1,1';
             break;
         case 'setfileerror':
             this.fileProgressWrapper.className = "progressWrapper progressWrapperError";
             this.progressMessage.innerHTML = this.getShortName(message, 50);
             swfupload.customSettings.setBindUploadStatus('error', -1);
-            displayCode = '0,0,0,0,1,0,0,0,1';
+            displayCode = '0,0,0,0,1,0,0,0,0,1';
             break;
         case 'renamestart':
-            displayCode = '1,0,0,1,0,0,0,0,0';
+            displayCode = '1,0,0,1,0,0,0,0,0,0';
             break;
         case 'renamecomplete':
             swfupload.customSettings.setBindUploadStatus('complete');
-            displayCode = '1,1,1,0,0,1,0,1,1';
+            displayCode = '1,1,1,0,0,1,0,1,1,1';
             break;
         case 'renameerror':
             this.fileProgressWrapper.className = "progressWrapper progressWrapperError";
             swfupload.customSettings.setBindUploadStatus('error', -1);
-            displayCode = '1,0,0,1,1,0,0,0,0';
+            displayCode = '1,0,0,1,1,0,0,0,0,0';
             break;
         default:
-            displayCode = '1,1,1,0,0,0,0,0,0';
+            displayCode = '1,1,1,0,0,0,0,0,0,0';
             break;
     }
     displayArr = displayCode.split(',');
@@ -181,8 +182,9 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
     this.progressMessage.style.display = displayArr[4] == '1' ? 'block' : 'none';
     this.progressBarWrapper.style.display = displayArr[5] == '1' ? 'block' : 'none';
     this.progressCancel.style.display = displayArr[6] == '1' ? 'block' : 'none';
-    this.fileOperatorRename.style.display = displayArr[7] == '1' ? 'inline' : 'none';
-    this.fileOperatorDelete.style.display = displayArr[8] == '1' ? 'inline' : 'none';
+    this.progressWealth.style.display = displayArr[7] == '1' ? 'block' : 'none';
+    this.fileOperatorRename.style.display = displayArr[8] == '1' ? 'inline' : 'none';
+    this.fileOperatorDelete.style.display = displayArr[9] == '1' ? 'inline' : 'none';
     this.fileProgressWrapper.style.display = 'block';
 };
 
@@ -219,14 +221,14 @@ window.swfUploadLoaded = function () {
         };
         swfupload.customSettings.deleteHandler = function (e) {
             var progress = swfupload.progress,
-                fileinfo = swfupload.customSettings.getBindUploadFile();
+                fileinfo = swfupload.customSettings.getUploadFile();
             e.preventDefault();
             swfupload.customSettings.successCount = 0;
-            swfupload.customSettings.setBindUploadFile(null);
+            swfupload.customSettings.setUploadFile('fileInfo', null);
             progress.setStatus('ready');
             T(progress.fileProgressWrapper).hide();
             if (swfupload.customSettings.isEditorFile) { //编辑回答的时候，假删除原来的文件
-                swfupload.customSettings.setBindBackupFile('delete', true);
+                swfupload.customSettings.setUploadFile('backFileInfo', true, 'delete');
             } else {
                 var swfUploadDir = swfupload.customSettings.swfUploadDir;
                 if (fileinfo && fileinfo.path.substr(0, swfUploadDir.length)==swfUploadDir && !swfupload.customSettings.isInsertFromWangPan) {
@@ -281,11 +283,11 @@ window.swfUploadLoaded = function () {
             } else {
                 //发送到重命名到网盘
                 var showName = progress.progressName.title,
-                    pathfrom = swfupload.customSettings.getBindUploadFile().path,
+                    pathfrom = swfupload.customSettings.getUploadFile().path,
                     pathto = pathfrom.substr(0, pathfrom.lastIndexOf('/')+1) + newname;
 
                 if (pathfrom != pathto && swfupload.customSettings.isEditorFile) { //编辑回答的时候，假重命名原来的文件
-                    swfupload.customSettings.setBindBackupFile('rename', pathto);
+                    swfupload.customSettings.setUploadFile('backFileInfo', pathto, 'rename');
                     progress.setFileInfo(newname);
                     progress.setStatus('renamecomplete');
                 } else if (newname != "" && newname != showName.substr(showName.lastIndexOf('.')+1) && newname != showName && pathto != pathfrom) {
@@ -304,7 +306,7 @@ window.swfUploadLoaded = function () {
                                 progress.setStatus('renamecomplete');
                                 progress.setFileInfo(newname);
                                 swfupload.progress.setFileInfo(newname);
-                                swfupload.customSettings.setBindUploadFile('path', pathto);
+                                swfupload.customSettings.setUploadFile('fileInfo', pathto, 'path');
                             }
                         }
                     });
@@ -327,7 +329,7 @@ window.swfUploadLoaded = function () {
         T.on(fileOperatorDelete, 'click', swfupload.customSettings.deleteHandler);
 
         if (swfupload.customSettings.isEditorFile) {
-            if (swfupload.customSettings.getBindUploadFile()) {
+            if (swfupload.customSettings.getUploadFile()) {
                 swfupload.customSettings.setBindUploadStatus('complete');
             } else {
                 swfupload.customSettings.setBindUploadStatus('error', -1);
@@ -354,12 +356,12 @@ window.swfUploadFileQueued = function (file) {
             alert('请使用插入图片功能，可直接在线预览');
         } else if (swfupload.customSettings.successCount > 0 || swfupload.customSettings.isUploading == true) {
             if (confirm("即将删除上一个附件,确定吗？")) {
-                var fileinfo = swfupload.customSettings.getBindUploadFile();
+                var fileinfo = swfupload.customSettings.getUploadFile();
                 swfupload.progress = new FileProgress(file, swfupload);
-                swfupload.customSettings.setBindUploadFile(null);
+                swfupload.customSettings.setUploadFile('fileInfo', null);
                 swfupload.customSettings.successCount = 0;
                 if (swfupload.customSettings.isEditorFile) { //编辑回答的时候，假删除原来的文件
-                    swfupload.customSettings.setBindBackupFile('delete', true);
+                    swfupload.customSettings.setUploadFile('backFileInfo', true, 'delete');
                 } else {
                     var swfUploadDir = swfupload.customSettings.swfUploadDir;
                     if (fileinfo && fileinfo.path.substr(0, swfUploadDir.length)==swfUploadDir && !swfupload.customSettings.isInsertFromWangPan) {
@@ -471,7 +473,7 @@ window.swfUploadSendSuccess = function (file, serverData) {
             }
             progress.setStatus('complete');
             swfupload.customSettings.successCount++;
-            swfupload.customSettings.setBindUploadFile(fileinfo);
+            swfupload.customSettings.setUploadFile('fileInfo', fileinfo);
         }
     } catch (ex) {
         var swfupload = this, progress = swfupload.progress;
@@ -512,8 +514,8 @@ window.editorSetUploadFile = function (data, isInsertFromWangPan, editor) {
             createTime = new Date(fileinfo.ctime),
             modifyTime = new Date(fileinfo.ctime);
 
-        editor.uploadFile.fileInfo = fileinfo;
-        editor.uploadFile.backFileInfo = fileinfo;
+        editor._uploadFile.fileInfo = fileinfo;
+        editor._uploadFile.backFileInfo = fileinfo;
         swfupload.customSettings.isEditorFile = true;
         swfupload.customSettings.isInsertFromWangPan = isInsertFromWangPan;
         swfupload.customSettings.successCount = 1;
@@ -531,8 +533,8 @@ window.editorSetUploadFile = function (data, isInsertFromWangPan, editor) {
         swfupload.progress.setStatus('setfilesuccess');
         swfupload.progress.setFileInfo(filename, filesize);
     } else {
-        editor.uploadFile.fileInfo = null;
-        editor.uploadFile.backFileInfo = null;
+        editor._uploadFile.fileInfo = null;
+        editor._uploadFile.backFileInfo = null;
         swfupload.customSettings.isEditorFile = true;
         swfupload.customSettings.successCount = 0;
         swfupload.customSettings.currentFile = {
@@ -546,8 +548,8 @@ window.editorSetUploadFile = function (data, isInsertFromWangPan, editor) {
 
 //修改问题，设置之前上传的文件
 window.editorSubmitUploadFile = function (method, editor) {
-    var fileInfo = editor.uploadFile.fileInfo,
-        backFileInfo = editor.uploadFile.backFileInfo,
+    var fileInfo = editor._uploadFile.fileInfo,
+        backFileInfo = editor._uploadFile.backFileInfo,
         swfupload = editor.swfupload,
         swfUploadDir = swfupload.customSettings.swfUploadDir;
 
@@ -583,7 +585,7 @@ window.editorSubmitUploadFile = function (method, editor) {
                     });
                 }
             }
-            editor.uploadFile.fileInfo = backFileInfo;
+            editor._uploadFile.fileInfo = backFileInfo;
             break;
     }
 };

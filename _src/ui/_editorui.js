@@ -306,8 +306,9 @@
         var cmd = 'uploadfile',
             timestamp = +new Date(),
             placeholderId = 'swfUploadPlaceholder' + timestamp,
+            wealthSelecterId = 'swfUploadWealthSelecter' + timestamp,
             uploadProgressId = 'swfUploadUploadProgress' + timestamp,
-            flashContainerId = 'swfUploadflashContainerId' + timestamp,
+            flashContainerId = 'swfUploadflashContainer' + timestamp,
             title = '上传',
             hoverTitle = '登录后才能使用功能';
 
@@ -347,6 +348,14 @@
                 '<div class="progressBar"></div>' +
                 '<span class="progressBarText"></span>' +
                 '</div>' +
+                '<div>' +
+                '<span class="progressWealthText">定价:</span>' +
+                '<select name="wealth" class="progressWealth" id=""' + wealthSelecterId + '">' +
+                '<option value="0">免费</option>' +
+                '<option value="1">1 财富值</option>' +
+                '<option value="2">2 财富值</option>' +
+                '</select>' +
+                '</div>' +
                 '<a class="progressCancel" href="#">取消</a>' +
                 '<div class="progressFileOperator">' +
                 '<a href="#" class="rename">重命名</a>' +
@@ -354,7 +363,7 @@
                 '</div>' +
                 '</div>';
             editor.ui.getDom().insertBefore(div, this.ui.getDom("iframeholder"));
-            editor.uploadFile = {fileInfo:null, backFileInfo:null, status:'ready', errorCode:null};
+            editor._uploadFile = {fileInfo:null, backFileInfo:null, score: 0, status:'ready', errorCode:null};
             editor.swfupload = new SWFUpload({
                 flash_url:editor.options.swfUploadFlashUrl,
                 upload_url:editor.options.swfUploadUrl,
@@ -374,42 +383,31 @@
                     isUploading:false,
                     successCount:0,
                     currentFile:null,
-                    getBindUploadFile:function () {
-                        return editor.uploadFile.fileInfo;
+                    getUploadFile:function (p) {
+                        if(p==undefined) p='fileInfo';
+                        return editor._uploadFile[p] || null;
                     },
-                    setBindUploadFile:function (a, b) {
-                        if (a == null) {
-                            editor.uploadFile.fileInfo = null;
-                        } else if (typeof a == "object") {
-                            editor.uploadFile.fileInfo = a;
-                        } else if (typeof a == "string") {
-                            if (editor.uploadFile.fileInfo == null) {
-                                editor.uploadFile.fileInfo = {};
+                    setUploadFile:function (p, value, key) {
+                        if (editor._uploadFile.hasOwnProperty(p)) {
+                            if (key) {
+                                editor._uploadFile[p][key] = value;
+                            } else {
+                                editor._uploadFile[p] = value;
                             }
-                            editor.uploadFile.fileInfo[a] = b;
+                            return true;
+                        } else {
+                            return false;
                         }
                     },
                     setBindUploadStatus:function (state, errorCode) {
-                        editor.uploadFile.status = state;
-                        if (state == 'error') editor.uploadFile.errorCode = errorCode;
-                        else editor.uploadFile.errorCode = null;
+                        editor._uploadFile.status = state;
+                        if (state == 'error') editor._uploadFile.errorCode = errorCode;
+                        else editor._uploadFile.errorCode = null;
                         // ready    就绪，未上传
                         // uploading上传中
                         // finish   上传结束等待文件检查
                         // complete 检查完成，上传成功
                         // error    上传出错
-                    },
-                    setBindBackupFile:function (a, b) {
-                        if (a == null) {
-                            editor.uploadFile.backFileInfo = null;
-                        } else if (typeof a == "object") {
-                            editor.uploadFile.backFileInfo = a;
-                        } else if (typeof a == "string") {
-                            if (editor.uploadFile.backFileInfo == null) {
-                                editor.uploadFile.backFileInfo = {};
-                            }
-                            editor.uploadFile.backFileInfo[a] = b;
-                        }
                     },
                     setEditorStatusBar:function(msg){
                         if (T('.f-red', editor.container).length){
@@ -443,6 +441,14 @@
             editor.setUploadFile = function (fileInfo, isInsertFromWangPan) {
                 if(!isInsertFromWangPan) isInsertFromWangPan=false;
                 editorSetUploadFile(fileInfo, isInsertFromWangPan, editor);
+            };
+            editor.getUploadFile = function () {
+                var result = {};
+                result['status'] = editor._uploadFile['status'];
+                result['errorCode'] = editor._uploadFile['errorCode'];
+                result['fileInfo'] = editor._uploadFile['fileInfo'];
+                result['fileInfo']['wealth'] = document.getElementById(wealthSelecterId).value;
+                return result;
             };
             editor.uploadAction = function (method, callback) {
                 editorSubmitUploadFile(method, editor, callback);
