@@ -6,7 +6,7 @@ UE.plugins['basicinfo'] = function () {
         execCommand:function (cmd) {
             UE.plugins['basicinfo'].id += 1;
 
-            var ifr = "<iframe  width='300' height='300' unselectable='on' class='foodinfo' align='center' scroling='no' frameborder='0'" +
+            var ifr = "<iframe  width='440' height='210' unselectable='on' class='foodinfo' align='center' scroling='no' frameborder='0'" +
                 "id='" + UE.plugins['basicinfo'].id  + "'" +
                 "src=" + me.options["basicinfoUrl"].food +
                 "></iframe>";
