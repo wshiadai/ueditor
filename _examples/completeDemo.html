@@ -11,17 +11,19 @@
     <script  id="editor" type="text/plain">
         <input type="text"  />
         <input type="button" value="12" onclick="alert(134)"/>
+        <iframe src="http://www.baidu.com" width="500" height="500">
+        </iframe>
     </script>
 </div>
 <script type="text/javascript">
-    var ed = UE.getEditor("editor");
-    ed.addListener("beforegetcontent",function(){
+    var ue = UE.getEditor("editor");
+    ue.addListener("beforegetcontent",function(){
         var links = domUtils.getElementsByTagName(this.document,"a");
         for(var i= 0,link;link=links[i++];){
             UE.dom.domUtils.remove(link,true)
         }
     });
-//    ed.addListener("keydown",function(){
+//    ue.addListener("keydown",function(){
 //        var start = this.selection.getStart(),
 //                range = this.selection.getRange();
 //        if(start.tagName.toLowerCase() == "img"&&range.collapsed){
