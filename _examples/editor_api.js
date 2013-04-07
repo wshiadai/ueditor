@@ -34,6 +34,7 @@
             'plugins/video.js',
             'plugins/basestyle.js',
             'plugins/_heading.js',
+            'plugins/_basicinfo.js',
             'ui/ui.js',
             'ui/uiutils.js',
             'ui/uibase.js',
@@ -44,7 +45,7 @@
             'ui/button.js',
             'ui/toolbar.js',
             'ui/dialog.js',
-            'ui/editorui.js',
+            'ui/_editorui.js',
             'ui/editor.js'
         ],
         baseURL = '../_src/';
