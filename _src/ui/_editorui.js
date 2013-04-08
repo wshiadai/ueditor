@@ -32,7 +32,7 @@
     };
 
     var iframeUrlMap = {
-        'insertvideo':'~/dialogs/video/video.html'
+        'insertvideo':'~/dialogs/_video/video.html'
     };
     //为工具栏添加按钮，以下都是统一的按钮触发命令，所以写在一起
     var btnCmds = ['undo', 'redo','bold', 'italic', 'autotypeset','insertorderedlist', 'insertunorderedlist','heading1',"basicinfo"];

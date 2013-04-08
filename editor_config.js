@@ -334,7 +334,7 @@
 
         /*-----------forexp-------*/
         ,basicinfoUrl:{
-            'food':URL+'dialogs/_basicinfo/food.html'
+            'food':URL+'_basicinfo/food.html'
         }
     };
 })();
