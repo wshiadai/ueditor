@@ -13,7 +13,7 @@
         <div class="title">美食食材</div>
         <div class="content">
             <div class="nav">主料</div>
-            <div class="food-sec"><input type="text"><input type="text"/><span class="delete"></span></div>
+            <div class="food-sec"><input type="text" id="test"><input type="text"/><span class="delete"></span></div>
             <div class=""><input type="text"><input type="text"/><span class="delete"></span></div>
         </div>
         <div><input type="button" value="添加食材"/></div>
@@ -22,33 +22,33 @@
 <script type="text/javascript">
     (function(){
         function get(){
-            var obj={a:"123"};
-            return obj;
+            var arr=['test'];
+            var obj={};
+            for(var i= 0,tmp;tmp=arr[i++];){
+                obj[tmp]=document.getElementById(tmp).value;
+            }
+            return JSON.stringify(obj) ;
         }
         function set(data){
-            debugger;
+            data = (new Function('return' + data))();
+            for(var attr in data){
+                document.getElementById(attr).value=data[attr];
+            }
         }
-
-        //获取内容
-        editor.addListener("getbasicinfo"+frameElement.id,function(){
-            var obj={};
-            obj[frameElement.id]=get();
-        });
 
         //保存
         domUtils.on(window, 'blur', function (e) {
-            var obj={};
-            obj[frameElement.id]=get();
-            editor["basicinfoManager"]["data"].push(obj);
+            editor["basicinfo"][frameElement.id]=get();
         });
+
+        //设置内容
+        window.onload=function(){
+            var data=editor['basicinfo'][frameElement.id];
+            if(data){
+                set(data);
+            }
+        }
     })();
-
-
-    //设置内容
-    window.onload=function(){
-        var manager=editor["basicinfoManager"];
-        set(manager.data[manager.index]);
-    }
 </script>
 </body>
 </html>

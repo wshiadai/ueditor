@@ -1,9 +1,6 @@
 UE.plugins['basicinfo'] = function () {
     var me = this;
-    me["basicinfoManager"]={
-        data:[],
-        index:0
-    };
+    me["basicinfo"]={};
     var id = 0;
 
 
@@ -30,7 +27,7 @@ UE.plugins['basicinfo'] = function () {
             var val;
             if ((val = node.getAttr('data_type')) && /basicinfo/.test(val)) {
                 var id=node.getAttr('id');
-                var str =me.fireEvent("getbasicinfo"+id);
+                var str =me['basicinfo'][id];
                 node.tagName = 'pre';
                 var attrs = {
                     'data-type':val,
@@ -61,8 +58,14 @@ UE.plugins['basicinfo'] = function () {
                     "></iframe>";
 
                 var node = UE.uNode.createElement(tmpDiv.innerHTML);
-                pi.parentNode.replaceChild(node, pi)
+                pi.parentNode.replaceChild(node, pi);
+
             }
         });
+    });
+
+    //销毁被删除iframe对应的数据
+    me.addListener("contentchange",function(){
+
     });
 };
