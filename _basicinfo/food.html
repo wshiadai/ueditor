@@ -4,8 +4,40 @@
     <title></title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <script type="text/javascript" src="basicinfo.js"></script>
+    <style type="text/css">
+        .wrapper{width: 99%;border: 1px dotted #d6d2b6;background-color: #fcfcf8;}
+    </style>
 </head>
 <body>
-    <div></div>
+    <div class="wrapper">
+        <div class="title">美食食材</div>
+        <div class="content">
+            <div class="nav">主料</div>
+            <div class="food-sec"><input type="text"><input type="text"/><span class="delete"></span></div>
+            <div class=""><input type="text"><input type="text"/><span class="delete"></span></div>
+        </div>
+        <div><input type="button" value="添加食材"/></div>
+    </div>
+
+<script type="text/javascript">
+    (function(){
+        function get(){
+            var obj={};
+            return obj;
+        }
+        function set(){
+
+        }
+        editor.addListener("getbasicinfo",function(){
+            var obj={};
+            obj[frameElement.id]=get();
+            editor["basicinfo"].push(obj);
+        });
+        editor.addListener("setbasicinfo",function(){
+
+        });
+    })();
+
+</script>
 </body>
 </html>

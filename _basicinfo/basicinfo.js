@@ -6,12 +6,12 @@
  * To change this template use File | Settings | File Templates.
  */
 (function () {
-    var iframe=window.parent.frameElement;
+    var parent = window.parent;
 
-    var parent = window.parent.parent;
-    UE = parent.UE;
+    UE = parent.parent.UE;
 
-    editor=UE.instants['ueditorInstant'+iframe.id.replace("baidu_editor_","")];
+    editor=UE.instants['ueditorInstant'+parent.frameElement.id.replace("baidu_editor_","")];
+
     domUtils = UE.dom.domUtils;
 
     utils = UE.utils;
