@@ -9864,16 +9864,24 @@ baidu.editor.ui = {};
             this.Stateful_init();
         },
         getHtmlTpl:function () {
-            return '<div id="##" class="edui-morepicker %%">' +
-                '<div class="edui-morepicker-body">' +
-                    '<div onclick="$$._onClickTemplate(event);" class="edui-morepicker-item edui-answertemplate" stateful>' +
-                        '<div class="edui-icon"></div><div class="edui-label">回答模板</div>' +
-                    '</div>' +
-                    '<div onclick="$$._onClickVideo(event);" class="edui-morepicker-item  edui-insertvideo" stateful>' +
-                        '<div class="edui-icon"></div><div class="edui-label">插入视频</div>' +
-                    '</div>'+
-                '</div>'+
+            var str=this.editor.options.toolbars.join("");
+            var html= '<div id="##" class="edui-morepicker %%">' +
+                '<div class="edui-morepicker-body">' ;
+
+            if(!/answertemplate/ig.test(str)){
+                html+='<div onclick="$$._onClickTemplate(event);" class="edui-morepicker-item edui-answertemplate" stateful>' +
+                    '<div class="edui-icon"></div><div class="edui-label">回答模板</div>' +
+                    '</div>' ;
+            }
+            if(!/insertvideo/ig.test(str)){
+                html+= '<div onclick="$$._onClickVideo(event);" class="edui-morepicker-item  edui-insertvideo" stateful>' +
+                    '<div class="edui-icon"></div><div class="edui-label">插入视频</div>' +
+                    '</div>';
+            }
+
+             html+= '</div>'+
                 '</div>';
+            return html;
         },
         getStateDom:function () {
             return this.target;

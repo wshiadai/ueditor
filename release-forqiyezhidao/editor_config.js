@@ -80,8 +80,8 @@
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
         , toolbars:[
-            ['insertimage' ,'|','insertunorderedlist','|','insertorderedlist','|', 'autotypeset'
-                ,'|','insertmap','|','link','|','media','|',"answertemplate"]
+            ['insertimage' ,'|','insertunorderedlist','|','insertorderedlist','|', 'autotypeset','answertemplate'
+                ,'|','insertmap','|','link','|','media','|',"more"]
         ]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
         ,labelMap:{
@@ -112,7 +112,7 @@
 
         //,initialContent:'欢迎使用ueditor!'    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
 
-        ,initialFrameWidth:626  //初始化编辑器宽度,默认1000
+        ,initialFrameWidth:726  //初始化编辑器宽度,默认1000
         ,initialFrameHeight:190  //初始化编辑器高度,默认320
 
         ,autoClearinitialContent:false //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
@@ -404,7 +404,7 @@
                 hoverTitle:"登录后才能使功能"
             },
             "answertemplate":{
-                title:"插入模板",
+                title:"回答模板",
                 hoverTitle:"登录后才能使功能"
             }
         }
