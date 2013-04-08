@@ -16,43 +16,25 @@
             this.Stateful_init();
         },
         getHtmlTpl:function () {
-            var opt = this.editor.options,
-                list = opt.linkList,
-                arr = [], height = "";
-
-            height = list.length > opt.linkCountLimit ? (opt.linkCountLimit * opt.linkSingleHeight + 'px') : "";
-
-            arr.push('<div id="##" class="edui-linkpicker %%">' +
-                '<div class="edui-linkpicker-body" style="height:' + height + '">');
-
-            for (var i = 0, item; item = list[i++];) {
-                var txt = item.title;
-                if (txt.length > opt.linkWordLimit) {
-                    txt = txt.substring(0, opt.linkWordLimit) + "...";
-                }
-                arr.push('<div onclick="$$._onClick(event);" class="edui-linkpicker-item" stateful  _href="' +
-                    item.href + '" _title="' + item.title + '">' + txt + '</div>');
-            }
-            arr.push('</div>' +
-                '<div onclick="$$._showDialog(event);" class="edui-linkpicker-edit edui-linkpicker-item">编辑</div>' +
-                ' </div>');
-
-            return arr.join("");
+            return '<div id="##" class="edui-attachpicker %%">' +
+                '<div class="edui-attachpicker-top"></div>' +
+                '<div class="edui-attachpicker-body" style="height:48px;">' +
+                '<div onclick="$$._showUploadFile(event);" class="edui-attachpicker-item" stateful _title="上传文件到网盘">上传文件</div>' +
+                '<div onclick="$$._showWangPan(event);" class="edui-attachpicker-item" stateful _title="从网盘插入文件">插入网盘</div>' +
+                '</div>' +
+                '</div>';
         },
         getStateDom:function () {
             return this.target;
         },
-
-        _showDialog:function (evt) {
+        _showUploadFile:function (evt,cmd) {
+            console.log(cmd);
             this.editor.fireEvent("linkeditclick");
             Popup.postHide(evt);
         },
-        _onClick:function (evt) {
-            var target = evt.target || evt.srcElement, obj = {};
-            obj["href"] = target.getAttribute("_href");
-            obj["_href"] = target.getAttribute("_href");
-            obj["textValue"] = target.getAttribute("_title");
-            this.editor.execCommand('link', obj);
+        _showWangPan:function (evt,cmd) {
+            console.log(cmd);
+            this.editor.fireEvent("linkeditclick");
             Popup.postHide(evt);
         },
         _UIBase_render:UIBase.prototype.render

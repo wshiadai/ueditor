@@ -412,17 +412,15 @@
         //是否开启自动保存
         ,autoSaveEnabled:false
         //自动保存频率，单位秒
-        ,autoSaveFrequency:60,
+        ,autoSaveFrequency:60
 
         //上传文件的flash路径
-        swfUploadFlashUrl:URL+'third-party/swfupload/swfupload.swf',
+        ,swfUploadFlashUrl:URL+'third-party/swfupload/swfupload.swf'
         //上传文件的发送目标uri
-        swfUploadUrl:'https://pcs.baidu.com/rest/2.0/pcs/file?method=upload&app_id=598913&response-status=200&ondup=newcopy',
+        ,swfUploadUrl:'https://pcs.baidu.com/rest/2.0/pcs/file?method=upload&app_id=598913&response-status=200&ondup=newcopy'
         //上传文件的在网盘保存的路径
-        swfUploadDir:'/apps/百度知道/',
+        ,swfUploadDir:'/apps/百度知道/'
         //发送文件的文件表单名称
-        swfUploadPostName:'file'
-
-        //插入网盘
+        ,swfUploadPostName:'file'
     };
 })();

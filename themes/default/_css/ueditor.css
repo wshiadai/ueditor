@@ -13,7 +13,7 @@
     /*按钮icon*/
 @import "_buttonicon.css";
     /*弹出菜单*/
-@import "popup.css";
+@import "_popup.css";
 
 
 /*-------独立按钮样式，按需加载-------*/
@@ -23,3 +23,5 @@
 @import "_separtor.css";
     /*上传进度条*/
 @import "_progress.css";
+    /*上传附件下拉菜单*/
+@import "_attachpicker.css";

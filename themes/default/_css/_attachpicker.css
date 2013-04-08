@@ -1,0 +1,23 @@
+/*链接弹出菜单*/
+.edui-default .edui-attachpicker .edui-attachpicker-top {
+    background: url("../images/popup.gif") no-repeat;
+    margin: -5px 0px 0px 20px;
+    height: 5px;
+}
+.edui-default .edui-attachpicker .edui-attachpicker-body {
+    width: 70px;
+    font-size: 12px;
+    cursor: default;
+    overflow-y: auto;
+}
+.edui-default .edui-attachpicker-item {
+    padding:5px 10px;
+    cursor: pointer;
+}
+.edui-default .edui-attachpicker-edit {
+    color: #133db6;
+    font-size: 12px;
+}
+.edui-default .edui-attachpicker-body .edui-attachpicker-item.edui-state-hover {
+    background-color: #ebf6e6;
+}

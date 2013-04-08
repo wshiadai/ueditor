@@ -455,7 +455,7 @@
             };
             //Flash插件版本过低提示
             var flashContainer = $(flashContainerId);
-            if (!/^[\s]*<((object)|(OBJECT))/.test(flashContainer.innerHTML)) {
+            if (!/^[\s]*<object/i.test(flashContainer.innerHTML)) {
                 flashContainer.title = "您的Flash插件版本过低，请更新后再尝试！";
             }
         });
@@ -543,14 +543,18 @@
             editor:editor,
             className:'edui-attachPop'
         });
+
         var ui = new editorui.Button({
-            className:'edui-for-' + cmd,
+            className:'edui-for-attachment',
             title:hoverTitle,
             label:title || '',
             onmouseover: function (evt) {
                 UE.ui.Popup.postHide(evt);
                 attachPop.render();
                 attachPop.showAnchor(this.getDom());
+            },
+            onmouseout: function (evt) {
+                UE.ui.Popup.postHide(evt);
             },
             onclick:function (evt) {
                 UE.ui.Popup.postHide(evt);
@@ -560,6 +564,14 @@
             theme:editor.options.theme,
             showText:true
         });
+
+        var _btnUploadFile = function (){
+
+        }
+        var _btnWangPan = function (){
+
+        }
+
         return ui;
     };
 

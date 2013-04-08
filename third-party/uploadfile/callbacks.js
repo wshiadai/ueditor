@@ -278,7 +278,7 @@ window.swfUploadLoaded = function () {
         swfupload.customSettings.doRenameHandler = function () {
             var progress = swfupload.progress,
                 newname = T.trim(progress.progressRenameValue.value);
-            if (/\.((jpg)|(jpeg)|(gif)|(bmp)|(png)|(jpe)|(cur)|(tif)|(tiff)|(ico))$/.test(newname)){
+            if (/\.((jpg)|(jpeg)|(gif)|(bmp)|(png)|(jpe)|(cur)|(tif)|(tiff)|(ico))$/i.test(newname)){
                 progress.setStatus('renameerror', '不允许改成图片格式');
             } else if (/[\\\/:\*\?"<>|]/.test(newname)) {
                 progress.setStatus('renameerror', '文件名不能包含下列字符 \\ \/ : * ? " < > |');
@@ -354,7 +354,7 @@ window.swfUploadFileQueued = function (file) {
     try {
         var swfupload = this;
 
-        if(/\.((jpg)|(jpeg)|(gif)|(bmp)|(png)|(jpe)|(cur)|(tif)|(tiff)|(ico))$/.test(file.type)) {
+        if(/\.((jpg)|(jpeg)|(gif)|(bmp)|(png)|(jpe)|(cur)|(tif)|(tiff)|(ico))$/i.test(file.type)) {
             alert('请使用插入图片功能，可直接在线预览');
         } else if (swfupload.customSettings.successCount > 0 || swfupload.customSettings.isUploading == true) {
             if (confirm("即将删除上一个附件,确定吗？")) {
