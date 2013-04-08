@@ -533,6 +533,36 @@
         return ui;
     };
 
+    editorui.attachment = function (editor) {
+        var cmd = 'attachment',
+            title = '附件',
+            hoverTitle = '网盘文件共分享，插入附件更方便';
+
+        var attachPop = new baidu.editor.ui.Popup({
+            content:new baidu.editor.ui.AttachPicker({editor:editor}),
+            editor:editor,
+            className:'edui-attachPop'
+        });
+        var ui = new editorui.Button({
+            className:'edui-for-' + cmd,
+            title:hoverTitle,
+            label:title || '',
+            onmouseover: function (evt) {
+                UE.ui.Popup.postHide(evt);
+                attachPop.render();
+                attachPop.showAnchor(this.getDom());
+            },
+            onclick:function (evt) {
+                UE.ui.Popup.postHide(evt);
+                attachPop.render();
+                attachPop.showAnchor(this.getDom());
+            },
+            theme:editor.options.theme,
+            showText:true
+        });
+        return ui;
+    };
+
     var lists = ['insertorderedlist', 'insertunorderedlist', 'autotypeset'];
     for (var l = 0, cl; cl = lists[l++];) {
         (function (cmd) {
