@@ -22,18 +22,26 @@
 <script type="text/javascript">
     (function(){
         function get(){
-            var obj={};
+            var obj={a:"123"};
             return obj;
         }
         function set(){
 
         }
-        editor.addListener("getbasicinfo",function(){
+        function save(){
             var obj={};
             obj[frameElement.id]=get();
             editor["basicinfo"].push(obj);
+        }
+        editor.addListener("getbasicinfo"+frameElement.id,function(){
+            var obj={};
+            obj[frameElement.id]=get();
         });
+
         editor.addListener("setbasicinfo",function(){
+
+        });
+        domUtils.on(window, 'blur', function (e) {
 
         });
     })();

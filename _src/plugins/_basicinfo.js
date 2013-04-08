@@ -18,6 +18,7 @@ UE.plugins['basicinfo'] = function () {
             me.execCommand("inserthtml", "<p style='text-align: center;'>" + ifr + "</p>");
         },
         queryCommandState:function () {
+
         }
     };
 
@@ -25,12 +26,13 @@ UE.plugins['basicinfo'] = function () {
         utils.each(root.getNodesByTagName('iframe'), function (node) {
             var val;
             if ((val = node.getAttr('data_type')) && /basicinfo/.test(val)) {
-                var str = "{a:XX,b:XX}";//fireevent get
+                var id=node.getAttr('id');
+                var str =me.fireEvent("getbasicinfo"+id);
                 node.tagName = 'pre';
                 var attrs = {
                     'data-type':val,
                     'class':node.getAttr('class'),
-                    'id':node.getAttr('id'),
+                    'id':id,
                     'src':node.getAttr('src')
                 };
                 node.setAttr();
