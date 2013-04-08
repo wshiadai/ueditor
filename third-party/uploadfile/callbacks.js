@@ -68,6 +68,7 @@ function FileProgress(file, swfupload) {
     this.progressBar = T('.progressBar', this.fileProgressWrapper)[0];
     this.progressBarText = T('.progressBarText', this.fileProgressWrapper)[0];
     this.progressCancel = T('.progressCancel', this.fileProgressWrapper)[0];
+    this.progressWealthText = T('.progressWealthText', this.fileOperator)[0];
     this.progressWealth = T('.progressWealth', this.fileOperator)[0];
     this.fileOperator = T('.progressFileOperator', this.fileProgressWrapper)[0];
     this.fileOperatorRename = T('a.rename', this.fileOperator)[0];
@@ -103,7 +104,7 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
     switch (status) {
         case 'ready':
             swfupload.customSettings.setBindUploadStatus('ready');
-            displayCode = '1,1,1,0,0,0,0,1,1,1';
+            displayCode = '1,1,1,0,0,0,0,1,1,1,1';
             swfupload.setButtonDisabled(false);
             break;
         case 'uploading':
@@ -115,14 +116,14 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             this.progressBar.className = "progressBar";
             this.fileProgressWrapper.className = "progressWrapper";
             swfupload.customSettings.setBindUploadStatus('uploading');
-            displayCode = '1,1,1,0,0,1,1,0,0,0';
+            displayCode = '1,1,1,0,0,1,1,0,0,0,0';
             swfupload.setButtonDisabled(true);
             break;
         case 'finish':
             this.progressBar.style.width = "99%";
             this.progressBarText.innerHTML = "99%";
             swfupload.customSettings.setBindUploadStatus('finish');
-            displayCode = '1,1,1,0,0,1,1,0,0,0';
+            displayCode = '1,1,1,0,0,1,1,0,0,0,0';
             swfupload.setButtonDisabled(true);
             break;
         case 'complete':
@@ -130,7 +131,7 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             this.progressBarText.innerHTML = "100%";
             this.progressBar.className = "progressBar progressBarComplete";
             swfupload.customSettings.setBindUploadStatus('complete');
-            displayCode = '1,1,1,0,0,1,0,1,1,1';
+            displayCode = '1,1,1,0,0,1,0,1,1,1,1';
             swfupload.setButtonDisabled(false);
             break;
         case 'error':
@@ -141,7 +142,7 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             } else {
                 swfupload.customSettings.setBindUploadStatus('error', -1);
             }
-            displayCode = '1,1,1,0,1,0,0,0,0,1';
+            displayCode = '1,1,1,0,1,0,0,0,0,0,1';
             swfupload.setButtonDisabled(false);
             break;
         case 'setfilesuccess':
@@ -149,28 +150,28 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             this.progressBarText.innerHTML = "100%";
             this.progressBar.className = "progressBar";
             swfupload.customSettings.setBindUploadStatus('complete');
-            displayCode = '1,1,1,0,0,1,0,1,1,1';
+            displayCode = '1,1,1,0,0,1,0,1,1,1,1';
             break;
         case 'setfileerror':
             this.fileProgressWrapper.className = "progressWrapper progressWrapperError";
             this.progressMessage.innerHTML = this.getShortName(message, 50);
             swfupload.customSettings.setBindUploadStatus('error', -1);
-            displayCode = '0,0,0,0,1,0,0,0,0,1';
+            displayCode = '0,0,0,0,1,0,0,0,0,0,1';
             break;
         case 'renamestart':
-            displayCode = '1,0,0,1,0,0,0,0,0,0';
+            displayCode = '1,0,0,1,0,0,0,0,0,0,0';
             break;
         case 'renamecomplete':
             swfupload.customSettings.setBindUploadStatus('complete');
-            displayCode = '1,1,1,0,0,1,0,1,1,1';
+            displayCode = '1,1,1,0,0,1,0,1,1,1,1';
             break;
         case 'renameerror':
             this.fileProgressWrapper.className = "progressWrapper progressWrapperError";
             swfupload.customSettings.setBindUploadStatus('error', -1);
-            displayCode = '1,0,0,1,1,0,0,0,0,0';
+            displayCode = '1,0,0,1,1,0,0,0,0,0,0';
             break;
         default:
-            displayCode = '1,1,1,0,0,0,0,0,0,0';
+            displayCode = '1,1,1,0,0,0,0,0,0,0,0';
             break;
     }
     displayArr = displayCode.split(',');
@@ -182,9 +183,10 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
     this.progressMessage.style.display = displayArr[4] == '1' ? 'block' : 'none';
     this.progressBarWrapper.style.display = displayArr[5] == '1' ? 'block' : 'none';
     this.progressCancel.style.display = displayArr[6] == '1' ? 'block' : 'none';
-    this.progressWealth.style.display = displayArr[7] == '1' ? 'block' : 'none';
-    this.fileOperatorRename.style.display = displayArr[8] == '1' ? 'inline' : 'none';
-    this.fileOperatorDelete.style.display = displayArr[9] == '1' ? 'inline' : 'none';
+    this.progressWealthText.style.display = displayArr[7] == '1' ? 'block' : 'none';
+    this.progressWealth.style.display = displayArr[8] == '1' ? 'block' : 'none';
+    this.fileOperatorRename.style.display = displayArr[9] == '1' ? 'inline' : 'none';
+    this.fileOperatorDelete.style.display = displayArr[10] == '1' ? 'inline' : 'none';
     this.fileProgressWrapper.style.display = 'block';
 };
 
