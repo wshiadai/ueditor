@@ -1,17 +1,20 @@
 UE.plugins['basicinfo'] = function () {
     var me = this;
-    me["basicinfo"]=[];
-    UE.plugins['basicinfo'].id = 0;
+    me["basicinfoManager"]={
+        data:[],
+        index:0
+    };
+    var id = 0;
 
 
     me.commands['basicinfo'] = {
         execCommand:function (cmd) {
-            UE.plugins['basicinfo'].id += 1;
+            id += 1;
 
             var ifr = "<iframe  width='600' height='210' unselectable='on' align='center' scroling='no' frameborder='0'" +
                 "class='foodinfo'" +
                 "data_type='basicinfo'"+
-                "id='" + UE.plugins['basicinfo'].id + "'" +
+                "id='" + id + "'" +
                 "src=" + me.options["basicinfoUrl"].food +
                 "></iframe>";
 

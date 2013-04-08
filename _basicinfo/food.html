@@ -25,27 +25,30 @@
             var obj={a:"123"};
             return obj;
         }
-        function set(){
+        function set(data){
+            debugger;
+        }
 
-        }
-        function save(){
-            var obj={};
-            obj[frameElement.id]=get();
-            editor["basicinfo"].push(obj);
-        }
+        //获取内容
         editor.addListener("getbasicinfo"+frameElement.id,function(){
             var obj={};
             obj[frameElement.id]=get();
         });
 
-        editor.addListener("setbasicinfo",function(){
-
-        });
+        //保存
         domUtils.on(window, 'blur', function (e) {
-
+            var obj={};
+            obj[frameElement.id]=get();
+            editor["basicinfoManager"]["data"].push(obj);
         });
     })();
 
+
+    //设置内容
+    window.onload=function(){
+        var manager=editor["basicinfoManager"];
+        set(manager.data[manager.index]);
+    }
 </script>
 </body>
 </html>
