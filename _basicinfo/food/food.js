@@ -64,8 +64,8 @@ function Food() {
             var sum = domUtils.getElementsByTagName(content, "div", "module").length;
 
             var len = sum % 2 ? 1 : 2;
-            for (var i = 0;i<len;i++) {
-                tmpDiv.innerHTML=tmpStr;
+            for (var i = 0; i < len; i++) {
+                tmpDiv.innerHTML = tmpStr;
                 content.appendChild(tmpDiv.children[0]);
             }
 
