@@ -31,14 +31,12 @@ function Food() {
             me._addFoodListener();
         },
         _buildPage:function () {
-            var tpl = this.template, arr = [], tmpStr = "";
-            for (var i = 0; i < 4; i++) {
-                tmpStr += tpl.module;
-            }
+            var tpl = this.template, arr = [];
+
             arr.push(tpl.title);
-            arr.push(tpl.section.replace("$$", "主料").replace("%%", tmpStr));
+            arr.push(tpl.section.replace("$$", "主料").replace("%%", me._addModule(4)));
             arr.push(tpl.foot);
-            arr.push(tpl.section.replace("$$", "辅料").replace("%%", tmpStr));
+            arr.push(tpl.section.replace("$$", "辅料").replace("%%", me._addModule(4)));
             arr.push(tpl.foot);
 
             $G("J_wrapper").innerHTML = arr.join('');
@@ -70,6 +68,13 @@ function Food() {
             }
 
             me._iframeAutoHeight();
+        },
+        _addModule:function (num) {
+            var me = this, str = "";
+            for (var i = 0; i < num; i++) {
+                str += me.template.module;
+            }
+            return str;
         },
         _deleteModule:function (tgt) {
             var node = tgt.parentNode;
