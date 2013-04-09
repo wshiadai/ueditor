@@ -31,7 +31,9 @@ function Food() {
             me._addFoodListener();
         },
         _buildPage:function () {
-            var tpl = this.template, arr = [];
+            var me = this,
+                tpl = me.template,
+                arr = [];
 
             arr.push(tpl.title);
             arr.push(tpl.section.replace("$$", "主料").replace("%%", me._addModule(4)));
