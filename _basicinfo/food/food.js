@@ -6,22 +6,26 @@
  * To change this template use File | Settings | File Templates.
  */
 function Food() {
-    this.template = {
+    var me = this;
+    me.tid = 0;
+    me.template = {
         title:' <div class="title">美食食材</div>',
         section:'<div class="section">' +
             '<div class="subtitle">$$</div>' +
             '<div class="content">%%</div>' +
             '</div>',
-        module:'<div class="module">' +
-            '<input type="text" class="name"/>' +
-            ' <input type="text" class="num"/>' +
-            '<span class="delete"></span>' +
-            ' </div>',
+        module:function () {
+            return '<div class="module">' +
+                '<input type="text" class="name" id="' + (me.tid++) + '"/>' +
+                '<input type="text" class="num" id="' + (me.tid++) + '"/>' +
+                '<span class="delete"></span>' +
+                ' </div>'
+        },
         foot:'<div class="foot">' +
             '<div class="add">+ 添加食材</div>' +
             '</div>'
     };
-    this._init();
+    me._init();
 }
 (function () {
     Food.prototype = {
@@ -57,7 +61,6 @@ function Food() {
         },
         _addSection:function (tgt) {
             var me = this,
-                tmpStr = me.template.module,
                 tmpDiv = document.createElement("div");
 
             var content = domUtils.getElementsByTagName(tgt.parentNode.previousSibling, "div", "content")[0];
@@ -65,7 +68,7 @@ function Food() {
 
             var len = sum % 2 ? 1 : 2;
             for (var i = 0; i < len; i++) {
-                tmpDiv.innerHTML = tmpStr;
+                tmpDiv.innerHTML = me.template.module();
                 content.appendChild(tmpDiv.children[0]);
             }
 
@@ -74,7 +77,7 @@ function Food() {
         _addModule:function (num) {
             var me = this, str = "";
             for (var i = 0; i < num; i++) {
-                str += me.template.module;
+                str += me.template.module();
             }
             return str;
         },
@@ -93,11 +96,23 @@ function Food() {
         readPageData:function () {
             var data = editor["basicinfo"][frameElement.id];
             if (data) {
+                for(var atrr in data){
 
+                }
             }
         },
         savePageData:function () {
+            editor["basicinfo"][frameElement.id]={};
+            var data=editor["basicinfo"][frameElement.id];
+            var list=domUtils.getElementsByTagName(document,"div","content");
 
+            for(var i= 0,len=list.length;i<len;i++){
+                data[i]={};
+                var inputs=domUtils.getElementsByTagName(list[i],"input");
+                for(var j= 0,node;node=inputs[j++];){
+                    data[i][j]=node.value;
+                }
+            }
         }
     };
 })();
