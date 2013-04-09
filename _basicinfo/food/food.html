@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <script type="text/javascript" src="../basicinfo.js"></script>
+    <link rel="stylesheet" type="text/css" href="food.css">
+</head>
+<body>
+<div class="wrapper" id="J_wrapper">
+</div>
+
+<script type="text/javascript" src="food.js"></script>
+<script type="text/javascript">
+    domUtils.on(window, ['blur', 'load'], function (e) {
+        var food = new Food();
+        e.type == "blur" ? food.savePageData() : food.readPageData();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+.wrapper {width: 99%;border: 1px dotted #d6d2b6;background-color: #fcfcf8;}
+.wrapper .title{font-size:16px;font-weight: bold;margin:15px 0 0 30px;}
+
+.wrapper .section{margin: 10px 0;font-size: 14px;overflow: hidden;line-height: 34px;height: 34px;}
+.section .subtitle{float:left;font-weight: bold;margin-left: 30px;}
+.section .module{float: right;margin-right: 20px;}
+.section .module input{float:left;border: 1px solid #e1e1e1;padding: 6px 0 6px 10px; vertical-align: middle;}
+.section .module .name{width: 150px;}
+.section .module .num{width: 90px;border-left: none;}
+.section .module .delete{float: left;margin: 12px 0 0 5px;width: 10px;height: 9px;background:url(img/food.png) 0 0 no-repeat;cursor: pointer;}
+
+.wrapper .foot{margin:10px;font-size:14px;overflow: hidden;font-weight: bold;text-align: center;}
+.foot .add{float: right;width: 120px;height: 32px;margin-right:24px;line-height:32px;background:url(img/food.png) -18px 0 no-repeat;color:#66c557;cursor: pointer;}

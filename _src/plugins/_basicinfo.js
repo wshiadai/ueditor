@@ -7,8 +7,7 @@ UE.plugins['basicinfo'] = function () {
     me.commands['basicinfo'] = {
         execCommand:function (cmd) {
             id += 1;
-
-            var ifr = "<iframe  width='600' height='210' unselectable='on' align='center' scroling='no' frameborder='0'" +
+            var ifr = "<iframe  width='675' height='320' unselectable='on' align='center' scroling='no' frameborder='0'" +
                 "class='foodinfo'" +
                 "data_type='basicinfo'"+
                 "id='" + id + "'" +
@@ -16,14 +15,6 @@ UE.plugins['basicinfo'] = function () {
                 "></iframe>";
 
             me.execCommand("inserthtml", "<p style='text-align: center;'>" + ifr + "</p>");
-
-            var info=me.document.getElementById(id);
-            domUtils.on(info, 'blur', function () {
-                editor.fireEvent("getbasicinfo"+id);
-            });
-            info.onload=function () {
-                me.fireEvent("setbasicinfo"+id);
-            };
         },
         queryCommandState:function () {
 
