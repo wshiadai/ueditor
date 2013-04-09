@@ -16,6 +16,14 @@ UE.plugins['basicinfo'] = function () {
                 "></iframe>";
 
             me.execCommand("inserthtml", "<p style='text-align: center;'>" + ifr + "</p>");
+
+            var info=me.document.getElementById(id);
+            domUtils.on(info, 'blur', function () {
+                editor.fireEvent("getbasicinfo"+id);
+            });
+            info.onload=function () {
+                me.fireEvent("setbasicinfo"+id);
+            };
         },
         queryCommandState:function () {
 
@@ -68,4 +76,6 @@ UE.plugins['basicinfo'] = function () {
     me.addListener("contentchange",function(){
 
     });
+
+
 };
