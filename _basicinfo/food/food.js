@@ -8,24 +8,17 @@
 function Food() {
     this.template = {
         title:' <div class="title">美食食材</div>',
-        subTitle:'<div class="subtitle">$$</div>',
-        section:function (hasSubTitle) {
-            return '<div class="section">' +
-                (hasSubTitle ? '<div class="subtitle">$$</div>' : '') +
-                '<div class="module">' +
-                '<input type="text" class="name"/>' +
-                ' <input type="text" class="num"/>' +
-                '<span class="delete" btn-type="delete"></span>' +
-                ' </div>' +
-                ' <div class="module">' +
-                '<input type="text" class="name"/>' +
-                ' <input type="text" class="num"/>' +
-                '<span class="delete" btn-type="delete"></span>' +
-                '</div>' +
-                '</div>';
-        },
+        section:'<div class="section">' +
+            '<div class="subtitle">$$</div>' +
+            '<div class="content">%%</div>' +
+            '</div>',
+        module:'<div class="module">' +
+            '<input type="text" class="name"/>' +
+            ' <input type="text" class="num"/>' +
+            '<span class="delete"></span>' +
+            ' </div>',
         foot:'<div class="foot">' +
-            '<div class="add" btn-type="add">+ 添加食材</div>' +
+            '<div class="add">+ 添加食材</div>' +
             '</div>'
     };
     this._init();
@@ -38,15 +31,14 @@ function Food() {
             me._addFoodListener();
         },
         _buildPage:function () {
-            var tpl = this.template, arr = [];
-
+            var tpl = this.template, arr = [], tmpStr = "";
+            for (var i = 0; i < 4; i++) {
+                tmpStr += tpl.module;
+            }
             arr.push(tpl.title);
-            arr.push(tpl.section(true).replace("$$", "主料"));
-            arr.push(tpl.section(false));
+            arr.push(tpl.section.replace("$$", "主料").replace("%%", tmpStr));
             arr.push(tpl.foot);
-
-            arr.push(tpl.section(true).replace("$$", "辅料"));
-            arr.push(tpl.section(false));
+            arr.push(tpl.section.replace("$$", "辅料").replace("%%", tmpStr));
             arr.push(tpl.foot);
 
             $G("J_wrapper").innerHTML = arr.join('');
@@ -56,31 +48,38 @@ function Food() {
 
             domUtils.on(document, "click", function (e) {
                 var tgt = e.target || e.srcElement;
-                var btnType = tgt.getAttribute("btn-type");
-
-                if (btnType == "add") {
+                if (domUtils.hasClass(tgt, "add")) {
                     me._addSection(tgt);
-                } else if (btnType == "delete") {
+                } else if (domUtils.hasClass(tgt, "delete")) {
                     me._deleteModule(tgt);
                 }
             });
         },
         _addSection:function (tgt) {
-            var me = this;
-            var node = tgt.parentNode;
-            var tmpDiv = document.createElement("div");
-            tmpDiv.innerHTML = me.template.section(false);
-            node.parentNode.insertBefore(tmpDiv.children[0], node);
+            var me = this,
+                tmpStr = me.template.module,
+                tmpDiv = document.createElement("div");
+
+            var content = domUtils.getElementsByTagName(tgt.parentNode.previousSibling, "div", "content")[0];
+            var sum = domUtils.getElementsByTagName(content, "div", "module").length;
+
+            var len = sum % 2 ? 1 : 2;
+            for (var i = 0;i<len;i++) {
+                tmpDiv.innerHTML=tmpStr;
+                content.appendChild(tmpDiv.children[0]);
+            }
+
             me._iframeAutoHeight();
         },
-        _deleteModule:function () {
-
+        _deleteModule:function (tgt) {
+            var node = tgt.parentNode;
+            node.parentNode.removeChild(node);
         },
         _iframeAutoHeight:function () {
             if (browser.ie && browser.version < 8) {
                 frameElement.height = frameElement.Document.body.scrollHeight
             } else {
-                frameElement.height = frameElement.contentDocument.body.offsetHeight;
+                frameElement.height = frameElement.contentDocument.body.scrollHeight;
             }
             editor.fireEvent("contentchange")
         },
