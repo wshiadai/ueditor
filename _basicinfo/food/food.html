@@ -14,7 +14,8 @@
 <script type="text/javascript">
     var food = new Food();
     domUtils.on(window, ['blur', 'load'], function (e) {
-        e.type == "blur" ? food.savePageData() : food.readPageData();
+        debugger;
+        e.type == "blur" ? food.savePageData() : food.initPageByData();
     });
 </script>
 </body>

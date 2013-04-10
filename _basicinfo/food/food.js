@@ -25,27 +25,29 @@ function Food() {
             '<div class="add">+ 添加食材</div>' +
             '</div>'
     };
-    me._init();
 }
 (function () {
     Food.prototype = {
-        _init:function () {
-            var me = this;
-            me._buildPage();
-            me._addFoodListener();
-        },
-        _buildPage:function () {
+        initPageByData:function () {
             var me = this,
+                arr = [],
                 tpl = me.template,
-                arr = [];
+                data = editor["basicinfo"][frameElement.id];
+
+            var mainNum = data ? (me._getObjLength(data[0]) / 2 ) : 4;
+            var subNum = data ? (me._getObjLength(data[1]) / 2 ) : 4;
 
             arr.push(tpl.title);
-            arr.push(tpl.section.replace("$$", "主料").replace("%%", me._addModule(4)));
+            arr.push(tpl.section.replace("$$", "主料").replace("%%", me._addModule(mainNum)));
             arr.push(tpl.foot);
-            arr.push(tpl.section.replace("$$", "辅料").replace("%%", me._addModule(4)));
+            arr.push(tpl.section.replace("$$", "辅料").replace("%%", me._addModule(subNum)));
             arr.push(tpl.foot);
 
             $G("J_wrapper").innerHTML = arr.join('');
+
+            me._addFoodListener();
+            me.setPageData(data);
+            me._iframeAutoHeight();
         },
         _addFoodListener:function () {
             var me = this;
@@ -81,6 +83,13 @@ function Food() {
             }
             return str;
         },
+        _getObjLength:function (obj) {
+            var num = 0;
+            for (var tmp in obj) {
+                num += 1;
+            }
+            return num;
+        },
         _deleteModule:function (tgt) {
             var node = tgt.parentNode;
             node.parentNode.removeChild(node);
@@ -93,24 +102,28 @@ function Food() {
             }
             editor.fireEvent("contentchange")
         },
-        readPageData:function () {
-            var data = editor["basicinfo"][frameElement.id];
+        setPageData:function (data) {
             if (data) {
-                for(var atrr in data){
+                var list = domUtils.getElementsByTagName(document, "div", "content");
 
+                for (var i = 0, len = list.length; i < len; i++) {
+                    var inputs = domUtils.getElementsByTagName(list[i], "input");
+                    for (var j = 0, node; node = inputs[j++];) {
+                        node.value = data[i][j];
+                    }
                 }
             }
         },
         savePageData:function () {
-            editor["basicinfo"][frameElement.id]={};
-            var data=editor["basicinfo"][frameElement.id];
-            var list=domUtils.getElementsByTagName(document,"div","content");
+            editor["basicinfo"][frameElement.id] = {};
+            var data = editor["basicinfo"][frameElement.id];
+            var list = domUtils.getElementsByTagName(document, "div", "content");
 
-            for(var i= 0,len=list.length;i<len;i++){
-                data[i]={};
-                var inputs=domUtils.getElementsByTagName(list[i],"input");
-                for(var j= 0,node;node=inputs[j++];){
-                    data[i][j]=node.value;
+            for (var i = 0, len = list.length; i < len; i++) {
+                data[i] = {};
+                var inputs = domUtils.getElementsByTagName(list[i], "input");
+                for (var j = 0, node; node = inputs[j++];) {
+                    data[i][j] = node.value;
                 }
             }
         }
