@@ -14,7 +14,7 @@ UE.plugins['basicinfo'] = function () {
                 "src=" + me.options["basicinfoUrl"].food +
                 "></iframe>";
 
-            me.execCommand("inserthtml", "<p style='text-align: center;'>" + ifr + "</p>");
+            me.execCommand("inserthtml", ifr);
         },
         queryCommandState:function () {
 
