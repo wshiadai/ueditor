@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+    </script>
+    <script type="text/javascript" src="../tangram.js"></script>
+    <script type="text/javascript" src="../editor_config.js"></script>
+    <!--<script type="text/javascript" src="editor_all.js"></script>-->
+    <script type="text/javascript" src="editor_api.js"></script>
+    <script type="text/javascript" src="../third-party/uploadfile/swfupload.js"></script>
+    <script type="text/javascript" src="../third-party/uploadfile/callbacks.js"></script>
+</head>
+<body>
+<script type="text/plain" id="editor">
+</script>
+<script type="text/javascript">
+    //编辑器实例化
+    var editor = new baidu.editor.ui.Editor();
+    editor.render("editor");
+    //            debugger
+    //            editor.focus();
+
+    //            if("noLogin") {
+    //                editor.disableToolbar();
+    //            }
+
+
+    //获取从服务器返回的数据并格式化，赋初始值
+    //    var content = getDataFromServer();
+    //    editor.setContent(formatContent(content));
+
+    //上传成功的回调
+    editor.addListener("uploadSuccess",function(type,data){
+//                debugger
+        //包含服务器主动拒绝的情况
+    });
+    //上传失败的回调，返回错误提示
+    editor.addListener("networkError",function(){
+//                debugger
+        //网络、超时等错误
+    });
+    //logout
+    editor.addListener("isLogout",function(){
+//                debugger
+    });
+    //            editor.addListener("flashClicked",function(){
+    //                            console.log(1);
+    //                        });
+    //图片大小超出限制
+    editor.addListener("imageSizeError",function(type,data){
+//                debugger
+    });
+    //格式化函数
+    function formatContent(content){
+        var contArr = content.split("\n");
+        contArr.shift();
+        contArr.pop();
+        return "<p>"+contArr.join("</p><p>")+"</p>";
+    }
+    //内容已经更改
+    editor.addListener("editorHasFocused",function(){
+    });
+
+    //单击按钮前
+    editor.addListener("beforeexeccmd",function(type,cmd){
+    });
+
+    //服务器端输出格式
+    //1、成功保存
+    // '<script type="text/javascript">parent.baidu.editor.success({"index":"'.$index.'","url":"'.$url.'"})<\/script>';
+    //2、拒绝保存
+    //<script type="text/javascript">parent.baidu.editor.error({"index":"'.$index.'","msg":"'.$msg.'"})<\/script>';
+
+    //手动保存内容到cookie
+    //editor.execCommand("handsave");
+
+    //从cookie中加载内容的编辑器
+    //editor.execCommand("reloadcontent");
+
+</script>
+</body>
+</html>
