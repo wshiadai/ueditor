@@ -34,8 +34,8 @@ function Food() {
                 tpl = me.template,
                 data = editor["basicinfo"][frameElement.id];
 
-            var mainNum = data ? (me._getObjLength(data[0]) / 2 ) : 4;
-            var subNum = data ? (me._getObjLength(data[1]) / 2 ) : 4;
+            var mainNum = data ? (me._getObjLength(data[0]) / 2 ) : 6;
+            var subNum = data ? (me._getObjLength(data[1]) / 2 ) : 6;
 
             arr.push(tpl.title);
             arr.push(tpl.section.replace("$$", "主料").replace("%%", me._addModule(mainNum)));
@@ -98,7 +98,7 @@ function Food() {
             if (browser.ie && browser.version < 8) {
                 frameElement.height = frameElement.Document.body.scrollHeight
             } else {
-                frameElement.height = frameElement.contentDocument.body.scrollHeight;
+                frameElement.height = frameElement.contentDocument.document.body.scrollHeight;
             }
             editor.fireEvent("contentchange")
         },
