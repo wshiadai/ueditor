@@ -58,7 +58,7 @@ UE.plugins['undo'] = function () {
                     currentContent = adjustContent(currentScene.content);
 
                 if (lastContent != currentContent) {
-                    this.save();
+//                    this.save();
                 }
                 if (!this.list[this.index - 1] && this.list.length == 1) {
                     this.reset();
