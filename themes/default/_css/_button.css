@@ -16,12 +16,12 @@
     width: 23px !important;
 }
 .edui-default .edui-toolbar .edui-button .edui-button-wrap {
-    position: relative;
+    /*position: relative;*/
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-hover .edui-button-wrap {
     padding: 0;
-    background: url(../images/zhidao.png) -1px -120px no-repeat;
+    background: url(../images/zhidao.png) -1px -120px no-repeat blue;
     height: 24px;
 }
 

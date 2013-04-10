@@ -32,12 +32,15 @@
 
 .edui-default .edui-dialog-foot {
     background-color: white;
+    height: 40px;
+    padding-top:15px;
 }
 
 .edui-default .edui-dialog-titlebar {
     height: 47px;
     position: relative;
     cursor: move;
+    background-color: #fff;
 }
 .edui-default .edui-dialog-caption {
     font-weight: bold;
@@ -64,20 +67,15 @@
     background: url("../images/dialog.gif") no-repeat 0 -92px;
 }
 
-.edui-default .edui-dialog-foot {
-    margin-top: 15px;
-    height: 40px;
-}
-
 .edui-default .edui-dialog-buttons {
     width: 210px;
     margin: 0 auto;
+    position: relative;
 }
 
 .edui-default .edui-dialog-buttons .edui-button {
     margin-right: 10px;
 }
-
 .edui-default .edui-dialog-buttons .edui-okbutton .edui-button-body {
     background: url("../images/dialog.gif") no-repeat;
     height: 31px;
@@ -136,7 +134,8 @@
     position: relative;
     border-top: 2px solid #3daa11;
     border-bottom: 1px solid #eeeeee;
-    margin: 0 20px;
+    padding: 0 20px;
+    background-color: #fff;
 }
 
 .edui-default .dialogcontmask {
