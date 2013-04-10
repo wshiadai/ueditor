@@ -4021,8 +4021,8 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             focusInEnd: true,
             initialFrameWidth: 300,
             initialFrameHeight: me.options.minFrameHeight || 100, //兼容老版本配置项
-            minFrameWidth: 800,
-            minFrameHeight: 220,
+            minFrameWidth: 100,
+            minFrameHeight: 100,
             autoClearEmptyNode: true,
             fullscreen: false,
             readonly: false,
