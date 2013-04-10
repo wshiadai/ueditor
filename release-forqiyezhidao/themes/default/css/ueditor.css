@@ -291,12 +291,12 @@ div.edui-box {
     width: 23px !important;
 }
 .edui-default .edui-toolbar .edui-button .edui-button-wrap {
-    position: relative;
+    /*position: relative;*/
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-hover .edui-button-wrap {
     padding: 0;
-    background: url(../images/zhidao.png) -1px -120px no-repeat;
+    background: url(../images/zhidao.png) -1px -120px no-repeat blue;
     height: 24px;
 }
 
@@ -634,12 +634,15 @@ div.edui-box {
 
 .edui-default .edui-dialog-foot {
     background-color: white;
+    height: 40px;
+    padding-top:15px;
 }
 
 .edui-default .edui-dialog-titlebar {
     height: 47px;
     position: relative;
     cursor: move;
+    background-color: #fff;
 }
 .edui-default .edui-dialog-caption {
     font-weight: bold;
@@ -666,20 +669,15 @@ div.edui-box {
     background: url("../images/dialog.gif") no-repeat 0 -92px;
 }
 
-.edui-default .edui-dialog-foot {
-    margin-top: 15px;
-    height: 40px;
-}
-
 .edui-default .edui-dialog-buttons {
     width: 210px;
     margin: 0 auto;
+    position: relative;
 }
 
 .edui-default .edui-dialog-buttons .edui-button {
     margin-right: 10px;
 }
-
 .edui-default .edui-dialog-buttons .edui-okbutton .edui-button-body {
     background: url("../images/dialog.gif") no-repeat;
     height: 31px;
@@ -738,7 +736,8 @@ div.edui-box {
     position: relative;
     border-top: 2px solid #3daa11;
     border-bottom: 1px solid #eeeeee;
-    margin: 0 20px;
+    padding: 0 20px;
+    background-color: #fff;
 }
 
 .edui-default .dialogcontmask {
