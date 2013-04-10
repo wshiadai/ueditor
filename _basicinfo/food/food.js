@@ -100,7 +100,7 @@ function Food() {
             } else {
                 frameElement.height = frameElement.contentDocument.body.scrollHeight;
             }
-            editor.fireEvent("contentchange")
+            editor.fireEvent("contentchange");
         },
         setPageData:function (data) {
             if (data) {
