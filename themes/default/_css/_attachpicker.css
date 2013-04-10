@@ -6,9 +6,9 @@
 }
 .edui-default .edui-attachpicker .edui-attachpicker-body {
     width: 70px;
+    overflow: hidden;
     font-size: 12px;
     cursor: default;
-    overflow-y: auto;
 }
 .edui-default .edui-attachpicker-item {
     padding:5px 10px;

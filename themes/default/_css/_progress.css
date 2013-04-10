@@ -50,10 +50,10 @@ div.fieldset span.legend {
 .progressRename,
 .progressMessage,
 .progressBarWrapper,
+.progressWealthWrapper,
 .progressWealthText,
 .progressWealth,
-.progressCancel,
-.progressFileOperator {
+.progressCancel{
     margin-right: 8px;
     float: left;
 }
@@ -113,7 +113,7 @@ div.fieldset span.legend {
 .progressBarWrapper {
     width: 100px;
     height: 11px;
-    margin: 4px 20px 0 0;
+    margin-top: 4px;
     border: solid 1px #d1e4c3;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -178,7 +178,8 @@ div.fieldset span.legend {
 }
 
 .progressFileOperator {
-    margin-right: 0px;
+    float:right;
+    margin-right: 20px;
     height: 21px;
     line-height: 21px;
     text-align: left;

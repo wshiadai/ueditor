@@ -18,7 +18,7 @@
         getHtmlTpl:function () {
             return '<div id="##" class="edui-attachpicker %%">' +
                 '<div class="edui-attachpicker-top"></div>' +
-                '<div class="edui-attachpicker-body" style="height:48px;">' +
+                '<div class="edui-attachpicker-body">' +
                 '<div onclick="$$._showUploadFile(event);" class="edui-attachpicker-item" stateful _title="上传文件到网盘">上传文件</div>' +
                 '<div onclick="$$._showWangPan(event);" class="edui-attachpicker-item" stateful _title="从网盘插入文件">插入网盘</div>' +
                 '</div>' +

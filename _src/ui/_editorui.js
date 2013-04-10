@@ -348,9 +348,9 @@
                 '<div class="progressBar"></div>' +
                 '<span class="progressBarText"></span>' +
                 '</div>' +
-                '<div>' +
+                '<div class="progressWealthWrapper">' +
                 '<span class="progressWealthText">定价:</span>' +
-                '<select name="wealth" class="progressWealth" id=""' + wealthSelecterId + '">' +
+                '<select name="wealth" class="progressWealth" id="' + wealthSelecterId + '">' +
                 '<option value="0">免费</option>' +
                 '<option value="1">1 财富值</option>' +
                 '<option value="2">2 财富值</option>' +
@@ -389,7 +389,7 @@
                     },
                     setUploadFile:function (p, value, key) {
                         if (editor._uploadFile.hasOwnProperty(p)) {
-                            if (key) {
+                            if (key && editor._uploadFile[p]) {
                                 editor._uploadFile[p][key] = value;
                             } else {
                                 editor._uploadFile[p] = value;
@@ -438,9 +438,9 @@
                 upload_error_handler:swfUploadSendError,
                 upload_complete_handler:swfUploadSendComplete
             });
-            editor.setUploadFile = function (fileInfo, isInsertFromWangPan) {
-                if(!isInsertFromWangPan) isInsertFromWangPan=false;
-                editorSetUploadFile(fileInfo, isInsertFromWangPan, editor);
+            editor.setUploadFile = function (data) {
+                editorSetUploadFile(data, editor);
+                document.getElementById(wealthSelecterId).selectedIndex = data['fileInfo']['wealth'] || 0;
             };
             editor.getUploadFile = function () {
                 var result = {};

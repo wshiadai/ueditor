@@ -68,8 +68,7 @@ function FileProgress(file, swfupload) {
     this.progressBar = T('.progressBar', this.fileProgressWrapper)[0];
     this.progressBarText = T('.progressBarText', this.fileProgressWrapper)[0];
     this.progressCancel = T('.progressCancel', this.fileProgressWrapper)[0];
-    this.progressWealthText = T('.progressWealthText', this.fileOperator)[0];
-    this.progressWealth = T('.progressWealth', this.fileOperator)[0];
+    this.progressWealthWrapper = T('.progressWealthWrapper', this.fileOperator)[0];
     this.fileOperator = T('.progressFileOperator', this.fileProgressWrapper)[0];
     this.fileOperatorRename = T('a.rename', this.fileOperator)[0];
     this.fileOperatorDelete = T('a.remove', this.fileOperator)[0];
@@ -104,7 +103,7 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
     switch (status) {
         case 'ready':
             swfupload.customSettings.setBindUploadStatus('ready');
-            displayCode = '1,1,1,0,0,0,0,1,1,1,1';
+            displayCode = '1,1,1,0,0,0,0,1,1,1';
             swfupload.setButtonDisabled(false);
             break;
         case 'uploading':
@@ -116,14 +115,14 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             this.progressBar.className = "progressBar";
             this.fileProgressWrapper.className = "progressWrapper";
             swfupload.customSettings.setBindUploadStatus('uploading');
-            displayCode = '1,1,1,0,0,1,1,0,0,0,0';
+            displayCode = '1,1,1,0,0,1,1,0,0,0';
             swfupload.setButtonDisabled(true);
             break;
         case 'finish':
             this.progressBar.style.width = "99%";
             this.progressBarText.innerHTML = "99%";
             swfupload.customSettings.setBindUploadStatus('finish');
-            displayCode = '1,1,1,0,0,1,1,0,0,0,0';
+            displayCode = '1,1,1,0,0,1,1,0,0,0';
             swfupload.setButtonDisabled(true);
             break;
         case 'complete':
@@ -131,7 +130,7 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             this.progressBarText.innerHTML = "100%";
             this.progressBar.className = "progressBar progressBarComplete";
             swfupload.customSettings.setBindUploadStatus('complete');
-            displayCode = '1,1,1,0,0,1,0,1,1,1,1';
+            displayCode = '1,1,1,0,0,1,0,1,1,1';
             swfupload.setButtonDisabled(false);
             break;
         case 'error':
@@ -142,7 +141,7 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             } else {
                 swfupload.customSettings.setBindUploadStatus('error', -1);
             }
-            displayCode = '1,1,1,0,1,0,0,0,0,0,1';
+            displayCode = '1,1,1,0,1,0,0,0,0,1';
             swfupload.setButtonDisabled(false);
             break;
         case 'setfilesuccess':
@@ -150,28 +149,28 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             this.progressBarText.innerHTML = "100%";
             this.progressBar.className = "progressBar";
             swfupload.customSettings.setBindUploadStatus('complete');
-            displayCode = '1,1,1,0,0,1,0,1,1,1,1';
+            displayCode = '1,1,1,0,0,1,0,1,1,1';
             break;
         case 'setfileerror':
             this.fileProgressWrapper.className = "progressWrapper progressWrapperError";
             this.progressMessage.innerHTML = this.getShortName(message, 50);
             swfupload.customSettings.setBindUploadStatus('error', -1);
-            displayCode = '0,0,0,0,1,0,0,0,0,0,1';
+            displayCode = '0,0,0,0,1,0,0,0,0,1';
             break;
         case 'renamestart':
-            displayCode = '1,0,0,1,0,0,0,0,0,0,0';
+            displayCode = '1,0,0,1,0,0,0,0,0,0';
             break;
         case 'renamecomplete':
             swfupload.customSettings.setBindUploadStatus('complete');
-            displayCode = '1,1,1,0,0,1,0,1,1,1,1';
+            displayCode = '1,1,1,0,0,1,0,1,1,1';
             break;
         case 'renameerror':
             this.fileProgressWrapper.className = "progressWrapper progressWrapperError";
             swfupload.customSettings.setBindUploadStatus('error', -1);
-            displayCode = '1,0,0,1,1,0,0,0,0,0,0';
+            displayCode = '1,0,0,1,1,0,0,0,0,0';
             break;
         default:
-            displayCode = '1,1,1,0,0,0,0,0,0,0,0';
+            displayCode = '1,1,1,0,0,0,0,0,0,0';
             break;
     }
     displayArr = displayCode.split(',');
@@ -183,10 +182,9 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
     this.progressMessage.style.display = displayArr[4] == '1' ? 'block' : 'none';
     this.progressBarWrapper.style.display = displayArr[5] == '1' ? 'block' : 'none';
     this.progressCancel.style.display = displayArr[6] == '1' ? 'block' : 'none';
-    this.progressWealthText.style.display = displayArr[7] == '1' ? 'block' : 'none';
-    this.progressWealth.style.display = displayArr[8] == '1' ? 'block' : 'none';
-    this.fileOperatorRename.style.display = displayArr[9] == '1' ? 'inline' : 'none';
-    this.fileOperatorDelete.style.display = displayArr[10] == '1' ? 'inline' : 'none';
+    this.progressWealthWrapper.style.display = displayArr[7] == '1' ? 'block' : 'none';
+    this.fileOperatorRename.style.display = displayArr[8] == '1' ? 'inline' : 'none';
+    this.fileOperatorDelete.style.display = displayArr[9] == '1' ? 'inline' : 'none';
     this.fileProgressWrapper.style.display = 'block';
 };
 
@@ -235,7 +233,7 @@ window.swfUploadLoaded = function () {
                 var swfUploadDir = swfupload.customSettings.swfUploadDir;
                 if (fileinfo && fileinfo.path.substr(0, swfUploadDir.length)==swfUploadDir && !swfupload.customSettings.isInsertFromWangPan) {
                     T.ajax({
-                        url:encodeURI('http://10.215.7.17/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileinfo.fs_id),
+                        url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileinfo.fs_id),
                         dataType:'jsonp',
                         success:function (response) {
                         }
@@ -278,7 +276,7 @@ window.swfUploadLoaded = function () {
         swfupload.customSettings.doRenameHandler = function () {
             var progress = swfupload.progress,
                 newname = T.trim(progress.progressRenameValue.value);
-            if (/\.((jpg)|(jpeg)|(gif)|(bmp)|(png)|(jpe)|(cur)|(tif)|(tiff)|(ico))$/i.test(newname)){
+            if (/\.((jpg)|(jpeg)|(gif)|(bmp)|(png)|(jpe)|(cur)|(tif)|(tiff)|(ico))$/.test(newname)){
                 progress.setStatus('renameerror', '不允许改成图片格式');
             } else if (/[\\\/:\*\?"<>|]/.test(newname)) {
                 progress.setStatus('renameerror', '文件名不能包含下列字符 \\ \/ : * ? " < > |');
@@ -295,7 +293,7 @@ window.swfUploadLoaded = function () {
                 } else if (newname != "" && newname != showName.substr(showName.lastIndexOf('.')+1) && newname != showName && pathto != pathfrom) {
                     // 新文件名 不为空 && 不等于之前的后缀名 && 有修改过文本框 && 不与实际文件名相同
                     T.ajax({
-                        url:encodeURI('http://10.215.7.17/rest/2.0/pcs/file?method=move&app_id=598913&response-status=200&from=' + pathfrom + '&to=' + pathto),
+                        url:encodeURI('http://pcs.baidu.com/rest/2.0/pcs/file?method=move&app_id=598913&response-status=200&from=' + pathfrom + '&to=' + pathto),
                         dataType:'jsonp',
                         success:function (response) {
                             if (response.error_code) {
@@ -339,7 +337,7 @@ window.swfUploadLoaded = function () {
         } else {
             swfupload.customSettings.setBindUploadStatus('ready');
         }
-    } catch (ex) {}
+     } catch (ex) {}
 };
 
 window.swfUploadLoadFailed = function () {
@@ -354,7 +352,7 @@ window.swfUploadFileQueued = function (file) {
     try {
         var swfupload = this;
 
-        if(/\.((jpg)|(jpeg)|(gif)|(bmp)|(png)|(jpe)|(cur)|(tif)|(tiff)|(ico))$/i.test(file.type)) {
+        if(/\.((jpg)|(jpeg)|(gif)|(bmp)|(png)|(jpe)|(cur)|(tif)|(tiff)|(ico))$/.test(file.type)) {
             alert('请使用插入图片功能，可直接在线预览');
         } else if (swfupload.customSettings.successCount > 0 || swfupload.customSettings.isUploading == true) {
             if (confirm("即将删除上一个附件,确定吗？")) {
@@ -368,7 +366,7 @@ window.swfUploadFileQueued = function (file) {
                     var swfUploadDir = swfupload.customSettings.swfUploadDir;
                     if (fileinfo && fileinfo.path.substr(0, swfUploadDir.length)==swfUploadDir && !swfupload.customSettings.isInsertFromWangPan) {
                         T.ajax({
-                            url:encodeURI('http://10.215.7.17/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileinfo.fs_id),
+                            url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=delete&app_id=598913&response-status=200&op=permanent&fs_id=' + fileinfo.fs_id),
                             dataType:'jsonp',
                             success:function (response) {
                             }
@@ -489,8 +487,8 @@ window.swfUploadSendError = function (file, errorCode, message) {
     try {
         var swfupload = this, progress = swfupload.progress;
         if (errorCode != SWFUpload.UPLOAD_ERROR.FILE_CANCELLED) {
-                swfupload.customSettings.setBindUploadStatus('error', -1);
-                progress.setStatus('error', '上传失败请重试或');
+            swfupload.customSettings.setBindUploadStatus('error', -1);
+            progress.setStatus('error', '上传失败请重试或');
         }
     } catch (ex) {}
 };
@@ -506,15 +504,13 @@ window.editorSetUploadFile = function (data, isInsertFromWangPan, editor) {
         //TODO 假如已有上传成功的文件，要先删除，有些情况需要假删除
     }
 
-    if (data && !data.error && data.data.length) {
-        var fileinfo = data.data[0];
+    if (data && !data.error) {
+        var fileinfo = data.fileInfo;
         fileinfo.path = decodeURIComponent(fileinfo.path);
         var filename = fileinfo.path.substr(fileinfo.path.lastIndexOf('/')+1),
             filesize = fileinfo.size,
             tmpArr = fileinfo.path.match(/(\.[^\.]*)$/),
-            filetype = tmpArr ? tmpArr[1] : '.',
-            createTime = new Date(fileinfo.ctime),
-            modifyTime = new Date(fileinfo.ctime);
+            filetype = tmpArr ? tmpArr[1] : '.';
 
         editor._uploadFile.fileInfo = fileinfo;
         editor._uploadFile.backFileInfo = fileinfo;
@@ -527,9 +523,7 @@ window.editorSetUploadFile = function (data, isInsertFromWangPan, editor) {
             size:filesize || 0,
             type:filetype || '',
             filestatus:-4,
-            index:1,
-            creationdate:createTime || +new Date(),
-            modificationdate:modifyTime || +new Date()
+            index:1
         };
         swfupload.progress = new FileProgress(swfupload.customSettings.currentFile, swfupload);
         swfupload.progress.setStatus('setfilesuccess');
