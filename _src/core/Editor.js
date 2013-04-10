@@ -46,9 +46,9 @@
         }
         if (!textarea) {
             form.appendChild(textarea = domUtils.createElement(document, 'textarea', {
-                'name':editor.options.textarea,
-                'id':'ueditor_textarea_' + editor.options.textarea,
-                'style':"display:none"
+                'name': editor.options.textarea,
+                'id': 'ueditor_textarea_' + editor.options.textarea,
+                'style': "display:none"
             }));
             //不要产生多个textarea
             editor.textarea = textarea;
@@ -80,39 +80,39 @@
         me.outputRules = [];
         //设置默认的常用属性
         me.setOpt({
-            isShow:true,
-            initialContent:'欢迎使用ueditor!',
-            autoClearinitialContent:false,
-            iframeCssUrl:me.options.UEDITOR_HOME_URL + 'themes/iframe.css',
-            textarea:'editorValue',
-            focus:false,
-            initialFrameWidth:"100%",
-            initialFrameHeight:me.options.minFrameHeight||320,//兼容老版本配置项
-            focusInEnd:true,
-            minFrameWidth:800,
-            minFrameHeight:220,
-            autoClearEmptyNode:true,
-            fullscreen:false,
-            readonly:false,
-            zIndex:999,
-            imagePopup:true,
-            enterTag:'p',
-            pageBreakTag:'_baidu_page_break_tag_',
-            customDomain:false,
-            lang:'zh-cn',
-            langPath:me.options.UEDITOR_HOME_URL + 'lang/',
-            theme:'default',
-            themePath:me.options.UEDITOR_HOME_URL + 'themes/',
-            allHtmlEnabled:false,
-            scaleEnabled:false,
-            tableNativeEditInFF:false
+            isShow: true,
+            initialContent: '',
+            autoClearinitialContent: false,
+            iframeCssUrl: me.options.UEDITOR_HOME_URL + 'themes/iframe.css',
+            textarea: 'editorValue',
+            focus: false,
+            focusInEnd: true,
+            initialFrameWidth: 1000,
+            initialFrameHeight: me.options.minFrameHeight || 320, //兼容老版本配置项
+            minFrameWidth: 800,
+            minFrameHeight: 220,
+            autoClearEmptyNode: true,
+            fullscreen: false,
+            readonly: false,
+            zIndex: 999,
+            imagePopup: true,
+            enterTag: 'p',
+            customDomain: false,
+            lang: 'zh-cn',
+            langPath: me.options.UEDITOR_HOME_URL + 'lang/',
+            theme: 'default',
+            themePath: me.options.UEDITOR_HOME_URL + 'themes/',
+            allHtmlEnabled: false,
+            scaleEnabled: false,
+            tableNativeEditInFF: false,
+            autoSyncData : true
         });
 
         utils.loadFile(document, {
-            src:me.options.langPath + me.options.lang + "/" + me.options.lang + ".js",
-            tag:"script",
-            type:"text/javascript",
-            defer:"defer"
+            src: me.options.langPath + me.options.lang + "/" + me.options.lang + ".js",
+            tag: "script",
+            type: "text/javascript",
+            defer: "defer"
         }, function () {
             //初始化插件
             for (var pi in UE.plugins) {
@@ -137,7 +137,7 @@
          *     editor.setContent("欢迎使用UEditor！");
          * })
          */
-        ready:function (fn) {
+        ready: function (fn) {
             var me = this;
             if (fn) {
                 me.isReady ? fn.apply(me) : me.addListener('ready', fn);
@@ -148,7 +148,7 @@
          * @grammar editor.setOpt(key,value);      //传入一个键、值对
          * @grammar editor.setOpt({ key:value});   //传入一个json对象
          */
-        setOpt:function (key, val) {
+        setOpt: function (key, val) {
             var obj = {};
             if (utils.isString(key)) {
                 obj[key] = val
@@ -162,7 +162,7 @@
          * @name destroy
          * @grammar editor.destroy();
          */
-        destroy:function () {
+        destroy: function () {
 
             var me = this;
             me.fireEvent('destroy');
@@ -188,7 +188,6 @@
                 }
             }
             UE.delEditor(key);
-
         },
         /**
          * 渲染编辑器的DOM到指定容器，必须且只能调用一次
@@ -196,7 +195,7 @@
          * @grammar editor.render(containerId);    //可以指定一个容器ID
          * @grammar editor.render(containerDom);   //也可以直接指定容器对象
          */
-        render:function (container) {
+        render: function (container) {
             var me = this, options = me.options;
             if (utils.isString(container)) {
                 container = document.getElementById(container);
@@ -219,11 +218,11 @@
                 if (options.customDomain && document.domain != location.hostname) {
                     html += '<script>window.parent.UE.instants[\'ueditorInstant' + me.uid + '\']._setup(document);</script></html>';
                     container.appendChild(domUtils.createElement(document, 'iframe', {
-                        id:'baidu_editor_' + me.uid,
-                        width:"100%",
-                        height:"100%",
-                        frameborder:"0",
-                        src:'javascript:void(function(){document.open();document.domain="' + document.domain + '";' +
+                        id: 'baidu_editor_' + me.uid,
+                        width: "100%",
+                        height: "100%",
+                        frameborder: "0",
+                        src: 'javascript:void(function(){document.open();document.domain="' + document.domain + '";' +
                             'document.write("' + html + '");document.close();}())'
                     }));
                 } else {
@@ -244,7 +243,7 @@
          * @ignore
          * @param {Element} doc 编辑器Iframe中的文档对象
          */
-        _setup:function (doc) {
+        _setup: function (doc) {
 
             var me = this,
                 options = me.options;
@@ -283,9 +282,15 @@
             //为form提交提供一个隐藏的textarea
             for (var form = this.iframe.parentNode; !domUtils.isBody(form); form = form.parentNode) {
                 if (form.tagName == 'FORM') {
-                    domUtils.on(form, 'submit', function () {
-                        setValue(this, me);
-                    });
+                    if(me.options.autoSyncData){
+                        domUtils.on(me.window,'blur',function(){
+                            setValue(form,me);
+                        });
+                    }else{
+                        domUtils.on(form, 'submit', function () {
+                            setValue(this, me);
+                        });
+                    }
                     break;
                 }
             }
@@ -371,7 +376,7 @@
          * form.sumbit(); //form变量已经指向了form元素
          *
          */
-        sync:function (formId) {
+        sync: function (formId) {
             var me = this,
                 form = formId ? document.getElementById(formId) :
                     domUtils.findParent(me.iframe.parentNode, function (node) {
@@ -384,14 +389,14 @@
          * @name setHeight
          * @grammar editor.setHeight(number);  //纯数值，不带单位
          */
-        setHeight:function (height) {
+        setHeight: function (height) {
             if (height !== parseInt(this.iframe.parentNode.style.height)) {
                 this.iframe.parentNode.style.height = height + 'px';
             }
             this.document.body.style.height = height - 20 + 'px';
         },
 
-        addshortcutkey:function (cmd, keys) {
+        addshortcutkey: function (cmd, keys) {
             var obj = {};
             if (keys) {
                 obj[cmd] = keys
@@ -400,7 +405,7 @@
             }
             utils.extend(this.shortcutkeys, obj)
         },
-        _bindshortcutKeys:function () {
+        _bindshortcutKeys: function () {
             var me = this, shortcutkeys = this.shortcutkeys;
             me.addListener('keydown', function (type, e) {
                 var keyCode = e.keyCode || e.which;
@@ -437,50 +442,7 @@
          *     return false //编辑器没有内容 ，getContent直接返回空
          * })
          */
-        getContent:function (cmd,fn,isPreview) {
-//            var me = this;
-//            if ( cmd && utils.isFunction( cmd ) ) {
-//                fn = cmd;
-//                cmd = '';
-//            }
-//            if ( fn ? !fn() : !this.hasContents() ) {
-//                return '';
-//            }
-////            var range = me.selection.getRange(),
-////                address = range.createAddress();
-//            var root = UE.htmlparser(me.body.innerHTML);
-//            me.fireEvent( 'beforegetcontent');
-//
-//            me.filterOutputRule(root);
-//            var reg = new RegExp( domUtils.fillChar, 'g' ),
-//            //ie下取得的html可能会有\n存在，要去掉，在处理replace(/[\t\r\n]*/g,'');代码高量的\n不能去除
-//                    html = me.body.innerHTML.replace( reg, '' ).replace( />[\t\r\n]*?</g, '><' );
-//            me.fireEvent( 'aftergetcontent', cmd );
-//            try{
-//                range.moveToAddress(address).select(true);
-//            }catch(e){}
-//            if ( me.serialize ) {
-//                var node = me.serialize.parseHTML( html );
-//                node = me.serialize.transformOutput( node );
-//                html = me.serialize.toHTML( node );
-//            }
-//
-//            if ( ie && isPreview ) {
-//                //trace:2471
-//                //两个br会导致空行，所以这里先注视掉
-//                html = html//.replace(/<\s*br\s*\/?\s*>/gi,'<br/><br/>')
-//                        .replace( /<p>\s*?<\/p>/g, '<p>&nbsp;</p>' );
-//            } else {
-//                //多个&nbsp;要转换成空格加&nbsp;的形式，要不预览时会所成一个
-//                html = html.replace( /(&nbsp;)+/g, function ( s ) {
-//                    for ( var i = 0, str = [], l = s.split( ';' ).length - 1; i < l; i++ ) {
-//                        str.push( i % 2 == 0 ? ' ' : '&nbsp;' );
-//                    }
-//                    return str.join( '' );
-//                } );
-//            }
-//
-//            return  html;
+        getContent: function (cmd, fn,notSetCursor) {
             var me = this;
             if (cmd && utils.isFunction(cmd)) {
                 fn = cmd;
@@ -489,42 +451,27 @@
             if (fn ? !fn() : !this.hasContents()) {
                 return '';
             }
-            var range = me.selection.getRange(),
-                address = range.createAddress();
+//            var range = me.selection.getRange(),
+//                address = range.createAddress();
 
-            me.fireEvent( 'beforegetcontent');
+            me.fireEvent('beforegetcontent');
             var root = UE.htmlparser(me.body.innerHTML);
             me.filterOutputRule(root);
-            me.fireEvent( 'aftergetcontent', cmd );
+            me.fireEvent('aftergetcontent', cmd);
 
-            try{
-                range.moveToAddress(address).select(true);
-            }catch(e){}
+//            try {
+//                !notSetCursor && range.moveToAddress(address).select(true);
+//            } catch (e) {
+//            }
 
-            var html = root.toHtml();
-            if (ie && isPreview) {
-                //trace:2471
-                //两个br会导致空行，所以这里先注视掉
-                html = html.replace(/<p>\s*?<\/p>/g, '<p>&nbsp;</p>');
-            } else {
-                //多个&nbsp;要转换成空格加&nbsp;的形式，要不预览时会所成一个
-                html = html.replace(/(&nbsp;)+/g, function (s) {
-                    for (var i = 0, str = [], l = s.split(';').length - 1; i < l; i++) {
-                        str.push(i % 2 == 0 ? ' ' : '&nbsp;');
-                    }
-                    return str.join('');
-                });
-            }
-            html = html.replace(/'/g,"&#39;");
-
-            return  html;
+            return  root.toHtml();
         },
         /**
          * 取得完整的html代码，可以直接显示成完整的html文档
          * @name getAllHtml
          * @grammar editor.getAllHtml()  => String
          */
-        getAllHtml:function () {
+        getAllHtml: function () {
             var me = this,
                 headHtml = [],
                 html = '';
@@ -548,7 +495,7 @@
          * @name getPlainTxt
          * @grammar editor.getPlainTxt()  => String
          */
-        getPlainTxt:function () {
+        getPlainTxt: function () {
             var reg = new RegExp(domUtils.fillChar, 'g'),
                 html = this.body.innerHTML.replace(/[\n\r]/g, '');//ie要先去了\n在处理
             html = html.replace(/<(p|div)[^>]*>(<br\/?>|&nbsp;)<\/\1>/gi, '\n')
@@ -566,7 +513,7 @@
          * @name getContentTxt
          * @grammar editor.getContentTxt()  => String
          */
-        getContentTxt:function () {
+        getContentTxt: function () {
             var reg = new RegExp(domUtils.fillChar, 'g');
             //取出来的空格会有c2a0会变成乱码，处理这种情况\u00a0
             return this.body[browser.ie ? 'innerText' : 'textContent'].replace(reg, '').replace(/\u00a0/g, ' ');
@@ -583,117 +530,20 @@
          *     editor.setContent("欢迎使用UEditor！");
          * })
          */
-        setContent:function (html, isAppendTo, notFireSelectionchange) {
-//            var me = this,
-//                    inline = utils.extend( {a:1, A:1}, dtd.$inline, true ),
-//                    lastTagName;
-//
-//            html = html
-//                    .replace( /^[ \t\r\n]*?</, '<' )
-//                    .replace( />[ \t\r\n]*?$/, '>' )
-//                    //ie有时的源码会有>&nbsp;<的情况
-//                    .replace(/>(?:(\s|&nbsp;)*?)</g,'><' )//代码高量的\n不能去除
-//                    .replace( /[\s\/]?(\w+)?>[ \t\r\n]*?<\/?(\w+)/gi, function ( a, b, c ) {
-//                        if ( b ) {
-//                            lastTagName = c;
-//                        } else {
-//                            b = lastTagName;
-//                        }
-//                        return !inline[b] && !inline[c] ? a.replace( />[ \t\r\n]*?</, '><' ) : a;
-//                    } );
-//            html = {'html':html};
-//            me.fireEvent( 'beforesetcontent',html,root);
-//            html = html.html;
-//            var serialize = this.serialize;
-//            if ( serialize ) {
-//                var node = serialize.parseHTML( html );
-//                node = serialize.transformInput( node );
-//                node = serialize.filter( node );
-//                html = serialize.toHTML( node );
-//            }
-//            //html.replace(new RegExp('[\t\n\r' + domUtils.fillChar + ']*','g'),'');
-//            //去掉了\t\n\r 如果有插入的代码，在源码切换所见即所得模式时，换行都丢掉了
-//            //\r在ie下的不可见字符，在源码切换时会变成多个&nbsp;
-//            //trace:1559
-//            this.body.innerHTML = (isAppendTo ? this.getContent() : '') + html.replace( new RegExp( '[\r' + domUtils.fillChar + ']*', 'g' ), '' );
-//            //处理ie6下innerHTML自动将相对路径转化成绝对路径的问题
-//            if ( browser.ie && browser.version < 7 ) {
-//                replaceSrc( this.document.body );
-//            }
-//            //给文本或者inline节点套p标签
-//            if ( me.options.enterTag == 'p' ) {
-//
-//                var child = this.body.firstChild, tmpNode;
-//                if ( !child || child.nodeType == 1 &&
-//                        (dtd.$cdata[child.tagName] ||
-//                                domUtils.isCustomeNode( child )
-//                                )
-//                        && child === this.body.lastChild ) {
-//                    this.body.innerHTML = '<p>' + (browser.ie ? '&nbsp;' : '<br/>') + '</p>' + this.body.innerHTML;
-//
-//                } else {
-//                    var p = me.document.createElement( 'p' );
-//                    while ( child ) {
-//                        while ( child && (child.nodeType == 3 || child.nodeType == 1 && dtd.p[child.tagName] && !dtd.$cdata[child.tagName]) ) {
-//                            tmpNode = child.nextSibling;
-//                            p.appendChild( child );
-//                            child = tmpNode;
-//                        }
-//                        if ( p.firstChild ) {
-//                            if ( !child ) {
-//                                me.body.appendChild( p );
-//                                break;
-//                            } else {
-//                                child.parentNode.insertBefore( p, child );
-//                                p = me.document.createElement( 'p' );
-//                            }
-//                        }
-//                        child = child.nextSibling;
-//                    }
-//                }
-//            }
-//            me.fireEvent( 'aftersetcontent' );
-//            me.fireEvent( 'contentchange' );
-//            console.log(root.toHtml())
-//            !notFireSelectionchange && me._selectionChange();
-//            //清除保存的选区
-//            me._bakRange = me._bakIERange = null;
-//            //trace:1742 setContent后gecko能得到焦点问题
-//            var geckoSel;
-//            if ( browser.gecko && (geckoSel = this.selection.getNative()) ) {
-//                geckoSel.removeAllRanges();
-//            }
-            var me = this,
-                inline = utils.extend({a:1, A:1}, dtd.$inline, true),
-                lastTagName;
+        setContent: function (html, isAppendTo, notFireSelectionchange) {
+            var me = this;
 
-            html = html
-                .replace(/^[ \t\r\n]*?</, '<')
-                .replace(/>[ \t\r\n]*?$/, '>')
-                //ie有时的源码会有>&nbsp;<的情况
-                .replace(/>(?:(\s|&nbsp;)*?)</g, '><')//代码高量的\n不能去除
-                .replace(/[\s\/]?(\w+)?>[ \t\r\n]*?<\/?(\w+)/gi, function (a, b, c) {
-                    if (b) {
-                        lastTagName = c;
-                    } else {
-                        b = lastTagName;
-                    }
-                    return !inline[b] && !inline[c] ? a.replace(/>[ \t\r\n]*?</, '><') : a;
-                });
-
-            me.fireEvent( 'beforesetcontent',html);
+            me.fireEvent('beforesetcontent', html);
             var root = UE.htmlparser(html);
             me.filterInputRule(root);
             html = root.toHtml();
 
-            //html.replace(new RegExp('[\t\n\r' + domUtils.fillChar + ']*','g'),'');
-            //去掉了\t\n\r 如果有插入的代码，在源码切换所见即所得模式时，换行都丢掉了
-            //\r在ie下的不可见字符，在源码切换时会变成多个&nbsp;
-            //trace:1559
-            this.body.innerHTML = (isAppendTo ? this.getContent() : '') + html.replace(new RegExp('[\r' + domUtils.fillChar + ']*', 'g'), '');
+
+            me.body.innerHTML = (isAppendTo ? this.getContent() : '') + html;
+
             //处理ie6下innerHTML自动将相对路径转化成绝对路径的问题
             if (browser.ie && browser.version < 7) {
-                replaceSrc(this.body);
+                replaceSrc(me.body);
             }
             //给文本或者inline节点套p标签
             if (me.options.enterTag == 'p') {
@@ -727,7 +577,7 @@
                     }
                 }
             }
-            me.fireEvent( 'aftersetcontent' );
+            me.fireEvent('aftersetcontent');
             me.fireEvent('contentchange');
 
             !notFireSelectionchange && me._selectionChange();
@@ -774,7 +624,7 @@
          * @name focus
          * @grammar editor.focus([toEnd])   //默认focus到编辑器头部，toEnd为true时focus到内容尾部
          */
-        focus:function (toEnd) {
+        focus: function (toEnd) {
             try {
                 var me = this,
                     rng = me.selection.getRange();
@@ -792,7 +642,7 @@
          * @private
          * @ignore
          */
-        _initEvents:function () {
+        _initEvents: function () {
             var me = this,
                 doc = me.document,
                 win = me.window;
@@ -854,7 +704,7 @@
          * @private
          * @ignore
          */
-        _proxyDomEvent:function (evt) {
+        _proxyDomEvent: function (evt) {
             return this.fireEvent(evt.type.replace(/^on/, ''), evt);
         },
         /**
@@ -862,7 +712,7 @@
          * @private
          * @ignore
          */
-        _selectionChange:function (delay, evt) {
+        _selectionChange: function (delay, evt) {
             var me = this;
             //有光标才做selectionchange 为了解决未focus时点击source不能触发更改工具栏状态的问题（source命令notNeedUndo=1）
 //            if ( !me.selection.isFocus() ){
@@ -914,7 +764,7 @@
                 }
             }, delay || 50);
         },
-        _callCmdFn:function (fnName, args) {
+        _callCmdFn: function (fnName, args) {
             var cmdName = args[0].toLowerCase(),
                 cmd, cmdFn;
             cmd = this.commands[cmdName] || UE.commands[cmdName];
@@ -932,7 +782,7 @@
          * @name execCommand
          * @grammar editor.execCommand(cmdName)   => {*}
          */
-        execCommand:function (cmdName) {
+        execCommand: function (cmdName) {
             cmdName = cmdName.toLowerCase();
             var me = this,
                 result,
@@ -965,7 +815,7 @@
          * * ''0'' 当前命令可用
          * * ''1'' 当前命令已经执行过了
          */
-        queryCommandState:function (cmdName) {
+        queryCommandState: function (cmdName) {
             return this._callCmdFn('queryCommandState', arguments);
         },
 
@@ -974,7 +824,7 @@
          * @name  queryCommandValue
          * @grammar editor.queryCommandValue(cmdName)  =>  {*}
          */
-        queryCommandValue:function (cmdName) {
+        queryCommandValue: function (cmdName) {
             return this._callCmdFn('queryCommandValue', arguments);
         },
         /**
@@ -988,7 +838,7 @@
          * @example
          * editor.hasContents(['span']) //如果编辑器里有这些，不认为是空
          */
-        hasContents:function (tags) {
+        hasContents: function (tags) {
             if (tags) {
                 for (var i = 0, ci; ci = tags[i++];) {
                     if (this.document.getElementsByTagName(ci).length > 0) {
@@ -1019,10 +869,10 @@
          * * 清空回退列表
          * @grammar editor.reset()
          */
-        reset:function () {
+        reset: function () {
             this.fireEvent('reset');
         },
-        setEnabled:function () {
+        setEnabled: function () {
             var me = this, range;
             if (me.body.contentEditable == 'false') {
                 me.body.contentEditable = true;
@@ -1047,10 +897,10 @@
          * @name enable
          * @grammar editor.enable()
          */
-        enable:function () {
+        enable: function () {
             return this.setEnabled();
         },
-        setDisabled:function (except) {
+        setDisabled: function (except) {
             var me = this;
             except = except ? utils.isArray(except) ? except : [except] : [];
             if (me.body.contentEditable == 'true') {
@@ -1076,7 +926,7 @@
          * //禁用工具栏中除加粗和插入图片之外的所有功能
          * editor.disable(['bold','insertimage']);//可以是单一的String,也可以是Array
          */
-        disable:function (except) {
+        disable: function (except) {
             return this.setDisabled(except);
         },
         /**
@@ -1085,7 +935,7 @@
          * @private
          * @param  {String} cont 要存入的内容
          */
-        _setDefaultContent:function () {
+        _setDefaultContent: function () {
             function clear() {
                 var me = this;
                 if (me.document.getElementById('initContent')) {
@@ -1112,7 +962,7 @@
          * @private
          * @ignore
          */
-        setShow:function () {
+        setShow: function () {
             var me = this, range = me.selection.getRange();
             if (me.container.style.display == 'none') {
                 //有可能内容丢失了
@@ -1135,7 +985,7 @@
          * @name show
          * @grammar editor.show()
          */
-        show:function () {
+        show: function () {
             return this.setShow();
         },
         /**
@@ -1143,7 +993,7 @@
          * @private
          * @ignore
          */
-        setHide:function () {
+        setHide: function () {
             var me = this;
             if (!me.lastBk) {
                 me.lastBk = me.selection.getRange().createBookmark(true);
@@ -1155,7 +1005,7 @@
          * @name hide
          * @grammar editor.hide()
          */
-        hide:function () {
+        hide: function () {
             return this.setHide();
         },
         /**
@@ -1165,7 +1015,7 @@
          * @example
          * editor.getLang('contextMenu.delete') //如果当前是中文，那返回是的是删除
          */
-        getLang:function (path) {
+        getLang: function (path) {
             var lang = UE.I18N[this.options.lang];
             if (!lang) {
                 throw Error("not import language file");
@@ -1184,8 +1034,8 @@
          * @example
          * editor.getLang(true)
          */
-        getContentLength:function (ingoneHtml, tagNames) {
-            var count = this.getContent().length;
+        getContentLength: function (ingoneHtml, tagNames) {
+            var count = this.getContent(false,false,true).length;
             if (ingoneHtml) {
                 tagNames = (tagNames || []).concat([ 'hr', 'img', 'iframe']);
                 count = this.getContentTxt().replace(/[\t\r\n]+/g, '').length;
@@ -1195,18 +1045,18 @@
             }
             return count;
         },
-        addInputRule:function (rule) {
+        addInputRule: function (rule) {
             this.inputRules.push(rule);
         },
-        filterInputRule:function (root) {
+        filterInputRule: function (root) {
             for (var i = 0, ci; ci = this.inputRules[i++];) {
                 ci.call(this, root)
             }
         },
-        addOutputRule:function (rule) {
+        addOutputRule: function (rule) {
             this.outputRules.push(rule)
         },
-        filterOutputRule:function (root) {
+        filterOutputRule: function (root) {
             for (var i = 0, ci; ci = this.outputRules[i++];) {
                 ci.call(this, root)
             }
@@ -1223,4 +1073,3 @@
     };
     utils.inherits(Editor, EventBase);
 })();
-

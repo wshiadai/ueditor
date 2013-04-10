@@ -105,7 +105,7 @@ UE.plugins['undo'] = function () {
             me.fireEvent('reset', true);
         };
 
-        this.getScene = function () {
+        this.getScene = function (notSetCursor) {
             var rng = me.selection.getRange(),
                 restoreAddress = rng.createAddress(),
                 rngAddress = rng.createAddress(false,true);
@@ -115,15 +115,15 @@ UE.plugins['undo'] = function () {
             browser.ie && (cont = cont.replace(/>&nbsp;</g, '><').replace(/\s*</g, '<').replace(/>\s*/g, '>'));
             me.fireEvent('aftergetscene');
             try{
-                rng.moveToAddress(restoreAddress).select(true);
+               !notSetCursor && rng.moveToAddress(restoreAddress).select(true);
             }catch(e){}
             return {
                 address:rngAddress,
                 content:cont
             }
         };
-        this.save = function (notCompareRange) {
-            var currentScene = this.getScene(),
+        this.save = function (notCompareRange,notSetCursor) {
+            var currentScene = this.getScene(notSetCursor),
                 lastScene = this.list[this.index];
             //内容相同位置相同不存
             if (lastScene && lastScene.content == currentScene.content &&
@@ -216,9 +216,7 @@ UE.plugins['undo'] = function () {
             if (inputType)
                 return;
             if (me.undoManger.list.length == 0 || ((keyCode == 8 || keyCode == 46) && lastKeyCode != keyCode)) {
-
                 me.fireEvent('contentchange');
-
                 me.undoManger.save(true);
                 lastKeyCode = keyCode;
                 return;
@@ -234,9 +232,21 @@ UE.plugins['undo'] = function () {
             if (keycont >= maxInputCount || me.undoManger.mousedown) {
                 if (me.selection.getRange().collapsed)
                     me.fireEvent('contentchange');
-                me.undoManger.save();
+                me.undoManger.save(false,true);
                 me.undoManger.mousedown = false;
             }
+        }
+    });
+    me.addListener('keyup', function (type, evt) {
+        var keyCode = evt.keyCode || evt.which;
+        if (!keys[keyCode] && !evt.ctrlKey && !evt.metaKey && !evt.shiftKey && !evt.altKey) {
+            if (inputType)
+                return;
+            if (me.undoManger.list.length == 1  ) {
+                me.undoManger.save(true);
+            }
+
+
         }
     });
     me.addListener('mousedown',function(){
