@@ -87,8 +87,8 @@
             textarea: 'editorValue',
             focus: false,
             focusInEnd: true,
-            initialFrameWidth: 1000,
-            initialFrameHeight: me.options.minFrameHeight || 320, //兼容老版本配置项
+            initialFrameWidth: 300,
+            initialFrameHeight: me.options.minFrameHeight || 100, //兼容老版本配置项
             minFrameWidth: 800,
             minFrameHeight: 220,
             autoClearEmptyNode: true,
