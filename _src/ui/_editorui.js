@@ -168,19 +168,17 @@
     }
 
     editorui["graphictemplate"] = function (editor) {
-        var cmd = "graphictemplate", graphictemplatePop = null;
+        var cmd = "graphictemplate",
+            graphictemplatePop = new baidu.editor.ui.Popup({
+                content:new baidu.editor.ui.GraphicTemplatePicker({editor:editor}),
+                editor:editor,
+                className:'edui-graphictemplatePop'
+            });
+        graphictemplatePop.render();
         var ui = new editorui.Button({
             className:'edui-for-' + cmd,
             title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
             onclick:function () {
-                if (!graphictemplatePop) {
-                    graphictemplatePop = new baidu.editor.ui.Popup({
-                        content:new baidu.editor.ui.GraphicTemplatePicker({editor:editor}),
-                        editor:editor,
-                        className:'edui-morePop'
-                    });
-                    graphictemplatePop.render();
-                }
                 graphictemplatePop.showAnchor(this.getDom());
             },
             theme:editor.options.theme,

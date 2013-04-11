@@ -43,6 +43,7 @@
             'ui/popup.js',
             'ui/stateful.js',
             'ui/button.js',
+            'ui/_graphictemplatepicker.js',
             'ui/toolbar.js',
             'ui/dialog.js',
             'ui/_editorui.js',

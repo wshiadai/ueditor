@@ -1,30 +1,17 @@
-/*链接弹出菜单*/
 .edui-default .edui-graphictemplatepicker .edui-graphictemplatepicker-body {
-    width: 100px;
+    width: 76px;
     font-size: 12px;
     cursor: default;
     overflow-y: auto;
 }
 .edui-default .edui-graphictemplatepicker-item {
-    padding:5px;
+    text-align: center;
     cursor: pointer;
+    height: 30px;
+    line-height: 30px;
     overflow: hidden;
 }
-.edui-default .edui-graphictemplatepicker-item .edui-label{
-    float: left;
-}
-.edui-default .edui-answertemplate .edui-icon{
-    background-position: -30px -50px
-}
-.edui-default .edui-insertvideo  .edui-icon{
-    background-position: -63px 0;
-}
 
-
-.edui-default .edui-graphictemplatepicker-edit {
-    color: #133db6;
-    font-size: 12px;
-}
 .edui-default .edui-graphictemplatepicker-body .edui-graphictemplatepicker-item.edui-state-hover {
-    background-color: #ebf6e6;
+    background-color: #f9fdf8;
 }

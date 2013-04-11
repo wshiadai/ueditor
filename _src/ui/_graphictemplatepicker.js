@@ -6,19 +6,19 @@
         Stateful = baidu.editor.ui.Stateful,
         UIBase = baidu.editor.ui.UIBase;
 
-    var GraphicTemplatePicker = baidu.editor.ui.MorePicker = function (options) {
+    var GraphicTemplatePicker = baidu.editor.ui.GraphicTemplatePicker = function (options) {
         this.initOptions(options);
-        this.initMorePicker();
+        this.initGraphicTemplatePicker();
     };
     GraphicTemplatePicker.prototype = {
-        initMorePicker:function () {
+        initGraphicTemplatePicker:function () {
             this.initUIBase();
             this.Stateful_init();
         },
         getHtmlTpl:function () {
-            return '<div id="##" class="edui-morepicker %%">' +
-                '<div class="edui-morepicker-body">' +
-                '<div onclick="$$._onClickTemplate(event);" class="edui-graphictemplatepicker-item edui-foodtemplate" stateful>' +
+            return '<div id="##" class="edui-graphictemplatepicker %%">' +
+                '<div class="edui-graphictemplatepicker-body">' +
+                '<div onclick="$$._onClickFoodTemplate(event);" class="edui-graphictemplatepicker-item edui-foodtemplate" stateful>' +
                 '<div class="edui-label">美食食材</div>' +
                 '</div>' +
                 '</div>' +
@@ -27,7 +27,8 @@
         getStateDom:function () {
             return this.target;
         },
-        _onClickTemplate:function (evt) {
+        _onClickFoodTemplate:function (evt) {
+            this.editor.execCommand("graphictemplate");
             Popup.postHide(evt);
         },
         _UIBase_render:UIBase.prototype.render
