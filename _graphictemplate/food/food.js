@@ -45,11 +45,11 @@ function Food() {
 
             $G("J_wrapper").innerHTML = arr.join('');
 
-            me._addFoodListener();
+            me._addPageListener();
             me.setPageData(data);
             me._iframeAutoHeight();
         },
-        _addFoodListener:function () {
+        _addPageListener:function () {
             var me = this;
 
             domUtils.on(document, "click", function (e) {
