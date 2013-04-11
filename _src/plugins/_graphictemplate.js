@@ -7,9 +7,8 @@ UE.plugins['graphictemplate'] = function () {
     me.commands['graphictemplate'] = {
         execCommand:function (cmd) {
             id += 1;
-            var ifr = "<iframe  width='675' height='320' unselectable='on' align='center' scroling='no' frameborder='0'" +
-                "class='foodinfo'" +
-                "data_type='graphictemplate'"+
+            var ifr = "<iframe  width='675'  unselectable='on' align='center' scroling='no' frameborder='0'" +
+                "class='foodtemplate'" +
                 "id='" + id + "'" +
                 "src=" + me.options["graphictemplateUrlMap"].food +
                 "></iframe>";
@@ -24,7 +23,7 @@ UE.plugins['graphictemplate'] = function () {
     me.addOutputRule(function (root) {
         utils.each(root.getNodesByTagName('iframe'), function (node) {
             var val;
-            if ((val = node.getAttr('data_type')) && /graphictemplate/.test(val)) {
+            if ((val = node.getAttr('class')) && /foodtemplate/.test(val)) {
                 var id=node.getAttr('id');
                 var str =me['graphictemplate'][id];
                 node.tagName = 'pre';
@@ -45,7 +44,7 @@ UE.plugins['graphictemplate'] = function () {
         var me = this;
         utils.each(root.getNodesByTagName('pre'), function (pi) {
             var val;
-            if (val = pi.getAttr('data_type') && /graphictemplate/.test(val)) {
+            if (val = pi.getAttr('class') && /foodtemplate/.test(val)) {
                 var tmpDiv = me.document.createElement('div');
                 var data = (new Function('return' + pi.innerHTML()))();
 
@@ -68,5 +67,23 @@ UE.plugins['graphictemplate'] = function () {
 
     });
 
-
+    //缓存所有iframe高度，阻止undo属性改变时重复保存
+    var heightStorage=[];
+    me.addListener("beforegetscene",function(){
+        heightStorage=[];
+        utils.each(domUtils.getElementsByTagName(me.body,"iframe","foodtemplate"),function(node){
+            var tmp=node.getAttribute("height");
+            if(tmp){
+                heightStorage.push(tmp);
+            }
+            node.removeAttribute("height");
+        });
+    });
+    me.addListener("aftergetscene",function(){
+        if(heightStorage.length){
+            utils.each(domUtils.getElementsByTagName(me.body,"iframe","foodtemplate"),function(node,i){
+                node.setAttribute("height",heightStorage[i]);
+            });
+        }
+    });
 };

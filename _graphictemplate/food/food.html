@@ -16,9 +16,6 @@
     domUtils.on(window, ['blur', 'load'], function (e) {
         e.type == "blur" ? food.savePageData() : food.initPageByData();
     });
-    editor.addListener("beforepaste",function(){
-        debugger;
-    });
 </script>
 </body>
 </html>

@@ -34,8 +34,8 @@ function Food() {
                 tpl = me.template,
                 data = editor["graphictemplate"][frameElement.id];
 
-            var mainNum = data ? (me._getObjLength(data[0]) / 2 ) : 6;
-            var subNum = data ? (me._getObjLength(data[1]) / 2 ) : 6;
+            var mainNum = data ? (me._getObjLength(data[0]) / 2 ) : 4;
+            var subNum = data ? (me._getObjLength(data[1]) / 2 ) : 4;
 
             arr.push(tpl.title);
             arr.push(tpl.section.replace("$$", "主料").replace("%%", me._addModule(mainNum)));
