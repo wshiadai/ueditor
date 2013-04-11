@@ -45,7 +45,11 @@
                     className:'edui-for-' + cmd,
                     title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
                     onclick:function () {
-                        editor.execCommand(cmd);
+                        if(cmd=="graphictemplate"){
+
+                        }else{
+                            editor.execCommand(cmd);
+                        }
                     },
                     theme:editor.options.theme,
                     showText:false
