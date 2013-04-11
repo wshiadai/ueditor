@@ -34,7 +34,7 @@
             'plugins/video.js',
             'plugins/basestyle.js',
             'plugins/_heading.js',
-            'plugins/_basicinfo.js',
+            'plugins/_graphictemplate.js',
             'ui/ui.js',
             'ui/uiutils.js',
             'ui/uibase.js',

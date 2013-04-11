@@ -32,7 +32,7 @@ function Food() {
             var me = this,
                 arr = [],
                 tpl = me.template,
-                data = editor["basicinfo"][frameElement.id];
+                data = editor["graphictemplate"][frameElement.id];
 
             var mainNum = data ? (me._getObjLength(data[0]) / 2 ) : 6;
             var subNum = data ? (me._getObjLength(data[1]) / 2 ) : 6;
@@ -115,8 +115,8 @@ function Food() {
             }
         },
         savePageData:function () {
-            editor["basicinfo"][frameElement.id] = {};
-            var data = editor["basicinfo"][frameElement.id];
+            editor["graphictemplate"][frameElement.id] = {};
+            var data = editor["graphictemplate"][frameElement.id];
             var list = domUtils.getElementsByTagName(document, "div", "content");
 
             for (var i = 0, len = list.length; i < len; i++) {

@@ -1,17 +1,17 @@
-UE.plugins['basicinfo'] = function () {
+UE.plugins['graphictemplate'] = function () {
     var me = this;
-    me["basicinfo"]={};
+    me["graphictemplate"]={};
     var id = 0;
 
 
-    me.commands['basicinfo'] = {
+    me.commands['graphictemplate'] = {
         execCommand:function (cmd) {
             id += 1;
             var ifr = "<iframe  width='675' height='320' unselectable='on' align='center' scroling='no' frameborder='0'" +
                 "class='foodinfo'" +
-                "data_type='basicinfo'"+
+                "data_type='graphictemplate'"+
                 "id='" + id + "'" +
-                "src=" + me.options["basicinfoUrl"].food +
+                "src=" + me.options["graphictemplateUrlMap"].food +
                 "></iframe>";
 
             me.execCommand("inserthtml", ifr);
@@ -24,9 +24,9 @@ UE.plugins['basicinfo'] = function () {
     me.addOutputRule(function (root) {
         utils.each(root.getNodesByTagName('iframe'), function (node) {
             var val;
-            if ((val = node.getAttr('data_type')) && /basicinfo/.test(val)) {
+            if ((val = node.getAttr('data_type')) && /graphictemplate/.test(val)) {
                 var id=node.getAttr('id');
-                var str =me['basicinfo'][id];
+                var str =me['graphictemplate'][id];
                 node.tagName = 'pre';
                 var attrs = {
                     'data-type':val,
@@ -45,7 +45,7 @@ UE.plugins['basicinfo'] = function () {
         var me = this;
         utils.each(root.getNodesByTagName('pre'), function (pi) {
             var val;
-            if (val = pi.getAttr('data_type') && /basicinfo/.test(val)) {
+            if (val = pi.getAttr('data_type') && /graphictemplate/.test(val)) {
                 var tmpDiv = me.document.createElement('div');
                 var data = (new Function('return' + pi.innerHTML()))();
 
