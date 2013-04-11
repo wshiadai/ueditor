@@ -334,7 +334,9 @@
 
         /*-----------forexp-------*/
         ,graphictemplateUrlMap:{
-            'food':URL+'_graphictemplate/food/food.html'
+            'food':URL+'_graphictemplate/food/food.html',
+            'home':URL+'_graphictemplate/home/home.html',
+            'soft':URL+'_graphictemplate/soft/soft.html'
         }
     };
 })();

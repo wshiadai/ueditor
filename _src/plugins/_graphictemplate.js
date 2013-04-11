@@ -5,12 +5,12 @@ UE.plugins['graphictemplate'] = function () {
 
 
     me.commands['graphictemplate'] = {
-        execCommand:function (cmd) {
+        execCommand:function (cmd,value) {
             id += 1;
             var ifr = "<iframe  width='675'  unselectable='on' align='center' scroling='no' frameborder='0'" +
                 "class='foodtemplate'" +
                 "id='" + id + "'" +
-                "src=" + me.options["graphictemplateUrlMap"].food +
+                "src=" + me.options["graphictemplateUrlMap"][value] +
                 "></iframe>";
 
             me.execCommand("inserthtml", ifr);
