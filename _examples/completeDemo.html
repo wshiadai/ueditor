@@ -16,8 +16,12 @@
 </script>
 <script type="text/javascript">
     //编辑器实例化
+
     var editor = UE.getEditor('editor',{
 
+    });
+    editor.ready(function(){
+        this.body.innerHTML = '<p>' + (UE.browser.ie ? '&nbsp;':'<br/>') + '</p>'
     });
     //            debugger
     //            editor.focus();
