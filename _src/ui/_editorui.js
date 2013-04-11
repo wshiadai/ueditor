@@ -5,7 +5,7 @@
     var utils = baidu.editor.utils;
     var editorui = baidu.editor.ui;
     var _Dialog = editorui.Dialog;
-    editorui.buttons={};
+    editorui.buttons = {};
 
     editorui.Dialog = function (options) {
         var dialog = new _Dialog(options);
@@ -35,7 +35,7 @@
         'insertvideo':'~/dialogs/_video/video.html'
     };
     //为工具栏添加按钮，以下都是统一的按钮触发命令，所以写在一起
-    var btnCmds = ['undo', 'redo','bold', 'italic', 'autotypeset','insertorderedlist', 'insertunorderedlist','heading1',"graphictemplate"];
+    var btnCmds = ['undo', 'redo', 'bold', 'italic', 'autotypeset', 'insertorderedlist', 'insertunorderedlist', 'heading1'];
 
     for (var i = 0, ci; ci = btnCmds[i++];) {
         ci = ci.toLowerCase();
@@ -45,16 +45,12 @@
                     className:'edui-for-' + cmd,
                     title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
                     onclick:function () {
-                        if(cmd=="graphictemplate"){
-
-                        }else{
-                            editor.execCommand(cmd);
-                        }
+                        editor.execCommand(cmd);
                     },
                     theme:editor.options.theme,
                     showText:false
                 });
-                editorui.buttons[cmd]=ui;
+                editorui.buttons[cmd] = ui;
                 editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
                     var state = editor.queryCommandState(cmd);
                     if (state == -1) {
@@ -150,7 +146,7 @@
                             theme:editor.options.theme,
                             disabled:cmd == 'scrawl' && editor.queryCommandState("scrawl") == -1
                         });
-                        editorui.buttons[cmd]=ui;
+                        editorui.buttons[cmd] = ui;
                         editor.addListener('selectionchange', function () {
                             //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
                             var unNeedCheckState = {'edittable':1};
@@ -170,5 +166,41 @@
             }
         })(p, dialogBtns[p])
     }
+
+    editorui["graphictemplate"] = function (editor) {
+        var cmd = "graphictemplate", graphictemplatePop = null;
+        var ui = new editorui.Button({
+            className:'edui-for-' + cmd,
+            title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
+            onclick:function () {
+                if (!graphictemplatePop) {
+                    graphictemplatePop = new baidu.editor.ui.Popup({
+                        content:new baidu.editor.ui.GraphicTemplatePicker({editor:editor}),
+                        editor:editor,
+                        className:'edui-morePop'
+                    });
+                    graphictemplatePop.render();
+                }
+                graphictemplatePop.showAnchor(this.getDom());
+            },
+            theme:editor.options.theme,
+            showText:false
+        });
+        editorui.buttons[cmd] = ui;
+        editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
+            var state = editor.queryCommandState(cmd);
+            if (state == -1) {
+                ui.setDisabled(true);
+                ui.setChecked(false);
+            } else {
+                if (!uiReady) {
+                    ui.setDisabled(false);
+                    ui.setChecked(state);
+                }
+            }
+        });
+        return ui;
+    };
+
 
 })();

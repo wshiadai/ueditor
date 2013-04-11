@@ -23,3 +23,5 @@
 @import "separtor.css";
     /*粘贴提示*/
 @import "pastepicker.css";
+    /*图文模板下拉菜单*/
+@import "_graphictemplatepicker.css";
