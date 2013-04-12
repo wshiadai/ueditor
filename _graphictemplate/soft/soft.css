@@ -1,0 +1,19 @@
+.wrapper {border: 1px dotted #d6d2b6;background-color: #fcfcf8;}
+.wrapper .title{margin:20px 0 0 40px;font-size: 16px;font-weight: bold;font-family:microsoft Yahei;color: #333;}
+.wrapper .section{margin: 10px 0;font-size: 14px;overflow: hidden;color: #666;font-size: 14px;}
+
+.section .left{float: left;}
+.section .left .star{ color: red;margin-left: 40px;}
+.section .left .key{margin:0 10px ;}
+.section .left .unit{margin: 0 10px;}
+
+.section .leftarea{float:left;width: 250px;overflow: hidden;}
+.section .rightarea{float:left;width: 300px;overflow: hidden;}
+.section .dropdownbox{padding-left: 10px;width: 80px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;}
+.section .textbox{ padding-left: 10px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;}
+
+.section .decorativetxt{float:left;margin:0 10px 0 40px;}
+.section .decorative{float:left;overflow: hidden;width: 415px;}
+.section .decorative .way{float:left;width:46px;margin-right:10px;height: 30px;border: #ddd 1px solid;background: #FFFFFF;text-align: center;line-height: 30px;cursor: pointer;}
+.section .decorative .way.active{ border: #77D068 1px solid;background:url('img/checked.png') no-repeat 37px 20px;}
+.section .decorative .other{float: left;width: 77px;height: 30px;margin:10px 0 20px;border: #DDDDDD 1px solid;color: #ddd;text-align: center;line-height: 30px;}

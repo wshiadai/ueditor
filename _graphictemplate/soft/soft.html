@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="../graphictemplate.js"></script>
+    <link rel="stylesheet" type="text/css" href="soft.css">
+</head>
+<body>
+<div class="wrapper">
+    <div class="title">软件基本信息</div>
+    <div class="section">
+        <div class="left">
+            <span class="star">*</span>
+            <span class="key">名称:</span>
+        </div>
+        <div class="left">
+            <input type="text" id="J_name" class="textbox"/>
+        </div>
+    </div>
+    <div class="section">
+        <div class="left">
+            <span class="star">*</span>
+            <span class="key">类型:</span>
+        </div>
+        <div class="left">
+            <label><input type="radio" name="size"/>电脑</label>
+            <label><input type="radio" name="size"/>移动平台</label>
+        </div>
+    </div>
+
+    <div class="tab">
+        <div class="section">
+            <div class="leftarea">
+                <div class="left">
+                    <span class="star">*</span>
+                    <span class="key">大小:</span>
+                </div>
+                <div class="left">
+                    <input type="text" class="textbox" value="10MB"/>
+                </div>
+            </div>
+            <div class="rightarea">
+                <div class="left">
+                    <span class="star">*</span>
+                    <span class="key">版本:</span>
+                </div>
+                <div class="left">
+                    <input type="text" class="textbox"/>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="leftarea">
+                <div class="left">
+                    <span class="key">类别:</span>
+                </div>
+                <div class="left">
+                    <select class="dropdownbox">
+                        <option value="系统工具">系统工具</option>
+                    </select>
+                </div>
+            </div>
+            <div class="rightarea">
+                <div class="left">
+                    <span class="star">*</span>
+                    <span class="key">语言:</span>
+                </div>
+                <div class="left">
+                    <input type="text" class="textbox" value="中文"/>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="left">
+                <span class="star">*</span>
+                <span class="key">系统需求:</span>
+            </div>
+            <div class="left">
+                <input type="text" class="textbox" value="windows Mac OS X Linux"/>
+            </div>
+        </div>
+        <div class="section">
+            <div class="left">
+                <span class="star">*</span>
+                <span class="key">下载地址:</span>
+            </div>
+            <div class="left">
+                <input type="text" class="textbox" value="http://"/>
+            </div>
+        </div>
+    </div>
+    <div class="tab">
+        <div class="section">
+            <div class="leftarea">
+                <div class="left">
+                    <span class="star">*</span>
+                    <span class="key">大小:</span>
+                </div>
+                <div class="left">
+                    <input type="text" class="textbox" value="10MB"/>
+                </div>
+            </div>
+            <div class="rightarea">
+                <div class="left">
+                    <span class="star">*</span>
+                    <span class="key">版本:</span>
+                </div>
+                <div class="left">
+                    <input type="text" class="textbox"/>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="leftarea">
+                <div class="left">
+                    <span class="key">类别:</span>
+                </div>
+                <div class="left">
+                    <select class="dropdownbox">
+                        <option value="系统工具">系统工具</option>
+                    </select>
+                </div>
+            </div>
+            <div class="rightarea">
+                <div class="left">
+                    <span class="star">*</span>
+                    <span class="key">语言:</span>
+                </div>
+                <div class="left">
+                    <input type="text" class="textbox" value="中文"/>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="left">
+                <span class="star">*</span>
+                <span class="key">价格:</span>
+            </div>
+            <div class="left">
+                <label><input type="radio" name="size"/>免费</label>
+                <label><input type="radio" name="size"/>付费</label>
+                <input type="text" class="textbox"/>
+                <span class="unit">元</span>
+            </div>
+        </div>
+        <div class="section">
+            <span class="decorativetxt">系统要求:</span>
+
+            <div class="decorative" id="J_decorative">
+                <span class="way active" id="J_jianyue">IOS</span>
+                <span class="way" id="J_xiandai">Android</span>
+                <span class="way" id="J_tianyuan">Windows Phone</span>
+            </div>
+        </div>
+        <div class="section">
+            <div class="left">
+                <span class="star">*</span>
+                <span class="key">下载地址:</span>
+            </div>
+            <div class="left">
+                <input type="text" class="textbox" value="http://"/>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="soft.js"></script>
+<script type="text/javascript">
+    var soft = new Soft();
+    domUtils.on(window, ['blur', 'load'], function (e) {
+        e.type == "blur" ? soft.savePageData() : soft.initPageByData();
+    });
+</script>
+</body>
+</html>
