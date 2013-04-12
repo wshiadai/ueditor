@@ -332,12 +332,8 @@
         //      indentValue : '2em'             //行首缩进的大小
         //  },
         //填写过滤规则
-        'filterRules':{
-            //直接删除及其字节点内容
-            '-':'script style object iframe embed input select',
-            'img':{
-                    ${"src","width","height"}}
-        }
+//        'filterRules':{
+//        }
 
         /*-----------forexp-------*/, graphictemplateUrlMap:{
             'food':URL + '_graphictemplate/food/food.html',
