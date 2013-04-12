@@ -40,27 +40,35 @@ function Fitment() {
             }
             editor.fireEvent("contentchange");
         },
+        _getActiveTxtById:function(id){
+            var node=$G(id);
+            if(domUtils.hasClass(node,"active")){
+                return node.innerText||node.textContent||node.nodeValue;
+            }else{
+                return "";
+            }
+        },
         setPageData:function (data) {
             if (data) {
                 $G("J_shi").value=data["J_shi"];
                 $G("J_ting").value=data["J_ting"];
                 $G("J_wei").value=data["J_wei"] ;
                 $G("J_meter").value=data["J_meter"];
-                data["J_wan"] = $G("J_wan").value;
-                data["J_quanbao"] = $G("J_quanbao").value;
-                data["J_hunfang"] = $G("J_hunfang").value;
+                $G("J_wan").value=data["J_wan"] ;
+                $G("J_quanbao").value=data["J_quanbao"];
+                $G("J_hunfang").value=data["J_hunfang"];
+                $G("J_other").value= data["J_other"];
 
-                data["J_jianyue"] = $G("J_jianyue").className;
-                data["J_xiandai"] = $G("J_xiandai").className;
-                data["J_tianyuan"] = $G("J_tianyuan").className;
-                data["J_zhongshi"] = $G("J_zhongshi").className;
-                data["J_hunda"] = $G("J_hunda").className;
-                data["J_oushi"] = $G("J_oushi").className;
-                data["J_dizhonghai"] = $G("J_dizhonghai").className;
-                data["J_other"] = $G("J_other").value;
+                var list=domUtils.getElementsByTagName($G("J_decorative"),"span");
+                for(var i= 0,node;node=list[i++];){
+                    if(data[node.id]){
+                        domUtils.addClass(node,"active");
+                    }
+                }
             }
         },
         savePageData:function () {
+            var me=this;
             editor["graphictemplate"][frameElement.id] = {};
             var data = editor["graphictemplate"][frameElement.id];
             data["J_shi"] = $G("J_shi").value;
@@ -70,15 +78,15 @@ function Fitment() {
             data["J_wan"] = $G("J_wan").value;
             data["J_quanbao"] = $G("J_quanbao").value;
             data["J_hunfang"] = $G("J_hunfang").value;
-
-            data["J_jianyue"] = $G("J_jianyue").className;
-            data["J_xiandai"] = $G("J_xiandai").className;
-            data["J_tianyuan"] = $G("J_tianyuan").className;
-            data["J_zhongshi"] = $G("J_zhongshi").className;
-            data["J_hunda"] = $G("J_hunda").className;
-            data["J_oushi"] = $G("J_oushi").className;
-            data["J_dizhonghai"] = $G("J_dizhonghai").className;
             data["J_other"] = $G("J_other").value;
+
+            data["J_jianyue"] =me._getActiveTxtById("J_jianyue");
+            data["J_xiandai"] = me._getActiveTxtById("J_xiandai");
+            data["J_tianyuan"] = me._getActiveTxtById("J_tianyuan");
+            data["J_zhongshi"] = me._getActiveTxtById("J_zhongshi");
+            data["J_hunda"] = me._getActiveTxtById("J_hunda");
+            data["J_oushi"] = me._getActiveTxtById("J_oushi");
+            data["J_dizhonghai"] = me._getActiveTxtById("J_dizhonghai");
         }
     };
 })();
