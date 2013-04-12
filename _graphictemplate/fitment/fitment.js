@@ -22,9 +22,11 @@ function Fitment() {
         _addPageListener:function () {
             var me = this;
 
-            domUtils.on(document, "click", function (e) {
+            domUtils.on($G("J_decorative"), "click", function (e) {
                 var tgt = e.target || e.srcElement;
-
+                if(/way/ig.test(tgt.className)){
+                    domUtils.addClass(tgt,"active");
+                }
             });
         },
         _iframeAutoHeight:function () {
