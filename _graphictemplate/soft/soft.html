@@ -14,7 +14,7 @@
             <span class="key">名称:</span>
         </div>
         <div class="left">
-            <input type="text" id="J_name" class="textbox"/>
+            <input type="text" id="J_name" class="textbox wt1"/>
         </div>
     </div>
     <div class="section">
@@ -22,13 +22,13 @@
             <span class="star">*</span>
             <span class="key">类型:</span>
         </div>
-        <div class="left">
-            <label><input type="radio" name="size"/>电脑</label>
-            <label><input type="radio" name="size"/>移动平台</label>
+        <div class="left" id="J_softSelect">
+            <label id="J_pc"><input type="radio" name="size" checked/>电脑</label>
+            <label id="J_mobile"><input type="radio" name="size"/>移动平台</label>
         </div>
     </div>
 
-    <div class="tab">
+    <div class="tab cur">
         <div class="section">
             <div class="leftarea">
                 <div class="left">
@@ -36,7 +36,7 @@
                     <span class="key">大小:</span>
                 </div>
                 <div class="left">
-                    <input type="text" class="textbox" value="10MB"/>
+                    <input type="text" class="textbox wt2" value="10MB"/>
                 </div>
             </div>
             <div class="rightarea">
@@ -45,14 +45,14 @@
                     <span class="key">版本:</span>
                 </div>
                 <div class="left">
-                    <input type="text" class="textbox"/>
+                    <input type="text wt2" class="textbox"/>
                 </div>
             </div>
         </div>
         <div class="section">
             <div class="leftarea">
                 <div class="left">
-                    <span class="key">类别:</span>
+                    <span class="type">类别:</span>
                 </div>
                 <div class="left">
                     <select class="dropdownbox">
@@ -66,7 +66,7 @@
                     <span class="key">语言:</span>
                 </div>
                 <div class="left">
-                    <input type="text" class="textbox" value="中文"/>
+                    <input type="text wt2" class="textbox" value="中文"/>
                 </div>
             </div>
         </div>
@@ -76,7 +76,7 @@
                 <span class="key">系统需求:</span>
             </div>
             <div class="left">
-                <input type="text" class="textbox" value="windows Mac OS X Linux"/>
+                <input type="text" class="textbox wt1" value="windows Mac OS X Linux"/>
             </div>
         </div>
         <div class="section">
@@ -85,7 +85,7 @@
                 <span class="key">下载地址:</span>
             </div>
             <div class="left">
-                <input type="text" class="textbox" value="http://"/>
+                <input type="text" class="textbox wt1" value="http://"/>
             </div>
         </div>
     </div>
@@ -97,7 +97,7 @@
                     <span class="key">大小:</span>
                 </div>
                 <div class="left">
-                    <input type="text" class="textbox" value="10MB"/>
+                    <input type="text" class="textbox wt2" value="10MB"/>
                 </div>
             </div>
             <div class="rightarea">
@@ -113,7 +113,7 @@
         <div class="section">
             <div class="leftarea">
                 <div class="left">
-                    <span class="key">类别:</span>
+                    <span class="type">类别:</span>
                 </div>
                 <div class="left">
                     <select class="dropdownbox">
@@ -139,7 +139,7 @@
             <div class="left">
                 <label><input type="radio" name="size"/>免费</label>
                 <label><input type="radio" name="size"/>付费</label>
-                <input type="text" class="textbox"/>
+                <input type="text" class="textbox" style="width: 78px;"/>
                 <span class="unit">元</span>
             </div>
         </div>
@@ -147,9 +147,9 @@
             <span class="decorativetxt">系统要求:</span>
 
             <div class="decorative" id="J_decorative">
-                <span class="way active" id="J_jianyue">IOS</span>
-                <span class="way" id="J_xiandai">Android</span>
-                <span class="way" id="J_tianyuan">Windows Phone</span>
+                <span class="way active" id="J_jianyue" style="width:47px">IOS</span>
+                <span class="way" id="J_xiandai"  style="width:68px">Android</span>
+                <span class="way" id="J_tianyuan"  style="width:108px">Windows Phone</span>
             </div>
         </div>
         <div class="section">
@@ -158,7 +158,7 @@
                 <span class="key">下载地址:</span>
             </div>
             <div class="left">
-                <input type="text" class="textbox" value="http://"/>
+                <input type="text" class="textbox wt1" value="http://"/>
             </div>
         </div>
     </div>
