@@ -15,22 +15,22 @@
         </div>
         <div class="left">
             <input type="text" class="textbox"/>
-            <span class="unit">室</span>
+            <span class="unit" id="J_shi">室</span>
             <input type="text" class="textbox"/>
-            <span class="unit">厅</span>
+            <span class="unit" id="J_ting">厅</span>
             <input type="text" class="textbox"/>
-            <span class="unit">卫</span>
+            <span class="unit" id="J_wei">卫</span>
         </div>
     </div>
     <div class="section">
         <div class="leftarea">
             <div class="left">
                 <span class="star">*</span>
-                <span class="key">面积:</span>
+                <span class="key" >面积:</span>
             </div>
             <div class="left">
                 <input type="text" class="textbox"/>
-                <span class="unit">平米</span>
+                <span class="unit" id="J_meter">平米</span>
             </div>
         </div>
         <div class="rightarea">
@@ -39,7 +39,7 @@
                 <span class="key">装修预算:</span>
             </div>
             <div class="left">
-                <input type="text" class="textbox" style="width: 67px;"/>
+                <input type="text" class="textbox" style="width: 67px;" id="J_wan"/>
                 <span class="unit">万</span>
             </div>
         </div>
@@ -52,7 +52,7 @@
                 <span class="key">方式:</span>
             </div>
             <div class="left">
-                <select class="dropdownbox">
+                <select class="dropdownbox" id="J_quanbao">
                     <option value="全包">全包</option>
                 </select>
             </div>
@@ -63,7 +63,7 @@
                 <span class="key">装修用途:</span>
             </div>
             <div class="left">
-                <select class="dropdownbox">
+                <select class="dropdownbox" id="J_hunfang">
                     <option value="婚房">婚房</option>
                 </select>
             </div>
@@ -72,14 +72,14 @@
     <div class="section">
     <span class="decorativetxt">装修风格:</span>
     <div class="decorative" id="J_decorative">
-        <span class="way active">简约</span>
-        <span class="way">现代</span>
-        <span class="way">田园</span>
-        <span class="way">中式</span>
-        <span class="way">混搭</span>
-        <span class="way">欧式</span>
-        <span class="way">地中海</span>
-        <input type="text" class="other" value="其他风格"/>
+        <span class="way active" id="J_jianyue">简约</span>
+        <span class="way" id="J_xiandai">现代</span>
+        <span class="way" id="J_tianyuan">田园</span>
+        <span class="way" id="J_zhongshi">中式</span>
+        <span class="way" id="J_hunda">混搭</span>
+        <span class="way" id="J_oushi">欧式</span>
+        <span class="way" id="J_dizhonghai">地中海</span>
+        <input type="text" class="other" value="其他风格" id="J_other"/>
     </div>
 </div>
 <script type="text/javascript" src="fitment.js"></script>
