@@ -10,7 +10,7 @@
 
     UE = parent.parent.UE;
 
-    editor=UE.instants['ueditorInstant'+parent.frameElement.id.replace("baidu_editor_","")];
+    editor = UE.instants['ueditorInstant' + parent.frameElement.id.replace("baidu_editor_", "")];
 
     domUtils = UE.dom.domUtils;
 
@@ -33,9 +33,9 @@
     };
 
     /*
-    * 移动图文模板
-    * */
-    moveTemplate=function(id){
+     * 移动图文模板
+     * */
+    moveTemplate = function (id) {
         var isSelect = false;
         domUtils.on(document, "click", function (e) {
             var tgt = e.target || e.srcElement;
@@ -57,7 +57,7 @@
     /*
      * iframe自动长高
      * */
-    iframeAutoHeight=function () {
+    iframeAutoHeight = function () {
         if (browser.ie && browser.version < 8) {
             frameElement.height = frameElement.Document.body.scrollHeight
         } else {
