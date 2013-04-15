@@ -63,13 +63,13 @@ function Soft() {
             money.readOnly = isEdit;
             money.style.cursor = isEdit ? "not-allowed" : "default";
         },
-        _getActiveTxtById:function (id) {
-            var node = $G(id);
-            if (domUtils.hasClass(node, "active")) {
-                return node.innerText || node.textContent || node.nodeValue;
-            } else {
-                return "";
+        _getActiveTxtById:function(id){
+            var node=$G(id);
+            var txt="";
+            if(domUtils.hasClass(node,"active")){
+                txt= node.innerText||node.textContent||node.nodeValue;
             }
+            return txt;
         },
         _setTabByTxt:function (selTxt) {
             var me=this;
