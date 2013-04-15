@@ -1,6 +1,6 @@
 .wrapper {border: 1px dotted #d6d2b6;background-color: #fcfcf8;}
 .wrapper .drag{cursor: move;width: 50px;height: 20px;}
-.wrapper .title{margin:20px 0 0 40px;font-size: 16px;font-weight: bold;font-family:microsoft Yahei;color: #333;}
+.wrapper .title{margin-left:40px;font-size: 16px;font-weight: bold;font-family:microsoft Yahei;color: #333;}
 .wrapper .section{margin: 10px 0;font-size: 14px;overflow: hidden;color: #666;font-size: 14px;line-height: 30px;}
 .wrapper .tab{display: none;}
 .wrapper .tab.cur{display: block;}
