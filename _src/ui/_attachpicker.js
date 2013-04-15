@@ -13,11 +13,13 @@
         this.initAttechPicker();
     };
 
+    var wangpanDialog;
+
     AttachPicker.prototype = {
         initAttechPicker:function () {
             this.initUIBase();
-            this.Stateful_init();
             this.initButtons();
+            this.Stateful_init();
         },
         initButtons:function(){
             this.uploadfileButton = (function (editor) {
@@ -36,20 +38,12 @@
                     label:title,
                     showText:true,
                     getHtmlTpl:function () {
-                        return '<div id="##" class="edui-box %%">' +
-                            '<div id="##_state" stateful>' +
-                            '<div class="%%-wrap"><div id="##_body" stateful unselectable="on" ' + (this.title ? 'title="' + this.title + '"' : '') +
-                            ' class="%%-body">' +
-                            (this.showIcon ? '<div class="edui-box edui-icon"></div>' : '') +
-                            (this.showText ? '<div class="edui-box edui-label" stateful>' + this.label + '</div>' : '') +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="ue_flash" id="' + flashContainerId + '"><div id="' + placeholderId + '"></div></div>' +
-                            '</div></div>';
+                        return '<div id="##">' + this.label + '</div>' +
+                            '<div class="ue_flash" id="' + flashContainerId + '"><div id="' + placeholderId + '"></div></div>';
                     }
                 });
 
-                editor.addListener('ready', function () {
+                AttachPicker.addListener("renderReady", function () {
                     var div = document.createElement("div");
                     div.id = uploadProgressId;
                     div.innerHTML = '<div class="progressWrapper" style="display:none;">' +
@@ -79,7 +73,8 @@
                         '<a href="#" class="remove">删除</a>' +
                         '</div>' +
                         '</div>';
-                    editor.ui.getDom().insertBefore(div, this.ui.getDom("iframeholder"));
+
+                    editor.ui.getDom().insertBefore(div, editor.ui.getDom("iframeholder"));
                     editor._uploadFile = {fileInfo:null, backFileInfo:null, score: 0, status:'ready', errorCode:null};
                     editor.swfupload = new SWFUpload({
                         flash_url:editor.options.swfUploadFlashUrl,
@@ -175,9 +170,9 @@
                     if (!/^[\s]*<object/i.test(flashContainer.innerHTML)) {
                         flashContainer.title = "您的Flash插件版本过低，请更新后再尝试！";
                     }
-                });
 
-                ui.addListener("renderReady", function () {
+
+
                     //鼠标mouseover/mouseout上传按钮事件
                     domUtils.on(ui.getDom(), "mouseover", function (e) {
                         ui.addState("hover");
@@ -205,7 +200,7 @@
                     url = 'dialogs/wangpan/wangpan.html',
                     hoverTitle = '网盘文件共分享';
 
-                var dialog = new Dialog(utils.extend({
+                wangpanDialog = new Dialog(utils.extend({
                     iframeUrl: editor.options.UEDITOR_HOME_URL + url,
                     editor:editor,
                     className:'edui-for-wangpan',
@@ -218,7 +213,7 @@
                             label: '确定',
                             editor:editor,
                             onclick:function () {
-                                dialog.close(true);
+                                wangpanDialog.close(true);
                             }
                         },
                         {
@@ -226,36 +221,29 @@
                             label: '取消',
                             editor:editor,
                             onclick:function () {
-                                dialog.close(false);
+                                wangpanDialog.close(false);
                             }
                         }
                     ]
                 }));
-                dialog.render();
+                wangpanDialog.render();
+                wangpanDialog.reset();
+
                 var ui = new Button({
                     className:'edui-for-insertmap insertmap',
                     title:hoverTitle,
                     label:title,
                     onclick:function () {
+                        Popup.postHide(evt);
                         if (editor.swfupload && editor.swfupload.customSettings.successCount>0 && !confirm('即将删除上一个附件,确定吗？')) {
                             return false;
                         } else {
-                            dialog.reset();
-                            dialog.showAtCenter();
                             return true;
                         }
+                        wangpanDialog.showAtCenter();
                     },
                     getHtmlTpl:function(){
-                        return '<div id="##" class="edui-box %%">' +
-                            '<div id="##_state" stateful>' +
-                            '<div class="%%-wrap"><div id="##_body" stateful unselectable="on" ' + (this.title ? 'title="' + this.title + '"' : '') +
-                            ' class="%%-body">' +
-                            (this.showIcon ? '<div class="edui-box edui-icon"></div>' : '') +
-                            (this.showText ? '<div class="edui-box edui-label" stateful>' + this.label + '</div>' : '') +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
+                        return '<div id="##" onclick="$$._onClickWangpan(event);">' + this.label + '</div>';
                     },
                     showText:true
                 });
@@ -266,10 +254,10 @@
             return '<div id="##" class="edui-attachpicker %%">' +
                 '<div class="edui-attachpicker-top"></div>' +
                 '<div class="edui-attachpicker-body">' +
-                '<div class="edui-attachpicker-item" stateful _title="上传文件到网盘">' +
+                '<div class="edui-attachpicker-item edui-attachpicker-uploadfile" stateful _title="上传文件到网盘">' +
                 this.uploadfileButton.getHtmlTpl() +
                 '</div>' +
-                '<div class="edui-attachpicker-item" stateful _title="从网盘插入文件">' +
+                '<div class="edui-attachpicker-item edui-attachpicker-wangpan" stateful _title="从网盘插入文件">' +
                 this.wangpanButton.getHtmlTpl() +
                 '</div>' +
                 '</div>' +
@@ -277,6 +265,9 @@
         },
         getStateDom:function () {
             return this.target;
+        },
+        postRender:function () {
+            this.fireEvent('postrender');
         },
         _onClick:function (evt) {
             Popup.postHide(evt);
@@ -293,6 +284,10 @@
             if (!this.isDisabled()) {
                 this.fireEvent('mouseout');
             }
+        },
+        _onClickWangpan:function (evt) {
+            Popup.postHide(evt);
+            wangpanDialog.showAtCenter();
         },
         _UIBase_render:UIBase.prototype.render
     };
