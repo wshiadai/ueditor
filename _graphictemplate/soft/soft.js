@@ -18,18 +18,20 @@ var Soft = {
     _addPageListener:function () {
         var me = this;
 
+        domUtils.on(G("J_systemask"), "click", function (e) {
+            var tgt = e.target || e.srcElement;
+            if (domUtils.hasClass(tgt, "active")) {
+                domUtils.removeClasses(tgt, ['active']);
+            } else {
+                if (domUtils.hasClass(tgt, "way")) {
+                    domUtils.addClass(tgt, "active")
+                }
+            }
+            e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+        });
         domUtils.on(document, "click", function (e) {
             var tgt = e.target || e.srcElement;
             switch (tgt.id) {
-                case "J_systemask":
-                    if (domUtils.hasClass(tgt, "active")) {
-                        domUtils.removeClasses(tgt, ['active']);
-                    } else {
-                        if (domUtils.hasClass(tgt, "way")) {
-                            domUtils.addClass(tgt, "active")
-                        }
-                    }
-                    break;
                 case "J_pc":
                     me._showTab0(true);
                     break;
