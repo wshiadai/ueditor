@@ -43,7 +43,7 @@ function Food() {
             arr.push(tpl.section.replace("$$", "辅料").replace("%%", me._addModule(subNum)));
             arr.push(tpl.foot);
 
-            $G("J_wrapper").innerHTML = arr.join('');
+            $G("J_main").innerHTML = arr.join('');
 
             me._addPageListener();
             me.setPageData(data);
@@ -51,13 +51,27 @@ function Food() {
         },
         _addPageListener:function () {
             var me = this;
-
+            var isSelect = false;
             domUtils.on(document, "click", function (e) {
                 var tgt = e.target || e.srcElement;
                 if (domUtils.hasClass(tgt, "add")) {
                     me._addSection(tgt);
                 } else if (domUtils.hasClass(tgt, "delete")) {
                     me._deleteModule(tgt);
+                }
+
+                if (tgt.id == "J_drag") {
+                    var rng = editor.selection.getRange();
+                    rng.setStart(frameElement, 0);
+                    rng.setEnd(frameElement, 1);
+                    rng.select(true);
+                    isSelect = true;
+                }
+            });
+            editor.addListener("click", function () {
+                if (isSelect && frameElement) {
+                    var rng = editor.selection.getRange();
+                    rng.insertNode(frameElement);
                 }
             });
         },
