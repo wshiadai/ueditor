@@ -43,7 +43,7 @@ function Food() {
             arr.push(tpl.section.replace("$$", "辅料").replace("%%", me._addModule(subNum)));
             arr.push(tpl.foot);
 
-            $G("J_main").innerHTML = arr.join('');
+            G("J_main").innerHTML = arr.join('');
 
             me._addPageListener();
             me.setPageData(data);

@@ -6,11 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 function Fitment() {
-    var me = this;
-    me.tid = 0;
 }
-(function () {
-    Fitment.prototype = {
+Fitment.prototype = {
         initPageByData:function () {
             var me = this,
                 data = editor["graphictemplate"][frameElement.id];
@@ -21,7 +18,7 @@ function Fitment() {
             iframeAutoHeight();
         },
         _addPageListener:function () {
-            var decorative = $G("J_decorative");
+            var decorative = G("J_decorative");
             domUtils.on(decorative, "click", function (e) {
                 var tgt = e.target || e.srcElement;
                 if (domUtils.hasClass(tgt, "active")) {
@@ -34,7 +31,7 @@ function Fitment() {
             });
         },
         _getActiveTxtById:function(id){
-            var node=$G(id);
+            var node=G(id);
             var txt="";
             if(domUtils.hasClass(node,"active")){
                 txt= node.innerText||node.textContent||node.nodeValue;
@@ -43,16 +40,16 @@ function Fitment() {
         },
         setPageData:function (data) {
             if (data) {
-                $G("J_shi").value=data["J_shi"];
-                $G("J_ting").value=data["J_ting"];
-                $G("J_wei").value=data["J_wei"] ;
-                $G("J_meter").value=data["J_meter"];
-                $G("J_wan").value=data["J_wan"] ;
-                $G("J_quanbao").value=data["J_quanbao"];
-                $G("J_hunfang").value=data["J_hunfang"];
-                $G("J_other").value= data["J_other"];
+                G("J_shi").value=data["J_shi"];
+                G("J_ting").value=data["J_ting"];
+                G("J_wei").value=data["J_wei"] ;
+                G("J_meter").value=data["J_meter"];
+                G("J_wan").value=data["J_wan"] ;
+                G("J_quanbao").value=data["J_quanbao"];
+                G("J_hunfang").value=data["J_hunfang"];
+                G("J_other").value= data["J_other"];
 
-                var list=domUtils.getElementsByTagName($G("J_decorative"),"span");
+                var list=domUtils.getElementsByTagName(G("J_decorative"),"span");
                 for(var i= 0,node;node=list[i++];){
                     if(data[node.id]){
                         domUtils.addClass(node,"active");
@@ -64,14 +61,14 @@ function Fitment() {
             var me=this;
             editor["graphictemplate"][frameElement.id] = {};
             var data = editor["graphictemplate"][frameElement.id];
-            data["J_shi"] = $G("J_shi").value;
-            data["J_ting"] = $G("J_ting").value;
-            data["J_wei"] = $G("J_wei").value;
-            data["J_meter"] = $G("J_meter").value;
-            data["J_wan"] = $G("J_wan").value;
-            data["J_quanbao"] = $G("J_quanbao").value;
-            data["J_hunfang"] = $G("J_hunfang").value;
-            data["J_other"] = $G("J_other").value;
+            data["J_shi"] = G("J_shi").value;
+            data["J_ting"] = G("J_ting").value;
+            data["J_wei"] = G("J_wei").value;
+            data["J_meter"] = G("J_meter").value;
+            data["J_wan"] = G("J_wan").value;
+            data["J_quanbao"] = G("J_quanbao").value;
+            data["J_hunfang"] = G("J_hunfang").value;
+            data["J_other"] = G("J_other").value;
 
             data["J_jianyue"] =me._getActiveTxtById("J_jianyue");
             data["J_xiandai"] = me._getActiveTxtById("J_xiandai");
@@ -82,4 +79,3 @@ function Fitment() {
             data["J_dizhonghai"] = me._getActiveTxtById("J_dizhonghai");
         }
     };
-})();

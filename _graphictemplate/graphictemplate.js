@@ -28,7 +28,7 @@
         rel:"stylesheet"
     });
 
-    $G = function (id) {
+    G = function (id) {
         return document.getElementById(id)
     };
 
