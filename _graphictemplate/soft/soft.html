@@ -118,9 +118,8 @@
 </div>
 <script type="text/javascript" src="soft.js"></script>
 <script type="text/javascript">
-    var soft = new Soft();
     domUtils.on(window, ['blur', 'load'], function (e) {
-        e.type == "blur" ? soft.savePageData() : soft.initPageByData();
+        e.type == "blur" ? Soft.savePageData() : Soft.initPageByData();
     });
 </script>
 </body>

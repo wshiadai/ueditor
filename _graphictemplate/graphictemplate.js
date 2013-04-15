@@ -35,7 +35,7 @@
     /*
     * 移动图文模板
     * */
-    movetemplate=function(id){
+    moveTemplate=function(id){
         var isSelect = false;
         domUtils.on(document, "click", function (e) {
             var tgt = e.target || e.srcElement;

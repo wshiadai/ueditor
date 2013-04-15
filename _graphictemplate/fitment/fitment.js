@@ -5,77 +5,79 @@
  * Time: 下午2:57
  * To change this template use File | Settings | File Templates.
  */
-function Fitment() {
-}
-Fitment.prototype = {
-        initPageByData:function () {
-            var me = this,
-                data = editor["graphictemplate"][frameElement.id];
+Fitment = {
+    initPageByData:function () {
+        var me = this,
+            data = editor["graphictemplate"][frameElement.id];
 
-            me._addPageListener();
-            me.setPageData(data);
-            movetemplate("J_drag");
-            iframeAutoHeight();
-        },
-        _addPageListener:function () {
-            var decorative = G("J_decorative");
-            domUtils.on(decorative, "click", function (e) {
-                var tgt = e.target || e.srcElement;
-                if (domUtils.hasClass(tgt, "active")) {
-                    domUtils.removeClasses(tgt, ['active']);
-                } else {
-                    if (domUtils.hasClass(tgt, "way")) {
-                        domUtils.addClass(tgt, "active")
-                    }
-                }
-            });
-        },
-        _getActiveTxtById:function(id){
-            var node=G(id);
-            var txt="";
-            if(domUtils.hasClass(node,"active")){
-                txt= node.innerText||node.textContent||node.nodeValue;
-            }
-            return txt;
-        },
-        setPageData:function (data) {
-            if (data) {
-                G("J_shi").value=data["J_shi"];
-                G("J_ting").value=data["J_ting"];
-                G("J_wei").value=data["J_wei"] ;
-                G("J_meter").value=data["J_meter"];
-                G("J_wan").value=data["J_wan"] ;
-                G("J_quanbao").value=data["J_quanbao"];
-                G("J_hunfang").value=data["J_hunfang"];
-                G("J_other").value= data["J_other"];
-
-                var list=domUtils.getElementsByTagName(G("J_decorative"),"span");
-                for(var i= 0,node;node=list[i++];){
-                    if(data[node.id]){
-                        domUtils.addClass(node,"active");
-                    }
+        me._addPageListener();
+        me.setPageData(data);
+        moveTemplate("J_drag");
+        iframeAutoHeight();
+    },
+    _addPageListener:function () {
+        domUtils.on(G("J_decorative"), "click", function (e) {
+            var tgt = e.target || e.srcElement;
+            if (domUtils.hasClass(tgt, "active")) {
+                domUtils.removeClasses(tgt, ['active']);
+            } else {
+                if (domUtils.hasClass(tgt, "way")) {
+                    domUtils.addClass(tgt, "active")
                 }
             }
-        },
-        savePageData:function () {
-            var me=this;
-            editor["graphictemplate"][frameElement.id] = {};
-            var data = editor["graphictemplate"][frameElement.id];
-            data["J_shi"] = G("J_shi").value;
-            data["J_ting"] = G("J_ting").value;
-            data["J_wei"] = G("J_wei").value;
-            data["J_meter"] = G("J_meter").value;
-            data["J_wan"] = G("J_wan").value;
-            data["J_quanbao"] = G("J_quanbao").value;
-            data["J_hunfang"] = G("J_hunfang").value;
-            data["J_other"] = G("J_other").value;
+        });
+    },
 
-            data["J_jianyue"] =me._getActiveTxtById("J_jianyue");
-            data["J_xiandai"] = me._getActiveTxtById("J_xiandai");
-            data["J_tianyuan"] = me._getActiveTxtById("J_tianyuan");
-            data["J_zhongshi"] = me._getActiveTxtById("J_zhongshi");
-            data["J_hunda"] = me._getActiveTxtById("J_hunda");
-            data["J_oushi"] = me._getActiveTxtById("J_oushi");
-            data["J_dizhonghai"] = me._getActiveTxtById("J_dizhonghai");
+    _setTextBox:function (data, list) {
+        for (var i = 0, id; id = list[i++];) {
+            G(id).value = data[id];
         }
-    };
+    },
+    _setCheckBox:function (data, containerId) {
+        var list = domUtils.getElementsByTagName(G(containerId), "span");
+        for (var i = 0, node; node = list[i++];) {
+            if (data[node.id]) {
+                domUtils.addClass(node, "active");
+            }
+        }
+    },
+    setPageData:function (data) {
+        if (data) {
+            var me = this;
+            //设置文本框值
+            me._setTextBox(data, ["J_shi", "J_ting", "J_wei", "J_meter", "J_wan", "J_quanbao", "J_hunfang", "J_other"]);
+            //设置复选框值
+            me._setCheckBox(data, "J_decorative");
+        }
+    },
+
+    _saveTextBox:function (data, list) {
+        for (var i = 0, id; id = list[i++];) {
+            data[id] = G(id).value;
+        }
+    },
+    _saveCheckBox:function (data, list) {
+        var node, txt;
+        for (var i = 0, id; id = list[i++];) {
+            node = G(id);
+            txt = "";
+            if (domUtils.hasClass(node, "active")) {
+                txt = node.innerText || node.textContent || node.nodeValue;
+            }
+            data[id] = txt;
+        }
+    },
+    savePageData:function () {
+        var me = this;
+        editor["graphictemplate"][frameElement.id] = {};
+        var data = editor["graphictemplate"][frameElement.id];
+
+        //文本框保存值
+        me._saveTextBox(data, ["J_shi", "J_ting", "J_wei",
+            "J_meter", "J_wan", "J_quanbao", "J_hunfang", "J_other"]);
+
+        //复选狂保存值
+        me._saveCheckBox(data, ["J_jianyue", "J_xiandai", "J_tianyuan",
+            "J_zhongshi", "J_hunda", "J_oushi", "J_dizhonghai"]);
+    }
+};

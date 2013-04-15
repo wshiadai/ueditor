@@ -26,8 +26,7 @@ function Food() {
             '</div>'
     };
 }
-(function () {
-    Food.prototype = {
+Food.prototype = {
         initPageByData:function () {
             var me = this,
                 arr = [],
@@ -47,7 +46,7 @@ function Food() {
 
             me._addPageListener();
             me.setPageData(data);
-            movetemplate("J_drag");
+            moveTemplate("J_drag");
             iframeAutoHeight();
         },
         _addPageListener:function () {
@@ -121,4 +120,3 @@ function Food() {
             }
         }
     };
-})();
