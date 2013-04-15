@@ -7,7 +7,7 @@ UE.plugins['graphictemplate'] = function () {
     me.commands['graphictemplate'] = {
         execCommand:function (cmd,value) {
             id += 1;
-            var ifr = "<iframe  width='678'  unselectable='on' align='center' scroling='no' frameborder='0'" +
+            var ifr = "<iframe  width='678'  align='center' scroling='no' frameborder='0'" +
                 "class='foodtemplate'" +
                 "id='" + id + "'" +
                 "src=" + me.options["graphictemplateUrlMap"][value] +
