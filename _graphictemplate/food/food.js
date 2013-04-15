@@ -47,31 +47,17 @@ function Food() {
 
             me._addPageListener();
             me.setPageData(data);
-            me._iframeAutoHeight();
+            movetemplate("J_drag");
+            iframeAutoHeight();
         },
         _addPageListener:function () {
             var me = this;
-            var isSelect = false;
             domUtils.on(document, "click", function (e) {
                 var tgt = e.target || e.srcElement;
                 if (domUtils.hasClass(tgt, "add")) {
                     me._addSection(tgt);
                 } else if (domUtils.hasClass(tgt, "delete")) {
                     me._deleteModule(tgt);
-                }
-
-                if (tgt.id == "J_drag") {
-                    var rng = editor.selection.getRange();
-                    rng.setStart(frameElement, 0);
-                    rng.setEnd(frameElement, 1);
-                    rng.select(true);
-                    isSelect = true;
-                }
-            });
-            editor.addListener("click", function () {
-                if (isSelect && frameElement) {
-                    var rng = editor.selection.getRange();
-                    rng.insertNode(frameElement);
                 }
             });
         },
@@ -88,7 +74,7 @@ function Food() {
                 content.appendChild(tmpDiv.children[0]);
             }
 
-            me._iframeAutoHeight();
+            iframeAutoHeight();
         },
         _addModule:function (num) {
             var me = this, str = "";
@@ -108,14 +94,7 @@ function Food() {
             var node = tgt.parentNode;
             node.parentNode.removeChild(node);
         },
-        _iframeAutoHeight:function () {
-            if (browser.ie && browser.version < 8) {
-                frameElement.height = frameElement.Document.body.scrollHeight
-            } else {
-                frameElement.height = frameElement.contentDocument.body.scrollHeight;
-            }
-            editor.fireEvent("contentchange");
-        },
+
         setPageData:function (data) {
             if (data) {
                 var list = domUtils.getElementsByTagName(document, "div", "content");

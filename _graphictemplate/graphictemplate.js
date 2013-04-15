@@ -20,26 +20,50 @@
 
     ajax = UE.ajax;
 
-    $G = function (id) {
-        return document.getElementById(id)
-    };
-    //focus元素
-    $focus = function (node) {
-        setTimeout(function () {
-            if (browser.ie) {
-                var r = node.createTextRange();
-                r.collapse(false);
-                r.select();
-            } else {
-                node.focus()
-            }
-        }, 0)
-    };
+
     utils.loadFile(document, {
         href:editor.options.themePath + editor.options.theme + "/dialogbase.css?cache=" + Math.random(),
         tag:"link",
         type:"text/css",
         rel:"stylesheet"
     });
+
+    $G = function (id) {
+        return document.getElementById(id)
+    };
+
+    /*
+    * 移动图文模板
+    * */
+    movetemplate=function(id){
+        var isSelect = false;
+        domUtils.on(document, "click", function (e) {
+            var tgt = e.target || e.srcElement;
+            if (tgt.id == id) {
+                var rng = editor.selection.getRange();
+                rng.setStart(frameElement, 0);
+                rng.setEnd(frameElement, 1);
+                rng.select(true);
+                isSelect = true;
+            }
+        });
+        editor.addListener("click", function () {
+            if (isSelect && frameElement) {
+                var rng = editor.selection.getRange();
+                rng.insertNode(frameElement);
+            }
+        });
+    };
+    /*
+     * iframe自动长高
+     * */
+    iframeAutoHeight=function () {
+        if (browser.ie && browser.version < 8) {
+            frameElement.height = frameElement.Document.body.scrollHeight
+        } else {
+            frameElement.height = frameElement.contentDocument.body.scrollHeight;
+        }
+        editor.fireEvent("contentchange");
+    };
 })();
 

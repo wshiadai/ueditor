@@ -17,7 +17,8 @@ function Fitment() {
 
             me._addPageListener();
             me.setPageData(data);
-            me._iframeAutoHeight();
+            movetemplate("J_drag");
+            iframeAutoHeight();
         },
         _addPageListener:function () {
             var decorative = $G("J_decorative");
@@ -31,14 +32,6 @@ function Fitment() {
                     }
                 }
             });
-        },
-        _iframeAutoHeight:function () {
-            if (browser.ie && browser.version < 8) {
-                frameElement.height = frameElement.Document.body.scrollHeight
-            } else {
-                frameElement.height = frameElement.contentDocument.body.scrollHeight;
-            }
-            editor.fireEvent("contentchange");
         },
         _getActiveTxtById:function(id){
             var node=$G(id);

@@ -15,7 +15,8 @@ function Soft() {
 
             me._addPageListener();
             me.setPageData(data);
-            me._iframeAutoHeight();
+            movetemplate("J_drag");
+            iframeAutoHeight();
         },
         _addPageListener:function () {
             var me = this;
@@ -55,20 +56,12 @@ function Soft() {
                 domUtils.addClass(list[1], "cur");
             }
 
-            me._iframeAutoHeight();
+            iframeAutoHeight();
         },
         _setBoxEdit:function (isEdit) {
             var money = $G("J_money");
             money.readOnly = isEdit;
             money.style.cursor = isEdit ? "not-allowed" : "default";
-        },
-        _iframeAutoHeight:function () {
-            if (browser.ie && browser.version < 8) {
-                frameElement.height = frameElement.Document.body.scrollHeight
-            } else {
-                frameElement.height = frameElement.contentDocument.body.scrollHeight;
-            }
-            editor.fireEvent("contentchange");
         },
         _getActiveTxtById:function (id) {
             var node = $G(id);
@@ -108,6 +101,16 @@ function Soft() {
                 $G("J_pay").checked = true;
             }
         },
+        _getTxtBySelect:function (id) {
+            var cur = $G(id);
+            var txt = "";
+            if (cur.checked) {
+                txt = domUtils.getNextDomNode(cur, function (node) {
+                    return node.nodeType == 3 && !domUtils.isFillChar(node)
+                });
+            }
+            return txt;
+        },
         setPageData:function (data) {
             if (data) {
                 var me = this;
@@ -131,16 +134,6 @@ function Soft() {
                     }
                 }
             }
-        },
-        _getTxtBySelect:function (id) {
-            var cur = $G(id);
-            var txt = "";
-            if (cur.checked) {
-                txt = domUtils.getNextDomNode(cur, function (node) {
-                    return node.nodeType == 3 && !domUtils.isFillChar(node)
-                });
-            }
-            return txt;
         },
         savePageData:function () {
             var me = this;
