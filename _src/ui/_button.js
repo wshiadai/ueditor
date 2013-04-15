@@ -23,7 +23,7 @@
             return '<div id="##" class="edui-box %%">' +
                 '<div id="##_state" stateful>' +
                 '<div class="%%-wrap"><div id="##_body" unselectable="on" ' + (this.title ? 'title="' + this.title + '"' : '') +
-                ' class="%%-body" onmousedown="return false;" onclick="return $$._onClick();" onmouseover="return $$._onMouseOver();">' +
+                ' class="%%-body" onmousedown="return false;" onclick="return $$._onClick();" onmouseover="return $$._onMouseOver();" onmouseout="return $$._onMouseOut();">' +
                 (this.showIcon ? '<div class="edui-box edui-icon"></div>' : '') +
                 (this.showText ? '<div class="edui-box edui-label">' + this.label + '</div>' : '') +
                 '</div>' +
@@ -50,6 +50,11 @@
         _onMouseOver:function(){
             if (!this.isDisabled()) {
                 this.fireEvent('mouseover');
+            }
+        },
+        _onMouseOut:function () {
+            if (!this.isDisabled()) {
+                this.fireEvent('mouseout');
             }
         }
     };
