@@ -19,7 +19,7 @@
             'core/filternode.js',
             'plugins/defaultfilter.js',
             'plugins/inserthtml.js',
-            'plugins/autotypeset.js',
+            'plugins/_autotypeset.js',
             'plugins/image.js',
             'plugins/selectall.js',
             'plugins/wordcount.js',
@@ -29,7 +29,7 @@
             'plugins/enterkey.js',
             'plugins/keystrokes.js',
             'plugins/fiximgclick.js',
-            'plugins/autoheight.js',
+            'plugins/_autoheight.js',
             'plugins/autofloat.js',  //依赖UEditor UI,在IE6中，会覆盖掉body的背景图属性
             'plugins/_video.js',
             'plugins/_basestyle.js',
