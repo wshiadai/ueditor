@@ -1,3 +1,6 @@
+/*
+ *   处理特殊键的兼容性问题
+ */
 UE.plugins['keystrokes'] = function() {
     var me = this;
 
@@ -41,13 +44,14 @@ UE.plugins['keystrokes'] = function() {
             }
         }
 
-
-        //处理backspace/del
-        if (keyCode == 8) {//|| keyCode == 46
+        //处理backspace
+        if (keyCode == 8) {
+            rng = me.selection.getRange();
             var start,end;
             //避免按两次删除才能生效的问题
             if(rng.collapsed && rng.inFillChar()){
                 start = rng.startContainer;
+
                 if(domUtils.isFillChar(start)){
                     rng.setStartBefore(start).shrinkBoundary(true).collapse(true);
                     domUtils.remove(start)
@@ -77,6 +81,7 @@ UE.plugins['keystrokes'] = function() {
                     return;
                 }
             }
+
         }
         //处理tab键的逻辑
         if (keyCode == 9) {
@@ -91,7 +96,7 @@ UE.plugins['keystrokes'] = function() {
                 domUtils.preventDefault(evt);
                 return;
             }
-            range = me.selection.getRange();
+            var range = me.selection.getRange();
             me.fireEvent('saveScene');
             for (var i = 0,txt = '',tabSize = me.options.tabSize|| 4,tabNode =  me.options.tabNode || '&nbsp;'; i < tabSize; i++) {
                 txt += tabNode;
@@ -149,17 +154,49 @@ UE.plugins['keystrokes'] = function() {
             rng;
         if(keyCode == 8){
             rng = me.selection.getRange();
-            //处理当删除到body时，要重新给p标签展位
-            if(rng.collapsed && domUtils.isBody(rng.startContainer)){
-                var tmpNode = domUtils.createElement(me.document,'p',{
-                    'innerHTML' : browser.ie ? domUtils.fillChar : '<br/>'
-                });
-                rng.insertNode(tmpNode).setStart(tmpNode,0).setCursor(false,true);
+            if(rng.collapsed){
+                var tmpNode,
+                    autoClearTagName = ['h1','h2','h3','h4','h5','h6'];
+                if(tmpNode = domUtils.findParentByTagName(rng.startContainer,autoClearTagName,true)){
+                    if(domUtils.isEmptyBlock(tmpNode)){
+                        var pre = tmpNode.previousSibling;
+                        if(pre && pre.nodeName != 'TABLE'){
+                            domUtils.remove(tmpNode);
+                            rng.setStartAtLast(pre).setCursor(false,true);
+                            return;
+                        }else{
+                            var next = tmpNode.nextSibling;
+                            if(next && next.nodeName != 'TABLE'){
+                                domUtils.remove(tmpNode);
+                                rng.setStartAtFirst(next).setCursor(false,true);
+                                return;
+                            }
+                        }
+                    }
+                }
+                //处理当删除到body时，要重新给p标签展位
+                if(domUtils.isBody(rng.startContainer)){
+                    var tmpNode = domUtils.createElement(me.document,'p',{
+                        'innerHTML' : browser.ie ? domUtils.fillChar : '<br/>'
+                    });
+                    rng.insertNode(tmpNode).setStart(tmpNode,0).setCursor(false,true);
+                }
             }
-//            //chrome下如果删除了inline标签，浏览器会有记忆，在输入文字还是会套上刚才删除的标签，所以这里再选一次就不会了
-            if(browser.chrome && rng.collapsed && rng.startContainer.nodeType == 1 && domUtils.isEmptyBlock(rng.startContainer)){
-                rng.select(true);
+
+
+            //chrome下如果删除了inline标签，浏览器会有记忆，在输入文字还是会套上刚才删除的标签，所以这里再选一次就不会了
+            if((rng.startContainer.nodeType == 3 || rng.startContainer.nodeType == 1 && domUtils.isEmptyBlock(rng.startContainer))){
+                if(browser.ie){
+                    var span = rng.document.createElement('span');
+                    rng.insertNode(span).setStartBefore(span).collapse(true);
+                    rng.select();
+                    domUtils.remove(span)
+                }else{
+                    rng.select()
+                }
+
             }
         }
+
     })
 };
