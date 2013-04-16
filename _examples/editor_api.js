@@ -25,14 +25,14 @@
             'plugins/wordcount.js',
             'plugins/undo.js',
             'plugins/paste.js',           //粘贴时候的提示依赖了UI
-            'plugins/list.js',
+            'plugins/_list.js',
             'plugins/enterkey.js',
             'plugins/keystrokes.js',
             'plugins/fiximgclick.js',
             'plugins/autoheight.js',
             'plugins/autofloat.js',  //依赖UEditor UI,在IE6中，会覆盖掉body的背景图属性
             'plugins/video.js',
-            'plugins/basestyle.js',
+            'plugins/_basestyle.js',
             'plugins/_heading.js',
             'plugins/_graphictemplate.js',
             'ui/ui.js',
@@ -47,7 +47,7 @@
             'ui/toolbar.js',
             'ui/dialog.js',
             'ui/_editorui.js',
-            'ui/editor.js'
+            'ui/_editor.js'
         ],
         baseURL = '../_src/';
     for (var i=0,pi;pi = paths[i++];) {
