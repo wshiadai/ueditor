@@ -203,12 +203,12 @@
                         ( options.iframeCssUrl ? '<link rel=\'stylesheet\' type=\'text/css\' href=\'' + utils.unhtml(options.iframeCssUrl) + '\'/>' : '' ) +
                         '<style type=\'text/css\'>' +
                         //设置四周的留边
-                        '.view{word-wrap:break-word;cursor:text;height:100%;}\n' +
+                        '.view{padding:0;word-wrap:break-word;cursor:text;height:100%;}\n' +
                         //设置默认字体和字号
                         //font-family不能呢随便改，在safari下fillchar会有解析问题
                         'body{margin:8px;font-family:sans-serif;font-size:16px;}' +
                         //设置段落间距
-                        'p{margin:0;}'
+                        'p{margin:5px 0;}'
                         + ( options.initialStyle || '' ) +
                         '</style></head><body' + (useBodyAsViewport ? ' class=\'view\'' : '') + '></body>';
                 if (options.customDomain && document.domain != location.hostname) {
@@ -599,35 +599,6 @@
             if (browser.gecko && (geckoSel = this.selection.getNative())) {
                 geckoSel.removeAllRanges();
             }
-        },
-
-        expSubmit:function(){
-            var me = this,
-                hlist = domUtils.getElementsByTagName(me.document,"h2"),
-                state="",
-                flag = true,
-                uiutils = baidu.editor.ui.uiUtils;
-            for(var i = 0,node;node=hlist[i++];){
-                var txt= node.innerHTML.replace(domUtils.fillChar,"");
-                if(domUtils.isEmptyNode(node)){
-                    state = "标题为空";
-                }
-                if(txt.replace(/[^\x00-\xff]/g, 'ci').length>40){
-                    state = "标题要小于40个字符";
-                }
-                if(state){
-                    var top = (document.body.scrollTop||document.documentElement.scrollTop) + uiutils.getClientRect(node).top-60;
-                    window.scrollTo(0,top);
-                    window.edSimShowStepPop(uiutils.getClientRect(node).top,state);
-                    if(!node.firstChild){
-                        node.innerHTML = domUtils.fillChar;
-                    }
-                    me.selection.getRange().selectNode(node.firstChild).setCursor(true);
-                    flag = false;
-                    break;
-                }
-            }
-            return flag;
         },
 
         /**
