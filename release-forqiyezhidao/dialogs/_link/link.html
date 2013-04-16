@@ -78,8 +78,9 @@
                 obj.textValue = text.value;
             }
             editor.execCommand('link',obj );
-            dialog.close();
+            dialog._hide();
         }
+
     }
     dialog.onok = handleDialogOk;
     $G('href').onkeydown =  function(evt){
