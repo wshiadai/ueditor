@@ -32,7 +32,7 @@
             'plugins/autolink.js',
             'plugins/_autoheight.js',
             'plugins/puretxtpaste.js',
-            'plugins/video.js',
+            'plugins/_video.js',
             'ui/ui.js',
             'ui/uiutils.js',
             'ui/uibase.js',
