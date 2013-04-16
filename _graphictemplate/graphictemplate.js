@@ -10,7 +10,7 @@
 
     UE = parent.parent.UE;
 
-    editor = UE.instants['ueditorInstant' + parent.frameElement.id.replace("baidu_editor_", "")];
+    editor = UE.instants['ueditorInstant' + parent.frameElement.id.replace("ueditor_", "")];
 
     domUtils = UE.dom.domUtils;
 
