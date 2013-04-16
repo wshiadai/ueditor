@@ -10073,14 +10073,14 @@ baidu.editor.ui = {};
                     buff[i] = this.buttons[i].renderHtml();
                 }
                 footHtml = '<div class="%%-foot">' +
-                     '<div id="##_buttons" class="%%-buttons">' + buff.join('') + '</div>' +
+                    '<div id="##_buttons" class="%%-buttons">' + buff.join('') + '</div>' +
                     '</div>';
             }
             return '<div id="##" class="%%"><div class="%%-wrap"><div id="##_body" class="%%-body">' +
                 '<div class="%%-shadow"></div>' +
                 '<div id="##_titlebar" class="%%-titlebar">' +
                 '<div class="%%-draghandle" onmousedown="$$._onTitlebarMouseDown(event, this);">' +
-                 '<span class="%%-caption">' + (this.title || '') + '</span>' +
+                '<span class="%%-caption">' + (this.title || '') + '</span>' +
                 '</div>' +
                 this.closeButton.renderHtml() +
                 '</div>' +
@@ -10200,7 +10200,7 @@ baidu.editor.ui = {};
         },
         close: function (ok){
             if (this.fireEvent('close', ok) !== false) {
-                this._hide();
+//                this._hide();
             }
         }
     };
@@ -10290,7 +10290,7 @@ baidu.editor.ui = {};
                                 label:editor.getLang("ok"),
                                 editor:editor,
                                 onclick:function () {
-//                                    dialog.close(true);
+                                    dialog.close(true);
                                 }
                             },
                             {
