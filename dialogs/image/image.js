@@ -12,17 +12,94 @@ var imageUploader = {},
     var g = $G,
         ajax = parent.baidu.editor.ajax,
         maskIframe = g("maskIframe"); //tab遮罩层,用来解决flash和其他dom元素的z-index层级不一致问题
+       // flashObj;                   //flash上传对象
 
     var flagImg = null, flashContainer;
     imageUploader.init = function (opt, callbacks) {
+        switchTab("imageTab");
+        createAlignButton(["remoteFloat", "localFloat"]);
         createFlash(opt, callbacks);
+        var srcImg = editor.selection.getRange().getClosedNode();
+        if (srcImg) {
+            showImageInfo(srcImg);
+            showPreviewImage(srcImg, true);
+            var tabElements = g("imageTab").children,
+                tabHeads = tabElements[0].children,
+                tabBodys = tabElements[1].children;
+            for (var i = 0, ci; ci = tabHeads[i++];) {
+                if (ci.getAttribute("tabSrc") == "remote") {
+                    clickHandler(tabHeads, tabBodys, ci);
+                }
+            }
+
+        }
+        addUrlChangeListener();
         addOKListener();
+        addScrollListener();
+        addSearchListener();
+        $focus(g("url"));
+    };
+    imageUploader.setPostParams = function(obj,index){
+        if(index===undefined){
+            utils.each(postConfig,function(config){
+                config.data = obj;
+            })
+        }else{
+            postConfig[index].data = obj;
+        }
     };
 
     function insertImage(imgObjs) {
         editor.fireEvent('beforeInsertImage', imgObjs);
         editor.execCommand("insertImage", imgObjs);
     }
+
+    function searchImage() {
+        var imgSearchInput = $G("imgSearchTxt");
+        if (!imgSearchInput.getAttribute("hasClick") || !imgSearchInput.value) {
+            selectTxt(imgSearchInput);
+            return;
+        }
+        g("searchList").innerHTML = "<p class='msg'>" + lang.imageLoading + "</p>";
+        var key = imgSearchInput.value,
+            type = $G("imgType").value,
+            url = "http://image.baidu.com/i?ct=201326592&cl=2&lm=-1&st=-1&tn=baiduimagejson&istype=2&rn=32&fm=index&pv=&word=" + encodeToGb2312(key) + type + "&" + +new Date;
+        var reqCallBack = function (data) {
+            try {
+                var imgObjs = data.data;
+            } catch (e) {
+                return;
+            }
+            var frg = document.createDocumentFragment();
+            if (imgObjs.length < 2) {
+                g("searchList").innerHTML = "<p class='msg'>" + lang.tryAgain + "</p>";
+                return;
+            }
+            for (var i = 0, len = imgObjs.length; i < len - 1; i++) {
+                var img = document.createElement("img"), obj = imgObjs[i], div = document.createElement("div");
+                img.src = obj.objURL; //obj.thumbURL 为缩略图，只能针对百度内部使用
+                img.setAttribute("sourceUrl", obj.objURL);
+                var title = obj.fromPageTitleEnc.replace(/^\.\.\./i, "");
+                img.setAttribute("title", lang.toggleSelect + obj.width + "X" + obj.height);
+                img.onclick = function () {
+                    changeSelected(this);
+                };
+                scale(img, 100, obj.width, obj.height);
+                div.appendChild(img);
+                var p = document.createElement("p");
+                p.innerHTML = "<a target='_blank' href='" + obj.fromURL + "'>" + title + "</a>";
+                div.appendChild(p);
+                //setTimeout(function(){
+                frg.appendChild(div);
+                //},0);
+
+            }
+            g("searchList").innerHTML = "";
+            g("searchList").appendChild(frg);
+        };
+        baidu.sio.callByServer(url, reqCallBack, {charset:"GB18030"});
+    }
+
     function selectTxt(node) {
         if (node.select) {
             node.select();
@@ -32,13 +109,79 @@ var imageUploader = {},
         }
     }
 
+    function addSearchListener() {
+        g("imgSearchTxt").onclick = function () {
+            selectTxt(this);
+            this.setAttribute("hasClick", true);
+            if (this.value == lang.searchInitInfo) {
+                this.value = "";
+            }
+        };
+        g("imgSearchTxt").onkeyup = function () {
+            this.setAttribute("hasClick", true);
+            //只触发一次
+            this.onkeyup = null;
+        };
+
+        g("imgSearchBtn").onclick = function () {
+            searchImage();
+        };
+        g("imgSearchReset").onclick = function () {
+            var txt = g("imgSearchTxt");
+            txt.value = "";
+            txt.focus();
+            g("searchList").innerHTML = "";
+        };
+        g("imgType").onchange = function () {
+            searchImage();
+        };
+        domUtils.on(g("imgSearchTxt"), "keyup", function (evt) {
+            if (evt.keyCode == 13) {
+                searchImage();
+            }
+        })
+
+    }
+
+    /**
+     * 延迟加载
+     */
+    function addScrollListener() {
+
+        g("imageList").onscroll = function () {
+            var imgs = this.getElementsByTagName("img"),
+                top = Math.ceil(this.scrollTop / 100) - 1;
+            top = top < 0 ? 0 : top;
+            for (var i = top * 5; i < (top + 5) * 5; i++) {
+                var img = imgs[i];
+                if (img && !img.getAttribute("src")) {
+                    img.src = img.getAttribute("lazy_src");
+                    img.removeAttribute("lazy_src");
+                }
+            }
+        }
+    }
 
     /**
      * 绑定确认按钮
      */
     function addOKListener() {
         dialog.onok = function () {
-            insertBatch();
+            var currentTab = findFocus("tabHeads", "tabSrc");
+            switch (currentTab) {
+                case "remote":
+                    return insertSingle();
+                    break;
+                case "local":
+                    return insertBatch();
+                    break;
+                case "imgManager":
+                    return insertSearch("imageList");
+                    break;
+                case "imgSearch":
+                    return insertSearch("searchList", true);
+                    break;
+            }
         };
         dialog.oncancel = function () {
             hideFlash();
@@ -50,6 +193,25 @@ var imageUploader = {},
         flashContainer.innerHTML = "";
     }
 
+    /**
+     * 将元素id下的所有图片文件插入到编辑器中。
+     * @param id
+     * @param catchRemote  是否需要替换远程图片
+     */
+    function insertSearch(id, catchRemote) {
+        var imgs = $G(id).getElementsByTagName("img"), imgObjs = [];
+        for (var i = 0, ci; ci = imgs[i++];) {
+            if (ci.getAttribute("selected")) {
+                var url = ci.getAttribute("src", 2).replace(/(\s*$)/g, ""), img = {};
+                img.src = url;
+                img._src = url;
+                imgObjs.push(img);
+            }
+        }
+        insertImage(imgObjs);
+        catchRemote && editor.fireEvent("catchRemoteImage");
+        hideFlash();
+    }
 
     /**
      * 插入单张图片
@@ -65,6 +227,7 @@ var imageUploader = {},
             imgObj = {};
         if (!url.value) return;
         if (!flagImg) return;   //粘贴地址后如果没有生成对应的预览图，可以认为本次粘贴地址失败
+        if (!checkNum([width, height, border, vhSpace])) return false;
         imgObj.src = url.value;
         imgObj._src = url.value;
         imgObj.width = width.value;
@@ -78,13 +241,38 @@ var imageUploader = {},
         editor.fireEvent("catchRemoteImage");
         hideFlash();
     }
+
+    /**
+     * 检测传入的所有input框中输入的长宽是否是正数
+     * @param nodes input框集合，
+     */
+    function checkNum(nodes) {
+        for (var i = 0, ci; ci = nodes[i++];) {
+            if (!isNumber(ci.value) || ci.value < 0) {
+                alert(lang.numError);
+                ci.value = "";
+                ci.focus();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 数字判断
+     * @param value
+     */
+    function isNumber(value) {
+        return /(0|^[1-9]\d*$)/.test(value);
+    }
+
     /**
      * 插入多张图片
      */
     function insertBatch() {
         if (imageUrls.length < 1) return;
         var imgObjs = [],
-            align = "none";
+            align = findFocus("localFloat", "name");
 
         for (var i = 0, ci; ci = imageUrls[i++];) {
             var tmpObj = {};
@@ -99,8 +287,6 @@ var imageUploader = {},
     }
 
     /**
-<<<<<<< HEAD
-=======
      * 找到id下具有focus类的节点并返回该节点下的某个属性
      * @param id
      * @param returnProperty
@@ -283,7 +469,6 @@ var imageUploader = {},
         return {width:w.toFixed(0),height:h.toFixed(0)}
     }
     /**
->>>>>>> dev-1.2.5
      * 创建flash实例
      * @param opt
      * @param callbacks
@@ -312,21 +497,197 @@ var imageUploader = {},
         };
         flashContainer = $G(opt.container);
         option = utils.extend(option, callbacks, false);
-
         flashObj = new baidu.flash.imageUploader(option);
     }
 
+    /**
+     * 依据传入的align值更新按钮信息
+     * @param align
+     */
+    function updateAlignButton(align) {
+        var aligns = g("remoteFloat").children;
+        for (var i = 0, ci; ci = aligns[i++];) {
+            if (ci.getAttribute("name") == align) {
+                if (ci.className != "focus") {
+                    ci.className = "focus";
+                }
+            } else {
+                if (ci.className == "focus") {
+                    ci.className = "";
+                }
+            }
+        }
+    }
 
     /**
      * 创建图片浮动选择按钮
      * @param ids
      */
+    function createAlignButton(ids) {
+        for (var i = 0, ci; ci = ids[i++];) {
+            var floatContainer = g(ci),
+                nameMaps = {"none":lang.floatDefault, "left":lang.floatLeft, "right":lang.floatRight, "center":lang.floatCenter};
+            for (var j in nameMaps) {
+                var div = document.createElement("div");
+                div.setAttribute("name", j);
+                if (j == "none") div.className = "focus";
+
+                div.style.cssText = "background:url(images/" + j + "_focus.jpg);";
+                div.setAttribute("title", nameMaps[j]);
+                floatContainer.appendChild(div);
+            }
+            switchSelect(ci);
+        }
+    }
 
     function toggleFlash(show) {
         if (flashContainer && browser.webkit) {
             flashContainer.style.left = show ? "0" : "-10000px";
         }
     }
+
+    /**
+     * tab点击处理事件
+     * @param tabHeads
+     * @param tabBodys
+     * @param obj
+     */
+    function clickHandler(tabHeads, tabBodys, obj) {
+        //head样式更改
+        for (var k = 0, len = tabHeads.length; k < len; k++) {
+            tabHeads[k].className = "";
+        }
+        obj.className = "focus";
+        //body显隐
+        var tabSrc = obj.getAttribute("tabSrc");
+        for (var j = 0, length = tabBodys.length; j < length; j++) {
+            var body = tabBodys[j],
+                id = body.getAttribute("id");
+            body.onclick = function () {
+                this.style.zoom = 1;
+            };
+            if (id != tabSrc) {
+                body.style.zIndex = 1;
+            } else {
+                body.style.zIndex = 200;
+                //当切换到本地图片上传时，隐藏遮罩用的iframe
+                if (id == "local") {
+                    toggleFlash(true);
+                    maskIframe.style.display = "none";
+                    //处理确定按钮的状态
+                    if (selectedImageCount) {
+                        dialog.buttons[0].setDisabled(true);
+                    }
+                } else {
+                    toggleFlash(false);
+                    maskIframe.style.display = "";
+                    dialog.buttons[0].setDisabled(false);
+                }
+                var list = g("imageList");
+                list.style.display = "none";
+                //切换到图片管理时，ajax请求后台图片列表
+                if (id == "imgManager") {
+                    list.style.display = "";
+                    //已经初始化过时不再重复提交请求
+                    if (!list.children.length) {
+                        ajax.request(editor.options.imageManagerUrl, {
+                            timeout:100000,
+                            action:"get",
+                            onsuccess:function (xhr) {
+                                //去除空格
+                                var tmp = utils.trim(xhr.responseText),
+                                    imageUrls = !tmp ? [] : tmp.split("ue_separate_ue"),
+                                    length = imageUrls.length;
+                                g("imageList").innerHTML = !length ? "&nbsp;&nbsp;" + lang.noUploadImage : "";
+                                for (var k = 0, ci; ci = imageUrls[k++];) {
+                                    var img = document.createElement("img");
+
+                                    var div = document.createElement("div");
+                                    div.appendChild(img);
+                                    div.style.display = "none";
+                                    g("imageList").appendChild(div);
+                                    img.onclick = function () {
+                                        changeSelected(this);
+                                    };
+                                    img.onload = function () {
+                                        this.parentNode.style.display = "";
+                                        var w = this.width, h = this.height;
+                                        scale(this, 100, 120, 80);
+                                        this.title = lang.toggleSelect + w + "X" + h;
+                                        this.onload = null;
+                                    };
+                                    img.setAttribute(k < 35 ? "src" : "lazy_src", editor.options.imageManagerPath + ci.replace(/\s+|\s+/ig, ""));
+                                    img.setAttribute("_src", editor.options.imageManagerPath + ci.replace(/\s+|\s+/ig, ""));
+
+                                }
+                            },
+                            onerror:function () {
+                                g("imageList").innerHTML = lang.imageLoadError;
+                            }
+                        });
+                    }
+                }
+                if (id == "imgSearch") {
+                    selectTxt(g("imgSearchTxt"));
+                }
+                if (id == "remote") {
+                    $focus(g("url"));
+                }
+            }
+        }
+
+    }
+
+    /**
+     * TAB切换
+     * @param tabParentId  tab的父节点ID或者对象本身
+     */
+    function switchTab(tabParentId) {
+        var tabElements = g(tabParentId).children,
+            tabHeads = tabElements[0].children,
+            tabBodys = tabElements[1].children;
+
+        for (var i = 0, length = tabHeads.length; i < length; i++) {
+            var head = tabHeads[i];
+            if (head.className === "focus")clickHandler(tabHeads, tabBodys, head);
+            head.onclick = function () {
+                clickHandler(tabHeads, tabBodys, this);
+            }
+        }
+    }
+
+    /**
+     * 改变o的选中状态
+     * @param o
+     */
+    function changeSelected(o) {
+        if (o.getAttribute("selected")) {
+            o.removeAttribute("selected");
+            o.style.cssText = "filter:alpha(Opacity=100);-moz-opacity:1;opacity: 1;border: 2px solid #fff";
+        } else {
+            o.setAttribute("selected", "true");
+            o.style.cssText = "filter:alpha(Opacity=50);-moz-opacity:0.5;opacity: 0.5;border:2px solid blue;";
+        }
+    }
+
+    /**
+     * 选择切换，传入一个container的ID
+     * @param selectParentId
+     */
+    function switchSelect(selectParentId) {
+        var select = g(selectParentId),
+            children = select.children;
+        domUtils.on(select, "click", function (evt) {
+            var tar = evt.srcElement || evt.target;
+            for (var j = 0, cj; cj = children[j++];) {
+                cj.className = "";
+                cj.removeAttribute && cj.removeAttribute("class");
+            }
+            tar.className = "focus";
+
+        });
+    }
+
     /**
      * gb2312编码
      * @param str
