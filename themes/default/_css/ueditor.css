@@ -9,9 +9,9 @@
 
 /*-------按钮类型，按需加载-------*/
     /*普通按钮*/
-@import "button.css";
+@import "_button.css";
     /*按钮icon*/
-@import "buttonicon.css";
+@import "_buttonicon.css";
     /*弹出菜单*/
 @import "_popup.css";
 
