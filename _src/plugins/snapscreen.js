@@ -14,7 +14,9 @@ UE.plugins['snapscreen'] = function(){
         var container = me.container;
         doc = container.ownerDocument || container.document;
         snapplugin = doc.createElement("object");
-        snapplugin.type = "application/x-pluginbaidusnap";
+        try{snapplugin.type = "application/x-pluginbaidusnap";}catch(e){
+            return;
+        };
         snapplugin.style.cssText = "position:absolute;left:-9999px;";
         snapplugin.setAttribute("width","0");
         snapplugin.setAttribute("height","0");
@@ -59,9 +61,6 @@ UE.plugins['snapscreen'] = function(){
             }catch(e){
                 me.ui._dialogs['snapscreenDialog'].open();
             }
-        },
-        queryCommandState: function(){
-            return this.highlight ? -1 :0;
         }
     };
 }
