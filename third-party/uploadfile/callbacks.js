@@ -345,6 +345,12 @@ window.swfUploadLoaded = function () {
 window.swfUploadLoadFailed = function () {
 };
 
+/*选择文件对话框开始*/
+window.swfUploadFileDialogStart = function () {
+    var swfupload = this;
+    swfupload.customSettings.hideAllPopup();
+};
+
 /*选择文件对话框结束*/
 window.swfUploadFileDialogComplete = function (numFilesSelected, numFilesQueued) {
 };

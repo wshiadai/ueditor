@@ -16,14 +16,14 @@
 
 
     editorui.insertimage = function (editor) {
-        var iframeUrl = editor.options.buttonConfig["insertimage"],
-            title = iframeUrl['title'],
-            hovertitle = iframeUrl['hoverTitle'],
-            overflowMsg = iframeUrl['overflowMsg'],
+        var buttonConfig = editor.options.buttonConfig["insertimage"],
+            title = buttonConfig['title'],
+            hoverTitle = buttonConfig['hoverTitle'],
+            overflowMsg = buttonConfig['overflowMsg'],
             obj, containerID = "ue_con_" + +new Date();
         var ui = new editorui.Button({
             className:'edui-for-insertimage',
-            title:hovertitle || '',
+            title:hoverTitle || '',
             label:title || '',
             getHtmlTpl:function () {
                 return '<div id="##" class="edui-box %%" ' + (this.title ? 'title="' + this.title + '"' : '') + '>' +
@@ -106,7 +106,7 @@
                 var dom = ui.getDom(),
                     label = $(dom.id + "_body").children[1];
                 label.style.color = "#999";
-                dom.setAttribute("title", hovertitle);
+                dom.setAttribute("title", hoverTitle);
 
                 var icon = $(dom.id + "_body").children[0];
                 domUtils.removeClasses(icon, ["edui-icon"]);
@@ -220,7 +220,7 @@
                 label = $(dom.id + "_body").children[1];
             if (!editor.options.isLogin) {
                 label.style.color = "#999";
-                dom.setAttribute("title", hovertitle);
+                dom.setAttribute("title", hoverTitle);
 
                 var icon = $(dom.id + "_body").children[0];
                 domUtils.removeClasses(icon, ["edui-icon"]);
@@ -235,7 +235,7 @@
             } else {
                 label.style.color = "";
                 checkFlashFun(obj, "enabledUpload", 200, 100);
-                ui.getDom().setAttribute("title", hovertitle);
+                ui.getDom().setAttribute("title", hoverTitle);
             }
 
         });
@@ -243,10 +243,10 @@
     };
 
     editorui.insertmap = function (editor) {
-        var iframeUrl = editor.options.buttonConfig["insertmap"],
-            title = iframeUrl.title,
-            unTitle = iframeUrl.unTitle,
-            hoverTitle = iframeUrl.hoverTitle;
+        var buttonConfig = editor.options.buttonConfig["insertmap"],
+            title = buttonConfig.title,
+            unTitle = buttonConfig.unTitle,
+            hoverTitle = buttonConfig.hoverTitle;
         var ui = new editorui.Button({
             className:'edui-for-insertmap insertmap',
             title:hoverTitle,
@@ -310,8 +310,9 @@
 
     editorui.attachment = function (editor) {
         var cmd = 'attachment',
-            title = '附件',
-            hoverTitle = '网盘文件共分享，插入附件更方便',
+            buttonConfig = editor.options.buttonConfig[cmd],
+            title = buttonConfig["title"],
+            hoverTitle = buttonConfig["hoverTitle"],
             attachPop;
 
         var ui = new editorui.Button({
@@ -336,11 +337,19 @@
             attachPop = new baidu.editor.ui.Popup({
                 content:new baidu.editor.ui.AttachPicker({editor:editor}),
                 editor:editor,
-                className:'edui-attachPop'
+                className:'edui-attachPop',
+                hide: function (notNofity){
+                    if (!this._hidden && this.getDom()) {
+                        this.getDom().style.left = '-20000px';
+                        this._hidden = true;
+                        if (!notNofity) {
+                            this.fireEvent('hide');
+                        }
+                    }
+                }
             });
             attachPop.render();
         }
-
         return ui;
     };
 
@@ -348,9 +357,9 @@
     for (var l = 0, cl; cl = lists[l++];) {
         (function (cmd) {
             editorui[cmd] = function (editor) {
-                var iframeUrl = editor.options.buttonConfig[cmd],
-                    title = iframeUrl['title'],
-                    hoverTitle = iframeUrl.hoverTitle;
+                var buttonConfig = editor.options.buttonConfig[cmd],
+                    title = buttonConfig['title'],
+                    hoverTitle = buttonConfig.hoverTitle;
                 var ui = new editorui.Button({
                     className:'edui-for-' + cmd + ' ' + cmd,
                     title:hoverTitle,

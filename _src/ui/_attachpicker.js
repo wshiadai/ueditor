@@ -12,7 +12,7 @@
         this.initOptions(options);
         this.initAttechPicker();
     };
-    var uploadfileButton, wangpanButton, wangpanDialog;
+    var editor, uploadfileButton, wangpanButton, wangpanDialog;
 
     AttachPicker.prototype = {
         initAttechPicker:function () {
@@ -21,11 +21,10 @@
             this.Stateful_init();
         },
         initButtons:function(){
-            this.uploadfileButton = uploadfileButton = (function (editor) {
+            editor = this.editor;
+            editor.uploadfile = uploadfileButton = (function (editor) {
                 var cmd = 'uploadfile',
-                    buttonConfig = editor.options.buttonConfig["attachment"]["list"][cmd],
-                    title = buttonConfig['title'],
-                    hovertitle = buttonConfig['hoverTitle'],
+                    title = editor.options.buttonConfig["attachment"]["list"][cmd],
                     timestamp = +new Date(),
                     placeholderId = 'swfuPlaceholder' + timestamp,
                     flashContainerId = 'swfuFlash' + timestamp,
@@ -34,7 +33,6 @@
 
                 var ui = new Button({
                     className:'edui-for-' + cmd,
-                    title:hovertitle,
                     label:title,
                     showText:true,
                     getHtmlTpl:function () {
@@ -124,6 +122,9 @@
                                 if (T('.f-red', editor.container).length){
                                     T(".edui-editor-wordcount", editor.container).eq(0).html(msg);
                                 }
+                            },
+                            hideAllPopup:function(){
+                                Popup.postHide();
                             }
                         },
                         // 按钮设置
@@ -139,6 +140,7 @@
                         swfupload_loaded_handler:swfUploadLoaded,
                         swfupload_load_failed_handler:swfUploadLoadFailed,
                         // 上传流程回调函数
+                        file_dialog_start_handler:swfUploadFileDialogStart,
                         file_dialog_complete_handler:swfUploadFileDialogComplete,
                         file_queued_handler:swfUploadFileQueued,
                         file_queue_error_handler:swfUploadFileQueueError,
@@ -178,7 +180,6 @@
                         var dom = ui.getDom(),
                             label = $(dom.id + "_body").children[1];
                         label.style.color = "#999";
-                        dom.setAttribute("title", hovertitle);
                         var icon = $(dom.id + "_body").children[0];
                         domUtils.removeClasses(icon, ["edui-icon"]);
                         domUtils.addClass(icon, "edui_disableIcon");
@@ -188,13 +189,12 @@
                 return ui;
             })(this.editor);
 
-            this.wangpanButton = (function (editor) {
-                var title = '插入网盘',
-                    url = 'dialogs/wangpan/wangpan.html',
-                    hovertitle = '网盘文件共分享';
+            editor.wangpanButton = wangpanButton = (function (editor) {
+                var cmd = "wangpan",
+                    title = editor.options.buttonConfig["attachment"]["list"][cmd];
 
                 wangpanDialog = new Dialog(utils.extend({
-                    iframeUrl: editor.options.UEDITOR_HOME_URL + url,
+                    iframeUrl: editor.options.UEDITOR_HOME_URL + 'dialogs/wangpan/wangpan.html',
                     editor:editor,
                     className:'edui-for-wangpan',
                     title:'从百度网盘插入文件',
@@ -223,8 +223,7 @@
                 wangpanDialog.reset();
 
                 var ui = new Button({
-                    className:'edui-for-insertmap insertmap',
-                    title:hovertitle,
+                    className:'edui-for-' + cmd + ' ' + cmd,
                     label:title,
                     onclick:function () {
                         Popup.postHide(evt);
@@ -248,10 +247,10 @@
                 '<div class="edui-attachpicker-top"></div>' +
                 '<div class="edui-attachpicker-body">' +
                 '<div class="edui-attachpicker-item edui-attachpicker-uploadfile" stateful _title="上传文件到网盘">' +
-                this.uploadfileButton.getHtmlTpl() +
+                uploadfileButton.getHtmlTpl() +
                 '</div>' +
                 '<div class="edui-attachpicker-item edui-attachpicker-wangpan" stateful _title="从网盘插入文件">' +
-                this.wangpanButton.getHtmlTpl() +
+                wangpanButton.getHtmlTpl() +
                 '</div>' +
                 '</div>' +
                 '</div>';

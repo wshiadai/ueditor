@@ -27,8 +27,8 @@
 
 /*上传按钮*/
 .edui-attachpicker-uploadfile .ue_flash{
+    margin-top: -24px;
 }
 .edui-attachpicker-uploadfile .swfupload {
     vertical-align: top;
-    margin-top: -24px;
 }
