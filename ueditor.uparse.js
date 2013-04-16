@@ -171,7 +171,7 @@ function uParse(selector,opt){
         }();
 
 
-    //ÈªòËÆ§ÁöÑÈÖçÁΩÆÈ°πÁõÆ
+    //ƒ¨ÔøΩœµÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩƒø
     var defaultOption ={
         liiconpath : 'http://bs.baidu.com/listicon/',
         listDefaultPaddingLeft : '20',
@@ -296,13 +296,8 @@ function uParse(selector,opt){
                 customCss.push(selector +' .list-paddingleft-1{padding-left:0}');
                 customCss.push(selector +' .list-paddingleft-2{padding-left:'+defaultOption.listDefaultPaddingLeft+'px}');
                 customCss.push(selector +' .list-paddingleft-3{padding-left:'+defaultOption.listDefaultPaddingLeft*2+'px}');
-<<<<<<< HEAD
                 //Â¶ÇÊûú‰∏çÁªôÂÆΩÂ∫¶‰ºöÂú®Ëá™ÂÆöÂ∫îÊ†∑ÂºèÈáåÂá∫Áé∞ÊªöÂä®Êù°
-                cssRule('list', selector +' ol,'+selector +' ul{margin:0;pading:0;}li{clear:both;}'+customCss.join('\n'), document);
-=======
-                //»Áπ˚≤ª∏¯øÌ∂»ª·‘⁄◊‘∂®”¶—˘ Ω¿Ô≥ˆœ÷πˆ∂ØÃı
                 cssRule('list', selector +' ol,'+selector +' ul{margin:0;padding:0;}li{clear:both;}'+customCss.join('\n'), document);
->>>>>>> dev-1.2.5
             }
             //Ëß£ÊûêÂÜÖÂÆπ
             var needParseTagName = {
@@ -333,17 +328,17 @@ function uParse(selector,opt){
                                 if(/brush/i.test(pi.className)){
                                     SyntaxHighlighter.highlight(pi);
                                     var tables = document.getElementsByTagName('table');
-                                       for(var t= 0,ti;ti=tables[t++];){
-                                           if(/SyntaxHighlighter/i.test(ti.className)){
-                                               var tds = ti.getElementsByTagName('td');
-                                               for(var i=0,li,ri;li=tds[0].childNodes[i];i++){
-                                                   ri = tds[1].firstChild.childNodes[i];
-                                                   if(ri){
-                                                      ri.style.height = li.style.height = ri.offsetHeight + 'px';
-                                                   }
-                                               }
-                                           }
-                                       }
+                                    for(var t= 0,ti;ti=tables[t++];){
+                                        if(/SyntaxHighlighter/i.test(ti.className)){
+                                            var tds = ti.getElementsByTagName('td');
+                                            for(var i=0,li,ri;li=tds[0].childNodes[i];i++){
+                                                ri = tds[1].firstChild.childNodes[i];
+                                                if(ri){
+                                                    ri.style.height = li.style.height = ri.offsetHeight + 'px';
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             });
                         });
