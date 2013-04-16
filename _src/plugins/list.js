@@ -27,16 +27,14 @@ UE.plugins['list'] = function () {
             'BLOCKQUOTE':1
         };
     var customStyle = {
-//        'cn' : 'cn-1-',
-//        'cn1' : 'cn-2-',
-//        'cn2' : 'cn-3-',
-//        'num':  'num-1-',
-//        'num1' : 'num-2-',
-//        'num2' : 'num-3-',
-//        'dash'  : 'dash',
-//        'dot':'dot',
-        'decimal':'exp-ol-',
-        'disc':'exp-ul'
+        'cn' : 'cn-1-',
+        'cn1' : 'cn-2-',
+        'cn2' : 'cn-3-',
+        'num':  'num-1-',
+        'num1' : 'num-2-',
+        'num2' : 'num-3-',
+        'dash'  : 'dash',
+        'dot':'dot'
     };
 
     me.setOpt( {
@@ -62,8 +60,19 @@ UE.plugins['list'] = function () {
         },
         listDefaultPaddingLeft : '30',
         listiconpath : 'http://bs.baidu.com/listicon/',
-        maxListLevel : 1//-1不限制
+        maxListLevel : -1//-1不限制
     } );
+    function listToArray(list){
+        var arr = [];
+        for(var p in list){
+            arr.push(p)
+        }
+        return arr;
+    }
+    var listStyle = {
+        'OL':listToArray(me.options.insertorderedlist),
+        'UL':listToArray(me.options.insertunorderedlist)
+    };
     var liiconpath = me.options.listiconpath;
 
     //根据用户配置，调整customStyle
@@ -79,13 +88,6 @@ UE.plugins['list'] = function () {
             if(p == 'dash' || p == 'dot'){
                 customCss.push('li.list-' + customStyle[p] + '{background-image:url(' + liiconpath +customStyle[p]+'.gif)}');
                 customCss.push('ul.custom_'+p+'{list-style:none;}ul.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
-            }else if(p == 'disc'){
-                customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/unsortlist.png);background-repeat:no-repeat;background-position: 11px 8px;}');
-            }else if(p == 'decimal'){
-                for(var i= 0;i<99;i++){
-                    customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(http://img.baidu.com/img/iknow/exp/edit/edit-num' +  i + '.png)}')
-                }
-                customCss.push('ol.custom_'+p+'{list-style:none;}ol.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
             }else{
                 for(var i= 0;i<99;i++){
                     customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(' + liiconpath + 'list-'+customStyle[p] + i + '.gif)}')
@@ -121,12 +123,6 @@ UE.plugins['list'] = function () {
                     break;
                 case 'dot':
                     customCss.push('li.list-'+p+'-paddingleft{padding-left:20px}');
-                    break;
-                case 'decimal':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding:9px 0 9px 42px;+padding-bottom:1px;}');
-                    break;
-                case 'disc':
-                    customCss.push('li.list-'+p+'-paddingleft{padding-left:41px}');
             }
         }
         customCss.push('.list-paddingleft-1{padding-left:0}');
@@ -135,20 +131,89 @@ UE.plugins['list'] = function () {
         //如果不给宽度会在自定应样式里出现滚动条
         utils.cssRule('list', 'ol,ul{margin:0;pading:0;'+(browser.ie ? '' : 'width:95%')+'}li{clear:both;}'+customCss.join('\n'), me.document);
     });
+    //单独处理剪切的问题
+    me.ready(function(){
+        domUtils.on(me.body,'cut',function(){
+            setTimeout(function(){
+                var rng = me.selection.getRange(),li;
+                if(li = domUtils.findParentByTagName(rng.startContainer,'li',true)){
+                    if(!li.nextSibling && domUtils.isEmptyBlock(li)){
+                        var pn = li.parentNode,node;
+                        if(node = pn.previousSibling){
+                            domUtils.remove(pn);
+                            rng.setStartAtLast(node).collapse(true);
+                            rng.select(true);
+                        }else if(node = pn.nextSibling){
+                            domUtils.remove(pn);
+                            rng.setStartAtFirst(node).collapse(true);
+                            rng.select(true);
+                        }else{
+                            var tmpNode = me.document.createElement('p');
+                            domUtils.fillNode(me.document,tmpNode);
+                            pn.parentNode.insertBefore(tmpNode,pn);
+                            domUtils.remove(pn);
+                            rng.setStart(tmpNode,0).collapse(true);
+                            rng.select(true);
+                        }
+                    }
+                }
+            })
+        })
+    });
 
     function getStyle(node){
         var cls = node.className;
         if(domUtils.hasClass(node,/custom_/)){
             return cls.match(/custom_(\w+)/)[1]
         }
-        return ''
+        return domUtils.getStyle(node, 'list-style-type')
+
     }
+
+    me.addListener('beforepaste',function(type,html,root){
+        var me = this,
+            rng = me.selection.getRange(),li;
+
+        if(li = domUtils.findParentByTagName(rng.startContainer,'li',true)){
+            var list = li.parentNode,tagName = list.tagName == 'OL' ? 'ul':'ol';
+            utils.each(root.getNodesByTagName(tagName),function(n){
+                n.tagName = list.tagName;
+                n.setAttr();
+                if(n.parentNode === root){
+                    type = getStyle(list) || (list.tagName == 'OL' ? 'decimal' : 'disc')
+                }else{
+                    var className = n.parentNode.getAttr('class');
+                    if(className && /custom_/.test(className)){
+                        type = className.match(/custom_(\w+)/)[1]
+                    }else{
+                        type = n.parentNode.getStyle('list-style-type');
+                    }
+                    if(!type){
+                        type = list.tagName == 'OL' ? 'decimal' : 'disc';
+                    }
+                }
+                var index = utils.indexOf(listStyle[list.tagName], type);
+                if(n.parentNode !== root)
+                    index = index + 1 == listStyle[list.tagName].length ? 0 : index + 1;
+                var currentStyle = listStyle[list.tagName][index];
+                if(customStyle[currentStyle]){
+                    n.setAttr('class', 'custom_' + currentStyle)
+
+                }else{
+                    n.setStyle('list-style-type',currentStyle)
+                }
+            })
+
+        }
+
+        html.html = root.toHtml();
+    });
     //进入编辑器的li要套p标签
     me.addInputRule(function(root){
         utils.each(root.getNodesByTagName('li'),function(li){
             var tmpP = UE.uNode.createElement('p');
             for(var i= 0,ci;ci=li.children[i];){
-                if(ci.type == 'text' || dtd.$inline[ci.tagName]){
+                if(ci.type == 'text' || dtd.p[ci.tagName]){
                     tmpP.appendChild(ci);
                 }else{
                     if(tmpP.firstChild()){
@@ -161,18 +226,102 @@ UE.plugins['list'] = function () {
 
                 }
             }
-            if(tmpP.firstChild() && !tmpP.parentNode){
+            if(tmpP.firstChild() && !tmpP.parentNode || !li.firstChild()){
                 li.appendChild(tmpP);
+            }
+        });
+        var orderlisttype = {
+                'num1':/^\d+\)/,
+                'decimal':/^\d+\./,
+                'lower-alpha':/^[a-z]+\)/,
+                'upper-alpha':/^[A-Z]+\./,
+                'cn':/^[\u4E00\u4E8C\u4E09\u56DB\u516d\u4e94\u4e03\u516b\u4e5d]+[\u3001]/,
+                'cn2':/^\([\u4E00\u4E8C\u4E09\u56DB\u516d\u4e94\u4e03\u516b\u4e5d]+\)/
+            },
+            unorderlisttype = {
+                'square':'n'
+            };
+        function checkListType(content,container){
+            var span = container.firstChild();
+            if(span &&  span.type == 'element' && span.tagName == 'span' && /Wingdings|Symbol/.test(span.getStyle('font-family'))){
+                for(var p in unorderlisttype){
+                    if(unorderlisttype[p] == span.data){
+                        return p
+                    }
+                }
+                return 'disc'
+            }
+            for(var p in orderlisttype){
+                if(orderlisttype[p].test(content)){
+                    return p;
+                }
+            }
+
+        }
+        utils.each(root.getNodesByTagName('p'),function(node){
+            if(node.getAttr('class') != 'MsoListParagraph'){
+                return
+            }
+            node.setAttr('class','');
+            function appendLi(list,p,type){
+                if(list.tagName == 'ol'){
+                    p.innerHTML(p.innerHTML().replace(orderlisttype[type],''));
+                }else{
+                    p.removeChild(p.firstChild())
+                }
+
+                var li = UE.uNode.createElement('li');
+                li.appendChild(p);
+                list.appendChild(li);
+            }
+            var tmp = node,type;
+
+            if(node.parentNode.tagName != 'li' && (type = checkListType(node.innerText(),node))){
+
+                var list = UE.uNode.createElement(me.options.insertorderedlist.hasOwnProperty(type) ? 'ol' : 'ul');
+                if(customStyle[type]){
+                    list.setAttr('class','custom_'+type)
+                }else{
+                    list.setStyle('list-style-type',type)
+                }
+                while(node && node.parentNode.tagName != 'li' && checkListType(node.innerText(),node)){
+                    tmp = node.nextSibling();
+                    if(!tmp){
+                        node.parentNode.insertBefore(list,node)
+                    }
+                    appendLi(list,node,type);
+                    node = tmp;
+                }
+                if(!list.parentNode && node && node.parentNode){
+                    node.parentNode.insertBefore(list,node)
+                }
             }
         })
     });
+
     //调整索引标签
     me.addListener('contentchange',function(){
-        utils.each(domUtils.getElementsByTagName(me.document,'ol ul'),function(node){
+        adjustListStyle(me.document)
+    });
 
-            if(!domUtils.inDoc(node,me.document))
+    function adjustListStyle(doc,ignore){
+        utils.each(domUtils.getElementsByTagName(doc,'ol ul'),function(node){
+
+            if(!domUtils.inDoc(node,doc))
                 return;
-            var index = 0,type = 2,parent = node.parentNode;
+
+            var parent = node.parentNode;
+            if(parent.tagName == node.tagName){
+                var nodeStyleType = getStyle(node) || (node.tagName == 'OL' ? 'decimal' : 'disc'),
+                    parentStyleType = getStyle(parent) || (parent.tagName == 'OL' ? 'decimal' : 'disc');
+                if(nodeStyleType == parentStyleType){
+                    var styleIndex = utils.indexOf(listStyle[node.tagName], nodeStyleType);
+                    styleIndex = styleIndex + 1 == listStyle[node.tagName].length ? 0 : styleIndex + 1;
+                    setListStyle(node,listStyle[node.tagName][styleIndex])
+                }
+
+            }
+            var index = 0,type = 2;
             if( domUtils.hasClass(node,/custom_/)){
                 if(!(/[ou]l/i.test(parent.tagName) && domUtils.hasClass(parent,/custom_/))){
                     type = 1;
@@ -182,7 +331,8 @@ UE.plugins['list'] = function () {
                     type = 3;
                 }
             }
-            style = domUtils.getStyle(node, 'list-style-type');
+
+            var style = domUtils.getStyle(node, 'list-style-type');
             node.style.cssText = style ? 'list-style-type:' + style : '';
             node.className = utils.trim(node.className.replace(/list-paddingleft-\w+/,'')) + ' list-paddingleft-' + type;
             utils.each(domUtils.getElementsByTagName(node,'li'),function(li){
@@ -227,11 +377,9 @@ UE.plugins['list'] = function () {
                     domUtils.removeAttributes(li,'class')
                 }
             });
-            adjustList(node,node.tagName.toLowerCase(),getStyle(node)||domUtils.getStyle(node, 'list-style-type'),true)
+            !ignore && adjustList(node,node.tagName.toLowerCase(),getStyle(node)||domUtils.getStyle(node, 'list-style-type'),true);
         })
-    });
-
-
+    }
     function adjustList(list, tag, style,ignoreEmpty) {
         var nextList = list.nextSibling;
         if (nextList && nextList.nodeType == 1 && nextList.tagName.toLowerCase() == tag && (getStyle(nextList) || domUtils.getStyle(nextList, 'list-style-type') || (tag == 'ol' ? 'decimal' : 'disc')) == style) {
@@ -251,14 +399,14 @@ UE.plugins['list'] = function () {
             domUtils.remove(preList);
         }
         !ignoreEmpty && domUtils.isEmptyBlock(list) && domUtils.remove(list);
+        if(getStyle(list)){
+            adjustListStyle(list.ownerDocument,true)
+        }
     }
 
     function setListStyle(list,style){
         if(customStyle[style]){
             list.className = 'custom_' + style;
-        }
-        if(style == "decimal" || style == "disc"){
-            style = "none";
         }
         try{
             domUtils.setStyle(list, 'list-style-type', style);
@@ -442,9 +590,10 @@ UE.plugins['list'] = function () {
 
 
             }
+
+
         }
         if (keyCode == 8) {
-
             //修中ie中li下的问题
             range = me.selection.getRange();
             if (range.collapsed && domUtils.isStartInblock(range)) {
@@ -556,20 +705,20 @@ UE.plugins['list'] = function () {
         }
     });
 
+    me.addListener('keyup',function(type, evt){
+        var keyCode = evt.keyCode || evt.which;
+        if (keyCode == 8) {
+            var rng = me.selection.getRange(),list;
+            if(list = domUtils.findParentByTagName(rng.startContainer,['ol', 'ul'],true)){
+                adjustList(list,list.tagName.toLowerCase(),getStyle(list)||domUtils.getComputedStyle(list,'list-style-type'))
+            }
+        }
+    });
     //处理tab键
     me.addListener('tabkeydown',function(){
-        function listToArray(list){
-            var arr = [];
-            for(var p in list){
-                arr.push(p)
-            }
-            return arr;
-        }
-        var range = me.selection.getRange(),
-            listStyle = {
-                'OL':listToArray(me.options.insertorderedlist),
-                'UL':listToArray(me.options.insertunorderedlist)
-            };
+
+        var range = me.selection.getRange();
+
         //控制级数
         function checkLevel(li){
             if(me.options.maxListLevel != -1){
@@ -919,15 +1068,6 @@ UE.plugins['list'] = function () {
 
             },
             queryCommandState:function (command) {
-                var range = this.selection.getRange(),ps;
-                if(range.collapsed){
-                    ps = domUtils.findParentByTagName(range.startContainer,"h2") || domUtils.findParentByTagName(range.endContainer,"h2");
-                }else{
-                    ps = domUtils.findParentByTagName(range.startContainer,"h2");
-                }
-                if(ps){
-                    return -1;
-                }
                 return domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
             },
             queryCommandValue:function (command) {
