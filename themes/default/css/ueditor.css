@@ -728,17 +728,16 @@ div.edui-box {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: black;
-    box-shadow: 3px 3px 5px #818181;
-    -webkit-box-shadow: 3px 3px 5px #818181;
-    -moz-box-shadow: 3px 3px 5px #818181;
-    filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius = '3', MakeShadow = 'true', ShadowOpacity = '0.5');
+    /*background-color: black;*/
+    /*box-shadow: 3px 3px 5px #818181;*/
+    /*-webkit-box-shadow: 3px 3px 5px #818181;*/
+    /*-moz-box-shadow: 3px 3px 5px #818181;*/
+    /*filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius = '3', MakeShadow = 'true', ShadowOpacity = '0.5');*/
 }
 
 .edui-default .edui-popup-content {
-    border: 1px solid gray;
+    border: 1px solid #e8e8e8;
     background-color: white;
-    padding: 5px;
 }
 
 .edui-default .edui-popup .edui-bordereraser {
@@ -764,16 +763,16 @@ div.edui-box {
     left: 0;
     bottom: -6px;
     height: 7px;
-    border-left: 1px solid gray;
-    border-right: 1px solid gray;
+    border-left: 1px solid #e8e8e8;
+    border-right: 1px solid #e8e8e8;
 }
 
 .edui-default .edui-anchor-bottomright .edui-bordereraser {
     right: 0;
     bottom: -6px;
     height: 7px;
-    border-left: 1px solid gray;
-    border-right: 1px solid gray;
+    border-left: 1px solid #e8e8e8;
+    border-right: 1px solid #e8e8e8;
 }
 
 /* 弹出对话框按钮和对话框大小 */
@@ -1133,4 +1132,21 @@ div.edui-box {
 }
 .edui-default  .edui-pastecontainer .edui-button  .edui-state-hover .edui-plaintxticon{
     background-position: -72px -34px;
+}
+.edui-default .edui-graphictemplatepicker .edui-graphictemplatepicker-body {
+    width: 76px;
+    font-size: 12px;
+    cursor: default;
+    overflow-y: auto;
+}
+.edui-default .edui-graphictemplatepicker-item {
+    text-align: center;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+}
+
+.edui-default .edui-graphictemplatepicker-body .edui-graphictemplatepicker-item.edui-state-hover {
+    background-color: #f9fdf8;
 }
