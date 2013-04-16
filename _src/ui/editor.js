@@ -83,12 +83,12 @@
             editor.addListener("afterpaste", function () {
                 if(editor.queryCommandState('pasteplain'))
                     return;
-//                pastePop = new baidu.editor.ui.Popup({
-//                    content:new baidu.editor.ui.PastePicker({editor:editor}),
-//                    editor:editor,
-//                    className:'edui-wordpastepop'
-//                });
-//                pastePop.render();
+                pastePop = new baidu.editor.ui.Popup({
+                    content:new baidu.editor.ui.PastePicker({editor:editor}),
+                    editor:editor,
+                    className:'edui-wordpastepop'
+                });
+                pastePop.render();
                 isPaste = true;
             });
 
@@ -233,6 +233,47 @@
                     var html = '', str = "",
                         img = editor.selection.getRange().getClosedNode(),
                         dialogs = editor.ui._dialogs;
+                    if (img && img.tagName == 'IMG') {
+                        var dialogName = 'insertimageDialog';
+                        if (img.className.indexOf("edui-faked-video") != -1) {
+                            dialogName = "insertvideoDialog"
+                        }
+                        if (img.className.indexOf("edui-faked-webapp") != -1) {
+                            dialogName = "webappDialog"
+                        }
+                        if (img.src.indexOf("http://api.map.baidu.com") != -1) {
+                            dialogName = "mapDialog"
+                        }
+                        if (img.className.indexOf("edui-faked-music") != -1) {
+                            dialogName = "musicDialog"
+                        }
+                        if (img.src.indexOf("http://maps.google.com/maps/api/staticmap") != -1) {
+                            dialogName = "gmapDialog"
+                        }
+                        if (img.getAttribute("anchorname")) {
+                            dialogName = "anchorDialog";
+                            html = popup.formatHtml(
+                                '<nobr>' + editor.getLang("property") + ': <span onclick=$$._onImgEditButtonClick("anchorDialog") class="edui-clickable">' + editor.getLang("modify") + '</span>&nbsp;&nbsp;' +
+                                    '<span onclick=$$._onRemoveButtonClick(\'anchor\') class="edui-clickable">' + editor.getLang("delete") + '</span></nobr>');
+                        }
+                        if (img.getAttribute("word_img")) {
+                            //todo 放到dialog去做查询
+                            editor.word_img = [img.getAttribute("word_img")];
+                            dialogName = "wordimageDialog"
+                        }
+                        if (!dialogs[dialogName]) {
+                            return;
+                        }
+                        str = '<nobr>' + editor.getLang("property") + ': '+
+                            '<span onclick=$$._onImgSetFloat("none") class="edui-clickable">' + editor.getLang("default") + '</span>&nbsp;&nbsp;' +
+                            '<span onclick=$$._onImgSetFloat("left") class="edui-clickable">' + editor.getLang("justifyleft") + '</span>&nbsp;&nbsp;' +
+                            '<span onclick=$$._onImgSetFloat("right") class="edui-clickable">' + editor.getLang("justifyright") + '</span>&nbsp;&nbsp;' +
+                            '<span onclick=$$._onImgSetFloat("center") class="edui-clickable">' + editor.getLang("justifycenter") + '</span>&nbsp;&nbsp;'+
+                            '<span onclick="$$._onImgEditButtonClick(\'' + dialogName + '\');" class="edui-clickable">' + editor.getLang("modify") + '</span></nobr>';
+
+                        !html && (html = popup.formatHtml(str))
+
+                    }
                     if (editor.ui._dialogs.linkDialog) {
                         var link = editor.queryCommandValue('link');
                         var url;
@@ -607,8 +648,6 @@
         editor.options.editor = editor;
         utils.loadFile(document, {
             href:editor.options.themePath + editor.options.theme + "/_css/ueditor.css",
-//            for经验
-//            href:editor.options.themePath + editor.options.theme + "/ueditor_simple.css",
             tag:"link",
             type:"text/css",
             rel:"stylesheet"
@@ -657,13 +696,27 @@
                     }
                     domUtils.addClass(holder, "edui-" + editor.options.theme);
                     editor.ui.render(holder);
-                    var iframeholder = editor.ui.getDom('iframeholder');
+                    var opt = editor.options;
                     //给实例添加一个编辑器的容器引用
                     editor.container = editor.ui.getDom();
-                    var options=editor.options;
-                    var width =Math.max(options.initialFrameWidth,options.minFrameWidth) ;
-                    editor.container.style.cssText = "z-index:" + options.zIndex + ";width:" + width+"px";
-                    oldRender.call(editor, iframeholder);
+                    if(opt.initialFrameWidth){
+                        opt.minFrameWidth = opt.initialFrameWidth
+                    }else{
+                        opt.minFrameWidth = opt.initialFrameWidth = holder.offsetWidth;
+                    }
+                    if(opt.initialFrameHeight){
+                        opt.minFrameHeight = opt.initialFrameHeight
+                    }else{
+                        opt.initialFrameHeight = opt.minFrameHeight = holder.offsetHeight;
+                    }
+                    //编辑器最外容器设置了高度，会导致，编辑器不占位
+                    //todo 先去掉，没有找到原因
+                    if(holder.style.height){
+                        holder.style.height = ''
+                    }
+                    editor.container.style.width = opt.initialFrameWidth+ 'px';
+                    editor.container.style.zIndex = opt.zIndex;
+                    oldRender.call(editor, editor.ui.getDom('iframeholder'));
 
                 }
             })
