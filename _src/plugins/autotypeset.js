@@ -8,22 +8,22 @@
  * @name baidu.editor.execCommands
  */
 
-UE.plugins['autotypeset'] = function () {
+UE.plugins['autotypeset'] = function(){
 
     this.setOpt({'autotypeset':{
-        mergeEmptyline:true, //合并空行
-        removeClass:false, //去掉冗余的class
-        removeEmptyline:true, //去掉空行
-        textAlign:"left", //段落的排版方式，可以是 left,right,center,justify 去掉这个属性表示不执行排版
-        imageBlockLine:'center', //图片的浮动方式，独占一行剧中,左右浮动，默认: center,left,right,none 去掉这个属性表示不执行排版
-        pasteFilter:false, //根据规则过滤没事粘贴进来的内容
-        clearFontSize:true, //去掉所有的内嵌字号，使用编辑器默认的字号
-        clearFontFamily:true, //去掉所有的内嵌字体，使用编辑器默认的字体
-        removeEmptyNode:true, // 去掉空节点
-        //可以去掉的标签
-        removeTagNames:utils.extend({div:1}, dtd.$removeEmpty),
-        indent:true, // 行首缩进
-        indentValue:'2em'             //行首缩进的大小
+        mergeEmptyline : true,          //合并空行
+            removeClass : true,            //去掉冗余的class
+            removeEmptyline : false,        //去掉空行
+            textAlign : "left",             //段落的排版方式，可以是 left,right,center,justify 去掉这个属性表示不执行排版
+            imageBlockLine : 'center',      //图片的浮动方式，独占一行剧中,左右浮动，默认: center,left,right,none 去掉这个属性表示不执行排版
+            pasteFilter : false,             //根据规则过滤没事粘贴进来的内容
+            clearFontSize : false,           //去掉所有的内嵌字号，使用编辑器默认的字号
+            clearFontFamily : false,         //去掉所有的内嵌字体，使用编辑器默认的字体
+            removeEmptyNode : false,         // 去掉空节点
+            //可以去掉的标签
+            removeTagNames : utils.extend({div:1},dtd.$removeEmpty),
+            indent : false,                  // 行首缩进
+            indentValue : '2em'             //行首缩进的大小
     }});
     var me = this,
         opt = me.options.autotypeset,
@@ -39,24 +39,24 @@ UE.plugins['autotypeset'] = function () {
             div:1,
             p:1,
             //trace:2183 这些也认为是行
-            blockquote:1, center:1, h1:1, h2:0, h3:1, h4:1, h5:1, h6:1,
+            blockquote:1,center:1,h1:1,h2:1,h3:1,h4:1,h5:1,h6:1,
             span:1
         },
         highlightCont;
     //升级了版本，但配置项目里没有autotypeset
-    if (!opt) {
+    if(!opt){
         return;
     }
-    function isLine(node, notEmpty) {
-        if (!node || node.nodeType == 3)
+    function isLine(node,notEmpty){
+        if(!node || node.nodeType == 3)
             return 0;
-        if (domUtils.isBr(node))
+        if(domUtils.isBr(node))
             return 1;
-        if (node && node.parentNode && tags[node.tagName.toLowerCase()]) {
-            if (highlightCont && highlightCont.contains(node)
+        if(node && node.parentNode && tags[node.tagName.toLowerCase()]){
+            if(highlightCont && highlightCont.contains(node)
                 ||
                 node.getAttribute('pagebreak')
-                ) {
+            ){
                 return 0;
             }
 
@@ -64,85 +64,65 @@ UE.plugins['autotypeset'] = function () {
         }
     }
 
-    function CtoH(str) {
-        var result = "";
-        for (var i = 0; i < str.length; i++) {
-            if (str.charCodeAt(i) == 12288) {
-                result += String.fromCharCode(str.charCodeAt(i) - 12256);
-                continue;
-            }
-            if (str.charCodeAt(i) > 65280 && str.charCodeAt(i) < 65375)
-                result += String.fromCharCode(str.charCodeAt(i) - 65248);
-            else result += String.fromCharCode(str.charCodeAt(i));
-        }
-        return result;
-    }
-
-    function removeNotAttributeSpan(node) {
-        if (!node.style.cssText) {
-            domUtils.removeAttributes(node, ['style']);
-            if (node.tagName.toLowerCase() == 'span' && domUtils.hasNoAttributes(node)) {
-                domUtils.remove(node, true);
+    function removeNotAttributeSpan(node){
+        if(!node.style.cssText){
+            domUtils.removeAttributes(node,['style']);
+            if(node.tagName.toLowerCase() == 'span' && domUtils.hasNoAttributes(node)){
+                domUtils.remove(node,true);
             }
         }
     }
-
-    function autotype(type, html) {
-        var me = this, cont;
-        if (html) {
-            if (!opt.pasteFilter) {
+    function autotype(type,html){
+        var me = this,cont;
+        if(html){
+            if(!opt.pasteFilter){
                 return;
             }
             cont = me.document.createElement('div');
             cont.innerHTML = html.html;
-        } else {
+        }else{
             cont = me.document.body;
-            cont.innerHTML = CtoH(cont.innerHTML);
         }
-        var nodes = domUtils.getElementsByTagName(cont, '*');
+        var nodes = domUtils.getElementsByTagName(cont,'*');
 
-        // 行首缩进，段落方向，段间距，段内间距
-        for (var i = 0, ci; ci = nodes[i++];) {
+          // 行首缩进，段落方向，段间距，段内间距
+        for(var i=0,ci;ci=nodes[i++];){
 
-            if (me.fireEvent('excludeNodeinautotype', ci) === true) {
+            if(me.fireEvent('excludeNodeinautotype',ci) === true){
                 continue;
             }
-            //font-size
-            if (opt.clearFontSize && ci.style.fontSize) {
-                domUtils.removeStyle(ci, 'font-size');
+             //font-size
+            if(opt.clearFontSize && ci.style.fontSize){
+                domUtils.removeStyle(ci,'font-size');
 
                 removeNotAttributeSpan(ci);
 
             }
             //font-family
-            if (opt.clearFontFamily && ci.style.fontFamily) {
-                domUtils.removeStyle(ci, 'font-family');
+            if(opt.clearFontFamily && ci.style.fontFamily){
+                domUtils.removeStyle(ci,'font-family');
                 removeNotAttributeSpan(ci);
             }
 
-            if (isLine(ci)) {
+            if(isLine(ci)){
                 //合并空行
-                if (opt.mergeEmptyline) {
-                    var next = ci.nextSibling, tmpNode, isBr = domUtils.isBr(ci);
-                    while (isLine(next)) {
+                if(opt.mergeEmptyline ){
+                    var next = ci.nextSibling,tmpNode,isBr = domUtils.isBr(ci);
+                    while(isLine(next)){
                         tmpNode = next;
                         next = tmpNode.nextSibling;
-                        if (isBr && (!next || next && !domUtils.isBr(next))) {
+                        if(isBr && (!next || next && !domUtils.isBr(next))){
                             break;
                         }
                         domUtils.remove(tmpNode);
                     }
 
                 }
-                //去掉空行，保留占位的空行
-                if (opt.removeEmptyline && domUtils.inDoc(ci, cont) && !remainTag[ci.parentNode.tagName.toLowerCase()]) {
-                    if (domUtils.isBr(ci)) {
-                        var li = domUtils.findParentByTagName(ci,"li",true);
-                        if(li){
-                            continue;
-                        }
+                 //去掉空行，保留占位的空行
+                if(opt.removeEmptyline && domUtils.inDoc(ci,cont) && !remainTag[ci.parentNode.tagName.toLowerCase()] ){
+                    if(domUtils.isBr(ci)){
                         next = ci.nextSibling;
-                        if (next && !domUtils.isBr(next)) {
+                        if(next && !domUtils.isBr(next)){
                             continue;
                         }
                     }
@@ -152,16 +132,11 @@ UE.plugins['autotypeset'] = function () {
                 }
 
             }
-            if (isLine(ci, true) && ci.tagName != 'SPAN') {
-                if (opt.indent) {
-                    if(domUtils.findParentByTagName(ci,"li",true)){
-                        //li里的不做操作
-                        continue;
-                    }
-//                    ci.innerHTML = "　　" + ci.innerHTML.replace(/(^[\\s\\t\\xa0\\u3000]+)|([\\u3000\\xa0\\s\\t]+\x24)|(　　)/ig, "");
+            if(isLine(ci,true) && ci.tagName != 'SPAN'){
+                if(opt.indent){
                     ci.style.textIndent = opt.indentValue;
                 }
-                if (opt.textAlign) {
+                if(opt.textAlign){
                     ci.style.textAlign = opt.textAlign;
                 }
 //                if(opt.lineHeight)
@@ -171,42 +146,40 @@ UE.plugins['autotypeset'] = function () {
             }
 
             //去掉class,保留的class不去掉
-            if (opt.removeClass && ci.className && !remainClass[ci.className.toLowerCase()]) {
+            if(opt.removeClass && ci.className && !remainClass[ci.className.toLowerCase()]){
 
-                if (highlightCont && highlightCont.contains(ci)) {
-                    continue;
+                if(highlightCont && highlightCont.contains(ci)){
+                     continue;
                 }
-                domUtils.removeAttributes(ci, ['class']);
+                domUtils.removeAttributes(ci,['class']);
             }
 
             //表情不处理
-            if (opt.imageBlockLine && ci.tagName.toLowerCase() == 'img' && !ci.getAttribute('emotion')) {
-                if (html) {
+            if(opt.imageBlockLine && ci.tagName.toLowerCase() == 'img' && !ci.getAttribute('emotion')){
+                if(html){
                     var img = ci;
-                    switch (opt.imageBlockLine) {
+                    switch (opt.imageBlockLine){
                         case 'left':
                         case 'right':
                         case 'none':
-                            var pN = img.parentNode, tmpNode, pre, next;
-                            while (dtd.$inline[pN.tagName] || pN.tagName == 'A') {
+                            var pN = img.parentNode,tmpNode,pre,next;
+                            while(dtd.$inline[pN.tagName] || pN.tagName == 'A'){
                                 pN = pN.parentNode;
                             }
                             tmpNode = pN;
-                            if (tmpNode.tagName == 'P' && domUtils.getStyle(tmpNode, 'text-align') == 'center') {
-                                if (!domUtils.isBody(tmpNode) && domUtils.getChildCount(tmpNode, function (node) {
-                                    return !domUtils.isBr(node) && !domUtils.isWhitespace(node)
-                                }) == 1) {
+                            if(tmpNode.tagName == 'P' && domUtils.getStyle(tmpNode,'text-align') == 'center'){
+                                if(!domUtils.isBody(tmpNode) && domUtils.getChildCount(tmpNode,function(node){return !domUtils.isBr(node) && !domUtils.isWhitespace(node)}) == 1){
                                     pre = tmpNode.previousSibling;
                                     next = tmpNode.nextSibling;
-                                    if (pre && next && pre.nodeType == 1 && next.nodeType == 1 && pre.tagName == next.tagName && domUtils.isBlockElm(pre)) {
+                                    if(pre && next && pre.nodeType == 1 &&  next.nodeType == 1 && pre.tagName == next.tagName && domUtils.isBlockElm(pre)){
                                         pre.appendChild(tmpNode.firstChild);
-                                        while (next.firstChild) {
+                                        while(next.firstChild){
                                             pre.appendChild(next.firstChild);
                                         }
                                         domUtils.remove(tmpNode);
                                         domUtils.remove(next);
-                                    } else {
-                                        domUtils.setStyle(tmpNode, 'text-align', '');
+                                    }else{
+                                        domUtils.setStyle(tmpNode,'text-align','');
                                     }
 
 
@@ -214,63 +187,61 @@ UE.plugins['autotypeset'] = function () {
 
 
                             }
-                            domUtils.setStyle(img, 'float', opt.imageBlockLine);
+                            domUtils.setStyle(img,'float',opt.imageBlockLine);
                             break;
                         case 'center':
-                            if (me.queryCommandValue('imagefloat') != 'center') {
+                            if(me.queryCommandValue('imagefloat') != 'center'){
                                 pN = img.parentNode;
-                                domUtils.setStyle(img, 'float', 'none');
+                                domUtils.setStyle(img,'float','none');
                                 tmpNode = img;
-                                while (pN && domUtils.getChildCount(pN, function (node) {
-                                    return !domUtils.isBr(node) && !domUtils.isWhitespace(node)
-                                }) == 1
-                                    && (dtd.$inline[pN.tagName] || pN.tagName == 'A')) {
+                                while(pN && domUtils.getChildCount(pN,function(node){return !domUtils.isBr(node) && !domUtils.isWhitespace(node)}) == 1
+                                    && (dtd.$inline[pN.tagName] || pN.tagName == 'A')){
                                     tmpNode = pN;
                                     pN = pN.parentNode;
                                 }
                                 var pNode = me.document.createElement('p');
-                                domUtils.setAttributes(pNode, {
+                                domUtils.setAttributes(pNode,{
 
                                     style:'text-align:center'
                                 });
-                                tmpNode.parentNode.insertBefore(pNode, tmpNode);
+                                tmpNode.parentNode.insertBefore(pNode,tmpNode);
                                 pNode.appendChild(tmpNode);
-                                domUtils.setStyle(tmpNode, 'float', '');
+                                domUtils.setStyle(tmpNode,'float','');
 
                             }
 
 
                     }
-                } else {
+                }else{
                     var range = me.selection.getRange();
                     range.selectNode(ci).select();
-                    me.execCommand('imagefloat', opt.imageBlockLine);
+                    me.execCommand('imagefloat',opt.imageBlockLine);
                 }
+
 
 
             }
 
             //去掉冗余的标签
-            if (opt.removeEmptyNode) {
-                if (opt.removeTagNames[ci.tagName.toLowerCase()] && domUtils.hasNoAttributes(ci) && domUtils.isEmptyBlock(ci)) {
+            if(opt.removeEmptyNode){
+                if(opt.removeTagNames[ci.tagName.toLowerCase()] && domUtils.hasNoAttributes(ci) && domUtils.isEmptyBlock(ci)){
                     domUtils.remove(ci);
                 }
             }
         }
-        if (html) {
+        if(html){
             html.html = cont.innerHTML;
         }
     }
-
-    if (opt.pasteFilter) {
-        me.addListener('beforepaste', autotype);
+    if(opt.pasteFilter){
+        me.addListener('beforepaste',autotype);
     }
 
     me.commands['autotypeset'] = {
         execCommand:function () {
-            me.removeListener('beforepaste', autotype);
-            if (opt.pasteFilter) {
-                me.addListener('beforepaste', autotype);
+            me.removeListener('beforepaste',autotype);
+            if(opt.pasteFilter){
+                me.addListener('beforepaste',autotype);
             }
             autotype.call(me)
         }

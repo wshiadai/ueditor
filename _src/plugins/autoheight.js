@@ -27,18 +27,20 @@ UE.plugins['autoheight'] = function () {
         if(isFullscreen)return;
         timer = setTimeout(function () {
 
-        if (me.queryCommandState && me.queryCommandState('source') != 1) {
+            if (me.queryCommandState && me.queryCommandState('source') != 1) {
                 if (!span) {
                     span = me.document.createElement('span');
                     //trace:1764
-                    span.style.cssText = 'display:block;width:0;height:0;margin:0;padding:0;border:0;clear:both;';
+                    span.style.cssText = 'display:block;width:0;margin:0;padding:0;border:0;clear:both;';
                     span.innerHTML = '.';
                 }
                 tmpNode = span.cloneNode(true);
                 me.body.appendChild(tmpNode);
+
                 currentHeight = Math.max(domUtils.getXY(tmpNode).y + tmpNode.offsetHeight,Math.max(options.minFrameHeight, options.initialFrameHeight));
 
                 if (currentHeight != lastHeight) {
+
                     me.setHeight(currentHeight);
 
                     lastHeight = currentHeight;
@@ -47,7 +49,7 @@ UE.plugins['autoheight'] = function () {
                 domUtils.remove(tmpNode);
 
             }
-        }, 0);
+        }, 50);
     }
     var isFullscreen;
     me.addListener('fullscreenchanged',function(cmd,f){
