@@ -83,6 +83,9 @@
 
     }
     dialog.onok = handleDialogOk;
+    dialog.oncancel=function(){
+        dialog._hide();
+    };
     $G('href').onkeydown =  function(evt){
         evt = evt || window.event;
         if (evt.keyCode == 13) {
