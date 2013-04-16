@@ -238,7 +238,7 @@
 
         , pasteplain:true  //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
         //纯文本粘贴模式下的过滤规则
-//        , 'filterTxtRules':{}
+        //, 'filterTxtRules':{}
             //,allHtmlEnabled:false //提交到后台的数据是否包含整个html字符串
             //iframeUrlMap
             //dialog内容的路径 ～会被替换成URL,垓属性一旦打开，将覆盖所有的dialog的默认路径
