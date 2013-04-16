@@ -132,7 +132,8 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             swfupload.customSettings.setBindUploadStatus('complete');
             displayCode = '1,1,1,0,0,1,0,1,1,1';
             swfupload.setButtonDisabled(false);
-            break;
+    swfupload.customSettings.setEditorStatusBar('');
+    break;
         case 'error':
             this.progressBar.style.width = "";
             this.fileProgressWrapper.className = "progressWrapper progressWrapperError";
@@ -276,7 +277,7 @@ window.swfUploadLoaded = function () {
         swfupload.customSettings.doRenameHandler = function () {
             var progress = swfupload.progress,
                 newname = T.trim(progress.progressRenameValue.value);
-            if (/\.((jpg)|(jpeg)|(gif)|(bmp)|(png)|(jpe)|(cur)|(tif)|(tiff)|(ico))$/.test(newname)){
+        if (/\.((jpg)|(jpeg)|(gif)|(bmp)|(png)|(jpe)|(cur)|(tif)|(tiff)|(ico))$/i.test(newname)){
                 progress.setStatus('renameerror', '不允许改成图片格式');
             } else if (/[\\\/:\*\?"<>|]/.test(newname)) {
                 progress.setStatus('renameerror', '文件名不能包含下列字符 \\ \/ : * ? " < > |');
@@ -286,14 +287,15 @@ window.swfUploadLoaded = function () {
                     pathfrom = swfupload.customSettings.getUploadFile().path,
                     pathto = pathfrom.substr(0, pathfrom.lastIndexOf('/')+1) + newname;
 
-                if (pathfrom != pathto && swfupload.customSettings.isEditorFile) { //编辑回答的时候，假重命名原来的文件
+            if (pathfrom != pathto && swfupload.customSettings.isEditorFile) { 
+                //编辑回答的时候，假重命名原来的文件
                     swfupload.customSettings.setUploadFile('backFileInfo', pathto, 'rename');
                     progress.setFileInfo(newname);
                     progress.setStatus('renamecomplete');
                 } else if (newname != "" && newname != showName.substr(showName.lastIndexOf('.')+1) && newname != showName && pathto != pathfrom) {
                     // 新文件名 不为空 && 不等于之前的后缀名 && 有修改过文本框 && 不与实际文件名相同
                     T.ajax({
-                        url:encodeURI('http://pcs.baidu.com/rest/2.0/pcs/file?method=move&app_id=598913&response-status=200&from=' + pathfrom + '&to=' + pathto),
+                        url:encodeURI('https://pcs.baidu.com/rest/2.0/pcs/file?method=move&app_id=598913&response-status=200&from=' + pathfrom + '&to=' + pathto),
                         dataType:'jsonp',
                         success:function (response) {
                             if (response.error_code) {
@@ -410,7 +412,7 @@ window.swfUploadFileQueueError = function (file, errorCode, message) {
                 break;
             default:
                 if (file !== null) {
-                    progress.setStatus('error', "上传失败请重试或");
+        progress.setStatus('error', "上传失败请重试或删除");
                 }
                 break;
         }
@@ -465,7 +467,7 @@ window.swfUploadSendSuccess = function (file, serverData) {
             if (!error_message) {
                 error_message = '上传失败';
             }
-            progress.setStatus('error', error_message + ',请重试或者 ', fileinfo.error_code);
+      progress.setStatus('error', error_message + ',请重试或者删除', fileinfo.error_code);
         } else {  //正真上传成功
             var serverFileName = fileinfo.path.substr(fileinfo.path.lastIndexOf('/')+1);
             if (serverFileName != swfupload.customSettings.currentFile.name) {
@@ -478,7 +480,7 @@ window.swfUploadSendSuccess = function (file, serverData) {
     } catch (ex) {
         var swfupload = this, progress = swfupload.progress;
         if (ex.name == 'SyntaxError') {
-            progress.setStatus('error', '上传失败请重试或');
+      progress.setStatus('error', '上传失败请重试或删除');
         }
     }
 };
@@ -488,7 +490,7 @@ window.swfUploadSendError = function (file, errorCode, message) {
         var swfupload = this, progress = swfupload.progress;
         if (errorCode != SWFUpload.UPLOAD_ERROR.FILE_CANCELLED) {
             swfupload.customSettings.setBindUploadStatus('error', -1);
-            progress.setStatus('error', '上传失败请重试或');
+      progress.setStatus('error', '上传失败请重试或删除');
         }
     } catch (ex) {}
 };
@@ -537,7 +539,7 @@ window.editorSetUploadFile = function (data, isInsertFromWangPan, editor) {
             id:"SWFUpload_0_NULL", name:'', size:0, type:'', filestatus:-4, index:1, creationdate:0, modificationdate:0
         };
         swfupload.progress = new FileProgress(swfupload.customSettings.currentFile, swfupload);
-        swfupload.progress.setStatus('setfileerror', '<span style="padding-left:5px;">很抱歉，您上传的附件已失效，请重新上传或</span>');
+        swfupload.progress.setStatus('setfileerror', '<span style="padding-left:5px;">很抱歉，您上传的附件已失效，请重新上传或删除。</span>');
         swfupload.progress.setFileInfo('', 0);
     }
 };

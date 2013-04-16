@@ -12,8 +12,7 @@
         this.initOptions(options);
         this.initAttechPicker();
     };
-
-    var wangpanDialog;
+    var uploadfileButton, wangpanButton, wangpanDialog;
 
     AttachPicker.prototype = {
         initAttechPicker:function () {
@@ -22,19 +21,20 @@
             this.Stateful_init();
         },
         initButtons:function(){
-            this.uploadfileButton = (function (editor) {
+            this.uploadfileButton = uploadfileButton = (function (editor) {
                 var cmd = 'uploadfile',
+                    buttonConfig = editor.options.buttonConfig["attachment"]["list"][cmd],
+                    title = buttonConfig['title'],
+                    hovertitle = buttonConfig['hoverTitle'],
                     timestamp = +new Date(),
-                    placeholderId = 'swfUploadPlaceholder' + timestamp,
-                    wealthSelecterId = 'swfUploadWealthSelecter' + timestamp,
-                    uploadProgressId = 'swfUploadUploadProgress' + timestamp,
-                    flashContainerId = 'swfUploadflashContainer' + timestamp,
-                    title = '上传网盘',
-                    hoverTitle = '上传附件更方便';
+                    placeholderId = 'swfuPlaceholder' + timestamp,
+                    flashContainerId = 'swfuFlash' + timestamp,
+                    uploadProgressId = 'swfuProgress' + timestamp,
+                    wealthSelecterId = 'swfuWealth' + timestamp;
 
                 var ui = new Button({
                     className:'edui-for-' + cmd,
-                    title:hoverTitle,
+                    title:hovertitle,
                     label:title,
                     showText:true,
                     getHtmlTpl:function () {
@@ -43,7 +43,7 @@
                     }
                 });
 
-                AttachPicker.addListener("renderReady", function () {
+                ui.addListener("postrender", function () {
                     var div = document.createElement("div");
                     div.id = uploadProgressId;
                     div.innerHTML = '<div class="progressWrapper" style="display:none;">' +
@@ -80,7 +80,6 @@
                         flash_url:editor.options.swfUploadFlashUrl,
                         upload_url:editor.options.swfUploadUrl,
                         file_post_name:editor.options.swfUploadPostName,
-                        post_params:editor.options.swfUploadPostParams,
                         file_types:"*.*",
                         file_types_description:"All Files",
                         file_queue_limit:0,
@@ -132,7 +131,7 @@
                         button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
                         button_cursor: SWFUpload.CURSOR.HAND,
                         button_placeholder_id : placeholderId,
-                        button_width:51,
+                        button_width:70,
                         button_height: 24,
                         // SWFupload对象加载设置
                         minimum_flash_version:"9.0.28",
@@ -150,8 +149,8 @@
                         upload_error_handler:swfUploadSendError,
                         upload_complete_handler:swfUploadSendComplete
                     });
-                    editor.setUploadFile = function (data) {
-                        editorSetUploadFile(data, editor);
+                    editor.setUploadFile = function (data, isWangPan) {
+                        editorSetUploadFile(data, isWangPan, editor);
                         document.getElementById(wealthSelecterId).selectedIndex = data['fileInfo']['wealth'] || 0;
                     };
                     editor.getUploadFile = function () {
@@ -165,27 +164,21 @@
                     editor.uploadAction = function (method, callback) {
                         editorSubmitUploadFile(method, editor, callback);
                     };
+
+                    var $ = function (id) {
+                        return document.getElementById(id);
+                    };
                     //Flash插件版本过低提示
                     var flashContainer = $(flashContainerId);
                     if (!/^[\s]*<object/i.test(flashContainer.innerHTML)) {
                         flashContainer.title = "您的Flash插件版本过低，请更新后再尝试！";
                     }
-
-
-
-                    //鼠标mouseover/mouseout上传按钮事件
-                    domUtils.on(ui.getDom(), "mouseover", function (e) {
-                        ui.addState("hover");
-                    });
-                    domUtils.on(ui.getDom(), "mouseout", function (e) {
-                        ui.removeState("hover");
-                    });
                     //未登录提示
                     if (!editor.options.isLogin) {
                         var dom = ui.getDom(),
                             label = $(dom.id + "_body").children[1];
                         label.style.color = "#999";
-                        dom.setAttribute("title", hoverTitle);
+                        dom.setAttribute("title", hovertitle);
                         var icon = $(dom.id + "_body").children[0];
                         domUtils.removeClasses(icon, ["edui-icon"]);
                         domUtils.addClass(icon, "edui_disableIcon");
@@ -198,7 +191,7 @@
             this.wangpanButton = (function (editor) {
                 var title = '插入网盘',
                     url = 'dialogs/wangpan/wangpan.html',
-                    hoverTitle = '网盘文件共分享';
+                    hovertitle = '网盘文件共分享';
 
                 wangpanDialog = new Dialog(utils.extend({
                     iframeUrl: editor.options.UEDITOR_HOME_URL + url,
@@ -231,7 +224,7 @@
 
                 var ui = new Button({
                     className:'edui-for-insertmap insertmap',
-                    title:hoverTitle,
+                    title:hovertitle,
                     label:title,
                     onclick:function () {
                         Popup.postHide(evt);
@@ -267,6 +260,7 @@
             return this.target;
         },
         postRender:function () {
+            uploadfileButton.fireEvent('postrender');
             this.fireEvent('postrender');
         },
         _onClick:function (evt) {

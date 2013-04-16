@@ -202,7 +202,7 @@
             T('#errorMsg').html('插入图片请使用图片功能！');
             return false;
         } else {
-            editor.setUploadFile({data: [file], error: false}, true);
+            editor.setUploadFile({error: false, fileInfo: file}, true);
             return true;
         }
     };

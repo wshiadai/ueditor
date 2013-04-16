@@ -386,6 +386,20 @@
             "autotypeset":{
                 title:"排版",
                 hoverTitle:"登录后才能使功能"
+            },
+            "attachment":{
+                title:"排版",
+                hoverTitle:"登录后才能使功能",
+                list:{
+                    "uploadfile":{
+                        title:"上传附件",
+                        hoverTitle:"登录后才能使功能"
+                    },
+                    "wangpan":{
+                        title:"插入网盘",
+                        hoverTitle:"登录后才能使功能"
+                    }
+                }
             }
         }
         //单位M

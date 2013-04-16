@@ -5,13 +5,16 @@
     height: 5px;
 }
 .edui-default .edui-attachpicker .edui-attachpicker-body {
-    width: 70px;
     overflow: hidden;
     font-size: 12px;
     cursor: default;
 }
 .edui-default .edui-attachpicker-item {
-    padding:5px 10px;
+    padding:0px 0px;
+    width: 70px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
     cursor: pointer;
 }
 .edui-default .edui-attachpicker-edit {
@@ -20,4 +23,12 @@
 }
 .edui-default .edui-attachpicker-body .edui-attachpicker-item.edui-state-hover {
     background-color: #ebf6e6;
+}
+
+/*上传按钮*/
+.edui-attachpicker-uploadfile .ue_flash{
+}
+.edui-attachpicker-uploadfile .swfupload {
+    vertical-align: top;
+    margin-top: -24px;
 }
