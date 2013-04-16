@@ -81,7 +81,7 @@
                                 label:editor.getLang("ok"),
                                 editor:editor,
                                 onclick:function () {
-//                                    dialog.close(true);
+                                    dialog.close(true);
                                 }
                             },
                             {
