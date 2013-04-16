@@ -400,7 +400,7 @@
                 hoverTitle:"登录后才能使功能"
             },
             "insertvideo":{
-                title:"插入视频",
+                title:"视频",
                 hoverTitle:"登录后才能使功能"
             },
             "answertemplate":{
