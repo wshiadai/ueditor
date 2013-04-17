@@ -38,7 +38,7 @@ function FileProgress(file, swfupload) {
         return iconNames[type.toLowerCase()] ? iconNames[type.toLowerCase()] : iconNames['default'];
     };
     this.getShortName = function (filename, limit) {
-        if (!limit) limit = 30;
+        if (!limit) limit = 27;
         for (var i = 0, len = 0; i < filename.length; i++) {
             if (filename[i].match(/[^\x00-\xff]/g) != null) {
                 len += 2;
@@ -78,7 +78,7 @@ function FileProgress(file, swfupload) {
 FileProgress.prototype.setFileInfo = function (filename, filesize, hideNewName) {
     var tmpArr;
     if (!hideNewName) {
-        this.progressName.innerHTML = this.getShortName(filename, 30);
+        this.progressName.innerHTML = this.getShortName(filename, 27);
         this.progressName.setAttribute('title', filename);
     }
     if (this.swfupload.customSettings.currentFile) {
@@ -104,7 +104,6 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
         case 'ready':
             swfupload.customSettings.setBindUploadStatus('ready');
             displayCode = '1,1,1,0,0,0,0,1,1,1';
-            swfupload.setButtonDisabled(false);
             break;
         case 'uploading':
             if (percentage != undefined) {
@@ -116,14 +115,12 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             this.fileProgressWrapper.className = "progressWrapper";
             swfupload.customSettings.setBindUploadStatus('uploading');
             displayCode = '1,1,1,0,0,1,1,0,0,0';
-            swfupload.setButtonDisabled(true);
             break;
         case 'finish':
             this.progressBar.style.width = "99%";
             this.progressBarText.innerHTML = "99%";
             swfupload.customSettings.setBindUploadStatus('finish');
             displayCode = '1,1,1,0,0,1,1,0,0,0';
-            swfupload.setButtonDisabled(true);
             break;
         case 'complete':
             this.progressBar.style.width = "";
@@ -131,7 +128,6 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
             this.progressBar.className = "progressBar progressBarComplete";
             swfupload.customSettings.setBindUploadStatus('complete');
             displayCode = '1,1,1,0,0,1,0,1,1,1';
-            swfupload.setButtonDisabled(false);
     swfupload.customSettings.setEditorStatusBar('');
     break;
         case 'error':
@@ -143,7 +139,6 @@ FileProgress.prototype.setStatus = function (status, message, errorCode, percent
                 swfupload.customSettings.setBindUploadStatus('error', -1);
             }
             displayCode = '1,1,1,0,1,0,0,0,0,1';
-            swfupload.setButtonDisabled(false);
             break;
         case 'setfilesuccess':
             this.progressBar.style.width = "";
@@ -208,9 +203,6 @@ window.swfUploadLoaded = function () {
         };
 
         var swfupload = this;
-        if (!swfupload.customSettings.isLogin) {
-            swfupload.setButtonDisabled(true);
-        }
         swfupload.customSettings.cancelHandler = function (e) {
             var progress = swfupload.progress;
             e.preventDefault();
