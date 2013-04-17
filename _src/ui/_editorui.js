@@ -344,11 +344,19 @@
                 className:'edui-attachPop',
                 hide: function (notNofity){
                     if (!this._hidden && this.getDom()) {
-                        this.getDom().style.left = '-20000px';
+                        this.getDom().style.visibility = 'hidden';
                         this._hidden = true;
                         if (!notNofity) {
                             this.fireEvent('hide');
                         }
+                    }
+                },
+                _show: function (){
+                    if (this._hidden) {
+                        var box = this.getDom();
+                        box.style.visibility = "visible";
+                        this._hidden = false;
+                        this.fireEvent('show');
                     }
                 }
             });
