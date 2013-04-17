@@ -16,8 +16,8 @@ function Food() {
             '</div>',
         module:function () {
             return '<div class="module">' +
-                '<input type="text" class="name" id="' + (me.tid++) + '"/>' +
-                '<input type="text" class="num" id="' + (me.tid++) + '"/>' +
+                '<input type="text" class="name" maxlength="8" id="' + (me.tid++) + '"/>' +
+                '<input type="text" class="num"  maxlength="6" id="' + (me.tid++) + '"/>' +
                 '<span class="delete"></span>' +
                 ' </div>'
         },

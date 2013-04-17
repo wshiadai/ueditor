@@ -49,7 +49,12 @@
         editor.addListener("click", function () {
             if (isSelect && frameElement) {
                 var rng = editor.selection.getRange();
-                rng.insertNode(frameElement);
+                var node=domUtils.findParentByTagName(rng.startContainer,"li");
+                if(node){
+
+                }else{
+                    rng.insertNode(frameElement);
+                }
             }
         });
     };

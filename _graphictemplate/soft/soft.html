@@ -16,7 +16,7 @@
                 <span class="key">名称:</span>
             </div>
             <div class="left">
-                <input type="text" id="J_name" class="textbox wt1"/>
+                <input type="text" id="J_name" maxlength="40" class="textbox wt1"/>
             </div>
         </div>
         <div class="section">
@@ -36,7 +36,7 @@
                     <span class="key">大小:</span>
                 </div>
                 <div class="left">
-                    <input type="text" class="textbox wt2" value="10MB" id="J_size"/>
+                    <input type="text" class="textbox wt2" maxlength="10" value="10MB" id="J_size"/>
                 </div>
             </div>
             <div class="rightarea">
@@ -45,7 +45,7 @@
                     <span class="key">版本:</span>
                 </div>
                 <div class="left">
-                    <input type="text wt2" class="textbox" id="J_version"/>
+                    <input type="text wt2" class="textbox" maxlength="10" id="J_version"/>
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
                     <span class="key">语言:</span>
                 </div>
                 <div class="left">
-                    <input type="text wt2" class="textbox" id="J_lang" value="中文"/>
+                    <input type="text wt2" class="textbox" maxlength="10" id="J_lang" value="中文"/>
                 </div>
             </div>
         </div>
@@ -77,7 +77,7 @@
                     <span class="key">系统需求:</span>
                 </div>
                 <div class="left">
-                    <input type="text" class="textbox wt1" id="J_systemNeed"  value="windows Mac OS X Linux"/>
+                    <input type="text" class="textbox wt1" id="J_systemNeed" maxlength="40"  value="windows Mac OS X Linux"/>
                 </div>
             </div>
 
@@ -91,7 +91,7 @@
                 <div class="left">
                     <label><input type="radio" name="price" id="J_free" checked/>免费</label>
                     <label><input type="radio" name="price" id="J_pay"/>付费</label>
-                    <input type="text" class="textbox" id="J_money" style="width: 78px;cursor: not-allowed;" readOnly=true />
+                    <input type="text" class="textbox" id="J_money" maxlength="10" style="width: 78px;cursor: not-allowed;" readOnly=true />
                     <span class="unit">元</span>
                 </div>
             </div>
@@ -111,7 +111,7 @@
                 <span class="key">下载地址:</span>
             </div>
             <div class="left">
-                <input type="text" class="textbox wt1" id="J_downloadlink" value="http://"/>
+                <input type="text" class="textbox wt1" maxlength="60" id="J_downloadlink" value="http://"/>
             </div>
         </div>
     </div>

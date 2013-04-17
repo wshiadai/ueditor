@@ -1,7 +1,7 @@
 UE.plugins['graphictemplate'] = function () {
     var me = this;
-    me["graphictemplate"]={};
     var id = 0;
+    me["graphictemplate"]={};
 
 
     me.commands['graphictemplate'] = {
