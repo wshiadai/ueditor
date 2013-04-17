@@ -65,8 +65,9 @@ UE.plugins['graphictemplate'] = function () {
     //销毁被删除iframe对应的数据
     me.addListener("contentchange", function () {
         var data=me.graphictemplate;
+        var doc=me.document;
         for(var id in data){
-            var node=me.document.getElementById(id);
+            var node=doc.getElementById(id);
             if(!node){
                 delete data[id];
             }
