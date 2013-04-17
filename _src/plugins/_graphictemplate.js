@@ -3,7 +3,6 @@ UE.plugins['graphictemplate'] = function () {
     var id = 0;
     me["graphictemplate"] = {};
 
-
     me.commands['graphictemplate'] = {
         execCommand:function (cmd, value) {
             id += 1;
