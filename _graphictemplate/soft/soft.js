@@ -12,6 +12,7 @@ var Soft = {
 
         me._addPageListener();
         me.setPageData(data);
+        me.savePageData();
         moveTemplate("J_drag");
         iframeAutoHeight();
     },
@@ -67,7 +68,9 @@ var Soft = {
         money.style.cursor = isEdit ? "not-allowed" : "default";
         cur && (cur.checked = isEdit);
     },
-
+    _innerTxt:function(node){
+        return   node.innerText || node.textContent || node.nodeValue;
+    },
     _setTextBox:function (data, list) {
         for (var i = 0, id; id = list[i++];) {
             G(id).value = data[id];
@@ -82,12 +85,13 @@ var Soft = {
         }
     },
     _setRadioValue:function (data, list) {
+        var me=this;
         for (var i = 0, obj; obj = list[i++];) {
             var cur = G(obj.id1);
             var standardTxt = domUtils.getNextDomNode(cur, function (node) {
                 return node.nodeType == 3 && !domUtils.isFillChar(node)
             });
-            if (standardTxt == data[obj.id1]) {
+            if (me._innerTxt(standardTxt) == data[obj.id1]) {
                 obj.callBack(true, cur);
             } else {
                 G(obj.id2).checked = true;
@@ -136,14 +140,16 @@ var Soft = {
         }
     },
     _saveRadioValue:function (data, list) {
+        var me=this;
         var cur, txt;
         for (var i = 0, id; id = list[i++];) {
             cur = G(id);
             txt = "";
             if (cur.checked) {
-                txt = domUtils.getNextDomNode(cur, function (node) {
+                var tmp = domUtils.getNextDomNode(cur, function (node) {
                     return node.nodeType == 3 && !domUtils.isFillChar(node)
                 });
+                txt=me._innerTxt(tmp);
             }
             data[id] = txt;
         }

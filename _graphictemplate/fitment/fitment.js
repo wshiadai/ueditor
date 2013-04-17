@@ -12,6 +12,7 @@ Fitment = {
 
         me._addPageListener();
         me.setPageData(data);
+        me.savePageData();
         moveTemplate("J_drag");
         iframeAutoHeight();
     },
