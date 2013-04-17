@@ -71,10 +71,10 @@ UE.plugins['graphictemplate'] = function () {
     var heightStorage = [];
     me.addListener("beforegetscene", function () {
         heightStorage = [];
-        var list = domUtils.getElementsByTagName(me.body, "iframe","foodtemplate").concat(
-            domUtils.getElementsByTagName(me.body, "iframe","softtemplate"),
-            domUtils.getElementsByTagName(me.body, "iframe","fitmenttemplate")
-        );
+        var list = domUtils.getElementsByTagName(me.body, "iframe",function(node){
+            return domUtils.hasClass(node,"template");
+        });
+
         utils.each(list, function (node) {
             var tmp = node.getAttribute("height");
             if (tmp) {
@@ -85,10 +85,9 @@ UE.plugins['graphictemplate'] = function () {
     });
     me.addListener("aftergetscene", function () {
         if (heightStorage.length) {
-            var list = domUtils.getElementsByTagName(me.body, "iframe","foodtemplate").concat(
-                domUtils.getElementsByTagName(me.body, "iframe","softtemplate"),
-                domUtils.getElementsByTagName(me.body, "iframe","fitmenttemplate")
-            );
+            var list = domUtils.getElementsByTagName(me.body, "iframe",function(node){
+                return domUtils.hasClass(node,"template");
+            });
             utils.each(list, function (node, i) {
                 node.setAttribute("height", heightStorage[i]);
             });
