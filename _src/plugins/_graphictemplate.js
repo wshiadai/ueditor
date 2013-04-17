@@ -71,7 +71,9 @@ UE.plugins['graphictemplate'] = function () {
     var heightStorage = [];
     me.addListener("beforegetscene", function () {
         heightStorage = [];
-        utils.each(domUtils.getElementsByTagName(me.body, "iframe", "foodtemplate"), function (node) {
+        var list=domUtils.getElementsByTagName(me.body, "iframe", "foodtemplate softtemplate fitmenttemplate");
+        utils.each(list, function (node) {
+
             var tmp = node.getAttribute("height");
             if (tmp) {
                 heightStorage.push(tmp);
@@ -81,7 +83,8 @@ UE.plugins['graphictemplate'] = function () {
     });
     me.addListener("aftergetscene", function () {
         if (heightStorage.length) {
-            utils.each(domUtils.getElementsByTagName(me.body, "iframe", "foodtemplate"), function (node, i) {
+            var list=domUtils.getElementsByTagName(me.body, "iframe", "foodtemplate softtemplate fitmenttemplate");
+            utils.each(list, function (node, i) {
                 node.setAttribute("height", heightStorage[i]);
             });
         }
@@ -225,6 +228,4 @@ UE.plugins['graphictemplate'] = function () {
             }
         };
     })();
-
-
 };
