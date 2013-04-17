@@ -40,7 +40,7 @@ function FileProgress(file, swfupload) {
     this.getShortName = function (filename, limit) {
         if (!limit) limit = 27;
         for (var i = 0, len = 0; i < filename.length; i++) {
-            if (filename[i].match(/[^\x00-\xff]/g) != null) {
+            if (filename.charAt(i).match(/[^\x00-\xff]/g) != null) {
                 len += 2;
             } else {
                 len++;
