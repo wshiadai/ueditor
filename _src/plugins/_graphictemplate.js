@@ -64,7 +64,13 @@ UE.plugins['graphictemplate'] = function () {
 
     //销毁被删除iframe对应的数据
     me.addListener("contentchange", function () {
-
+        var data=me.graphictemplate;
+        for(var id in data){
+            var node=me.document.getElementById(id);
+            if(!node){
+                delete data[id];
+            }
+        }
     });
 
     //缓存所有iframe高度，阻止undo属性改变时重复保存
@@ -93,7 +99,6 @@ UE.plugins['graphictemplate'] = function () {
             });
         }
     });
-
 
     var stringify = (function () {
         /**
