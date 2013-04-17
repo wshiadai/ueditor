@@ -321,13 +321,17 @@
             label:title || '',
             onmouseover: function (evt) {
                 if(!attachPop) setAttachPop();
-                UE.ui.Popup.postHide(evt);
-                attachPop.showAnchor(this.getDom());
+                if(editor._uploadFile.status!="uploading"&&editor._uploadFile.status!="finish"){
+                    UE.ui.Popup.postHide(evt);
+                    attachPop.showAnchor(this.getDom());
+                }
             },
             onclick:function (evt) {
                 if(!attachPop) setAttachPop();
-                UE.ui.Popup.postHide(evt);
-                attachPop.showAnchor(this.getDom());
+                if(editor._uploadFile.status!="uploading"&&editor._uploadFile.status!="finish"){
+                    UE.ui.Popup.postHide(evt);
+                    attachPop.showAnchor(this.getDom());
+                }
             },
             theme:editor.options.theme,
             showText:true
@@ -350,6 +354,10 @@
             });
             attachPop.render();
         }
+
+        ui.addListener("renderReady", function () {
+            setAttachPop();
+        });
         return ui;
     };
 

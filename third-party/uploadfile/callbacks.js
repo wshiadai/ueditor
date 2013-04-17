@@ -347,12 +347,12 @@ window.swfUploadLoadFailed = function () {
 
 /*选择文件对话框开始*/
 window.swfUploadFileDialogStart = function () {
-    var swfupload = this;
-    swfupload.customSettings.hideAllPopup();
 };
 
 /*选择文件对话框结束*/
 window.swfUploadFileDialogComplete = function (numFilesSelected, numFilesQueued) {
+    var swfupload = this;
+    swfupload.customSettings.hideAllPopup();
 };
 
 /*上传队列*/
@@ -507,6 +507,9 @@ window.swfUploadSendComplete = function () {
 //修改问题，设置之前上传的文件
 window.editorSetUploadFile = function (data, isInsertFromWangPan, editor) {
     var swfupload = editor.swfupload;
+
+    //TODO 假如正在上传要取消上传
+    swfupload.cancelUpload();
 
     if(swfupload.customSettings.successCount>0) {
         //TODO 假如已有上传成功的文件，要先删除，有些情况需要假删除

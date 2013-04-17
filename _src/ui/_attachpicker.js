@@ -22,7 +22,7 @@
         },
         initButtons:function(){
             editor = this.editor;
-            editor.uploadfile = uploadfileButton = (function (editor) {
+            editor.ui.uploadfile = uploadfileButton = (function (editor) {
                 var cmd = 'uploadfile',
                     title = editor.options.buttonConfig["attachment"]["list"][cmd],
                     timestamp = +new Date(),
@@ -189,7 +189,7 @@
                 return ui;
             })(this.editor);
 
-            editor.wangpanButton = wangpanButton = (function (editor) {
+            editor.ui.wangpan = wangpanButton = (function (editor) {
                 var cmd = "wangpan",
                     title = editor.options.buttonConfig["attachment"]["list"][cmd];
 
