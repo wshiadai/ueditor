@@ -42,6 +42,16 @@ GraphicTemplate = {
             }
         }
     },
+    _setDrawdownBox:function (data, list) {
+        for (var i = 0, id; id = list[i++];) {
+            var cur = G(id);
+            for (var j = 0, opt; opt = cur.options[j++];) {
+                if (opt.value == data[id]) {
+                    cur.selectedIndex = j - 1;
+                }
+            }
+        }
+    },
     setPageData:function (data) {
         if (data) {
             var me = this;
@@ -49,6 +59,8 @@ GraphicTemplate = {
             me._setTextBox(data, ["J_shi", "J_ting", "J_wei", "J_meter", "J_wan", "J_quanbao", "J_hunfang", "J_other"]);
             //设置复选框值
             me._setCheckBox(data, "J_decorative");
+            //设置下拉框值
+            me._setDrawdownBox(data, ["J_quanbao",'J_hunfang']);
         }
     },
 

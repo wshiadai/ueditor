@@ -68,7 +68,7 @@ var GraphicTemplate = {
         money.style.cursor = isEdit ? "not-allowed" : "default";
         cur && (cur.checked = isEdit);
     },
-    _innerTxt:function(node){
+    _innerTxt:function (node) {
         return   node.innerText || node.textContent || node.nodeValue;
     },
     _setTextBox:function (data, list) {
@@ -85,7 +85,7 @@ var GraphicTemplate = {
         }
     },
     _setRadioValue:function (data, list) {
-        var me=this;
+        var me = this;
         for (var i = 0, obj; obj = list[i++];) {
             var cur = G(obj.id1);
             var standardTxt = domUtils.getNextDomNode(cur, function (node) {
@@ -99,11 +99,21 @@ var GraphicTemplate = {
             }
         }
     },
+    _setDrawdownBox:function (data, list) {
+        for (var i = 0, id; id = list[i++];) {
+            var cur = G(id);
+            for (var j = 0, opt; opt = cur.options[j++];) {
+                if (opt.value == data[id]) {
+                    cur.selectedIndex = j - 1;
+                }
+            }
+        }
+    },
     setPageData:function (data) {
         if (data) {
             var me = this;
             //设置文本框值
-            me._setTextBox(data, ["J_name", "J_size", "J_version", "J_systemtool",
+            me._setTextBox(data, ["J_name", "J_size", "J_version",
                 "J_lang", "J_money", "J_systemNeed", "J_downloadlink"]);
             //设置复选框值
             me._setCheckBox(data, "J_systemask");
@@ -120,6 +130,8 @@ var GraphicTemplate = {
                     callBack:me._showTab0
                 }
             ]);
+            //设置下拉框值
+            me._setDrawdownBox(data, ["J_systemtool"]);
         }
     },
 
@@ -140,7 +152,7 @@ var GraphicTemplate = {
         }
     },
     _saveRadioValue:function (data, list) {
-        var me=this;
+        var me = this;
         var cur, txt;
         for (var i = 0, id; id = list[i++];) {
             cur = G(id);
@@ -149,7 +161,7 @@ var GraphicTemplate = {
                 var tmp = domUtils.getNextDomNode(cur, function (node) {
                     return node.nodeType == 3 && !domUtils.isFillChar(node)
                 });
-                txt=me._innerTxt(tmp);
+                txt = me._innerTxt(tmp);
             }
             data[id] = txt;
         }
