@@ -437,9 +437,9 @@
 
             /*-----------forexp-------*/
             , graphictemplateUrlMap:{
-                'food':URL + '_graphictemplate/food/food.html',
-                'fitment':URL + '_graphictemplate/fitment/fitment.html',
-                'soft':URL + '_graphictemplate/soft/soft.html'
+                'food':URL + 'graphictemplate/food/food.html',
+                'fitment':URL + 'graphictemplate/fitment/fitment.html',
+                'soft':URL + 'graphictemplate/soft/soft.html'
             }
         };
 })();
