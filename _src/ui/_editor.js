@@ -59,27 +59,6 @@
                     }
                     return iconNames[type.toLowerCase()] ? iconNames[type.toLowerCase()] : iconNames['default'];
                 }
-                //传入文件字节大小，返回文件大小的字符串。如 1K 1M 1G 1T
-                editor.getFileSize = function(filesize) {
-                    var units = ["B", "K", "M", "G", "T"];
-                    var p = Math.min(Math.max(Math.floor(Math.log(filesize) / Math.LN2 / 10), 1), 5);
-                    return Math.round(filesize * 100 / Math.pow(2, p * 10)) / 100 + units[p]
-                }
-                //限制长度截取字符串子串，区分中英文
-                editor.getShortName = function(filename, limit) {
-                    if (!limit) limit = 30;
-                    for (var i = 0, len = 0; i < filename.length; i++) {
-                        if (filename.charAt(i).match(/[^\x00-\xff]/g) != null) {
-                            len += 2;
-                        } else {
-                            len++;
-                        }
-                        if (len > limit) {
-                            break;
-                        }
-                    }
-                    return filename.substr(0, i) + (i >= filename.length ? '' : '...');
-                }
 
                 domUtils.on(editor.window, 'scroll', function (evt) {
                     baidu.editor.ui.Popup.postHide(evt);

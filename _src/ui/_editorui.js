@@ -5,7 +5,6 @@
     var domUtils = baidu.editor.dom.domUtils,
         editorui = baidu.editor.ui;
     editorui.buttons = {};
-
     /*
     * ----------------分界线----------------------
     * for zhidao by xuheng
@@ -13,7 +12,6 @@
     var $ = function (id) {
         return document.getElementById(id);
     };
-
 
     editorui.insertimage = function (editor) {
         var buttonConfig = editor.options.buttonConfig["insertimage"],
@@ -321,14 +319,14 @@
             label:title || '',
             onmouseover: function (evt) {
                 if(!attachPop) setAttachPop();
-                if(editor._uploadFile.status!="uploading"&&editor._uploadFile.status!="finish"){
+                if(editor.options.isLogin && editor._uploadFile.status!="uploading"&&editor._uploadFile.status!="finish"){
                     UE.ui.Popup.postHide(evt);
                     attachPop.showAnchor(this.getDom());
                 }
             },
             onclick:function (evt) {
                 if(!attachPop) setAttachPop();
-                if(editor._uploadFile.status!="uploading"&&editor._uploadFile.status!="finish"){
+                if(editor.options.isLogin && editor._uploadFile.status!="uploading"&&editor._uploadFile.status!="finish"){
                     UE.ui.Popup.postHide(evt);
                     attachPop.showAnchor(this.getDom());
                 }
