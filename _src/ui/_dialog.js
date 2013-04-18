@@ -244,7 +244,7 @@
         },
         close: function (ok){
             if (this.fireEvent('close', ok) !== false) {
-//                this._hide();
+                this._hide();
             }
         }
     };

@@ -78,13 +78,12 @@
                 obj.textValue = text.value;
             }
             editor.execCommand('link',obj );
-            dialog._hide();
         }
+//        dialog.close();
 
     }
     dialog.onok = handleDialogOk;
     dialog.oncancel=function(){
-        dialog._hide();
     };
     $G('href').onkeydown =  function(evt){
         evt = evt || window.event;
