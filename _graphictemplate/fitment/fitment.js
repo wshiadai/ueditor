@@ -5,7 +5,7 @@
  * Time: 下午2:57
  * To change this template use File | Settings | File Templates.
  */
-Fitment = {
+GraphicTemplate = {
     initPageByData:function () {
         var me = this,
             data = editor["graphictemplate"][frameElement.id];

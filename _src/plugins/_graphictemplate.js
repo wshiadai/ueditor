@@ -23,7 +23,6 @@ UE.plugins['graphictemplate'] = function () {
                 var str = stringify(me['graphictemplate'][id]);
                 node.tagName = 'pre';
                 var attrs = {
-                    'data-type':val,
                     'class':node.getAttr('class'),
                     'id':id,
                     'src':node.getAttr('src')

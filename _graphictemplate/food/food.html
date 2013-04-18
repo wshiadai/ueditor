@@ -14,11 +14,5 @@
 </div>
 
 <script type="text/javascript" src="food.js"></script>
-<script type="text/javascript">
-    var food = new Food();
-    domUtils.on(window, ['blur', 'load'], function (e) {
-        e.type == "blur" ? food.savePageData() : food.initPageByData();
-    });
-</script>
 </body>
 </html>

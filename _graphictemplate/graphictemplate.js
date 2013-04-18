@@ -73,5 +73,11 @@
         }
         editor.fireEvent("autoHeight");
     };
+    /*
+     * 页面数据加载与保存
+     * */
+    domUtils.on(window, ['blur', 'load'], function (e) {
+        e.type == "blur" ? GraphicTemplate.savePageData() : GraphicTemplate.initPageByData();
+    });
 })();
 
