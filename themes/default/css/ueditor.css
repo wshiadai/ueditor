@@ -488,6 +488,7 @@ div.edui-box {
     width: 48px;
     height: 22px;
 }
+
 /* 弹出菜单 */
 .edui-default .edui-popup {
     z-index: 3000;
@@ -998,8 +999,8 @@ div.fieldset span.legend {
 
 /*上传按钮*/
 .edui-attachpicker-uploadfile .ue_flash{
+    margin-top: -24px;
 }
 .edui-attachpicker-uploadfile .swfupload {
     vertical-align: top;
-    margin-top: -24px;
 }
