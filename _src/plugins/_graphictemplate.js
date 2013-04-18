@@ -8,7 +8,7 @@ UE.plugins['graphictemplate'] = function () {
             id += 1;
             var ifr = "<iframe  width='678'  align='center' scroling='no' frameborder='0'" +
                 "class='" + value + "template'" +
-                "id='" + id + "'" +
+                "id='graphictemplate-" + id + "'" +
                 "src=" + me.options["graphictemplateUrlMap"][value] +
                 "></iframe>";
 
@@ -45,12 +45,10 @@ UE.plugins['graphictemplate'] = function () {
             var val;
             if ((val = pi.getAttr('class')) && /((food)|(fitment)|(soft))template/.test(val)) {
                 var tmpDiv = me.document.createElement('div');
-                var data = (new Function('return' + pi.innerHTML()))();
 
                 tmpDiv.innerHTML = "<iframe  width='678'  align='center' scroling='no' frameborder='0'" +
                     "id='" + pi.getAttr("id") + "'" +
                     "class='" + pi.getAttr("class") + "'" +
-                    "data_type='" + val + "'" +
                     "src=" + pi.getAttr("src") +
                     "></iframe>";
 

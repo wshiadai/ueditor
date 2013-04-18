@@ -71,7 +71,7 @@
         } else {
             frameElement.height = frameElement.contentDocument.body.scrollHeight;
         }
-        editor.fireEvent("contentchange");
+        editor.fireEvent("autoHeight");
     };
 })();
 
