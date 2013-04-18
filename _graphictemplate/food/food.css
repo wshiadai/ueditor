@@ -9,7 +9,7 @@
 .content .module input{float:left;border: 1px solid #e1e1e1;padding: 6px 0 6px 10px; vertical-align: middle;}
 .content .module .name{width: 149px;}
 .content .module .num{width: 90px;border-left: none;}
-.content .module .delete{float: left;margin: 12px 0 0 6px;width: 10px;height: 9px;background:url(img/food.png) 0 0 no-repeat;cursor: pointer;}
+.content .module .delete{float: left;margin: 12px 0 0 6px;width: 10px;height: 9px;background:url(../img/food.png) 0 0 no-repeat;cursor: pointer;}
 
 .wrapper .foot{margin:10px 0 20px;font-size:14px;overflow: hidden;font-weight: bold;text-align: center;}
-.foot .add{float: right;width: 120px;height: 32px;margin-right:26px;line-height:32px;background:url(img/food.png) -18px 0 no-repeat;color:#66c557;cursor: pointer;}
+.foot .add{float: right;width: 120px;height: 32px;margin-right:26px;line-height:32px;background:url(../img/food.png) -18px 0 no-repeat;color:#66c557;cursor: pointer;}
