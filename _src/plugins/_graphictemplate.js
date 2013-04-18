@@ -55,11 +55,11 @@ UE.plugins['graphictemplate'] = function () {
 
     //销毁被删除iframe对应的数据
     me.addListener("contentchange", function () {
-        var data=me.graphictemplate;
-        var doc=me.document;
-        for(var id in data){
-            var node=doc.getElementById(id);
-            if(!node){
+        var data = me.graphictemplate;
+        var doc = me.document;
+        for (var id in data) {
+            var node = doc.getElementById(id);
+            if (!node) {
                 delete data[id];
             }
         }
@@ -69,8 +69,8 @@ UE.plugins['graphictemplate'] = function () {
     var heightStorage = [];
     me.addListener("beforegetscene", function () {
         heightStorage = [];
-        var list = domUtils.getElementsByTagName(me.body, "iframe",function(node){
-            return domUtils.hasClass(node,"graphictemplate");
+        var list = domUtils.getElementsByTagName(me.body, "iframe", function (node) {
+            return domUtils.hasClass(node, "graphictemplate");
         });
 
         utils.each(list, function (node) {
@@ -83,8 +83,8 @@ UE.plugins['graphictemplate'] = function () {
     });
     me.addListener("aftergetscene", function () {
         if (heightStorage.length) {
-            var list = domUtils.getElementsByTagName(me.body, "iframe",function(node){
-                return domUtils.hasClass(node,"graphictemplate");
+            var list = domUtils.getElementsByTagName(me.body, "iframe", function (node) {
+                return domUtils.hasClass(node, "graphictemplate");
             });
             utils.each(list, function (node, i) {
                 node.setAttribute("height", heightStorage[i]);
