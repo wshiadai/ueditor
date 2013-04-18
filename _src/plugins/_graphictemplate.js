@@ -6,23 +6,19 @@ UE.plugins['graphictemplate'] = function () {
     me.commands['graphictemplate'] = {
         execCommand:function (cmd, value) {
             id += 1;
-            var ifr = "<iframe  width='678'  align='center' scroling='no' frameborder='0'" +
-                "class='" + value + "template'" +
+            var ifr = "<iframe  width='678'  align='center' scroling='no' frameborder='0'  class='graphictemplate' " +
                 "id='graphictemplate-" + id + "'" +
                 "src=" + me.options["graphictemplateUrlMap"][value] +
                 "></iframe>";
 
             me.execCommand("inserthtml", ifr);
-        },
-        queryCommandState:function () {
-
         }
     };
 
     me.addOutputRule(function (root) {
         utils.each(root.getNodesByTagName('iframe'), function (node) {
             var val = node.getAttr('class');
-            if (val && /((food)|(fitment)|(soft))template/.test(val)) {
+            if (val && /graphictemplate/.test(val)) {
                 var id = node.getAttr('id');
                 var str = stringify(me['graphictemplate'][id]);
                 node.tagName = 'pre';
@@ -43,12 +39,11 @@ UE.plugins['graphictemplate'] = function () {
         var me = this;
         utils.each(root.getNodesByTagName('pre'), function (pi) {
             var val;
-            if ((val = pi.getAttr('class')) && /((food)|(fitment)|(soft))template/.test(val)) {
+            if ((val = pi.getAttr('class')) && /graphictemplate/.test(val)) {
                 var tmpDiv = me.document.createElement('div');
 
-                tmpDiv.innerHTML = "<iframe  width='678'  align='center' scroling='no' frameborder='0'" +
+                tmpDiv.innerHTML = "<iframe  width='678'  align='center' scroling='no' frameborder='0' class='graphictemplate' " +
                     "id='" + pi.getAttr("id") + "'" +
-                    "class='" + pi.getAttr("class") + "'" +
                     "src=" + pi.getAttr("src") +
                     "></iframe>";
 
@@ -76,7 +71,7 @@ UE.plugins['graphictemplate'] = function () {
     me.addListener("beforegetscene", function () {
         heightStorage = [];
         var list = domUtils.getElementsByTagName(me.body, "iframe",function(node){
-            return domUtils.hasClass(node,"template");
+            return domUtils.hasClass(node,"graphictemplate");
         });
 
         utils.each(list, function (node) {
@@ -90,7 +85,7 @@ UE.plugins['graphictemplate'] = function () {
     me.addListener("aftergetscene", function () {
         if (heightStorage.length) {
             var list = domUtils.getElementsByTagName(me.body, "iframe",function(node){
-                return domUtils.hasClass(node,"template");
+                return domUtils.hasClass(node,"graphictemplate");
             });
             utils.each(list, function (node, i) {
                 node.setAttribute("height", heightStorage[i]);
