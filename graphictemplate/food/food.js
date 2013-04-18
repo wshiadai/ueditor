@@ -14,9 +14,9 @@ GraphicTemplate = {
             '<div class="content">%%</div>' +
             '</div>',
         module:function () {
-            return '<div class="module">' +
-                '<input type="text" class="name" maxlength="8" id="' + (this.tid++) + '"/>' +
-                '<input type="text" class="num"  maxlength="6" id="' + (this.tid++) + '"/>' +
+            return '<div class="module" id="' + (GraphicTemplate.tid++) + '">' +
+                '<input type="text" class="name" maxlength="8" />' +
+                '<input type="text" class="num"  maxlength="6" />' +
                 '<span class="delete"></span>' +
                 ' </div>'
         },
@@ -30,8 +30,8 @@ GraphicTemplate = {
             tpl = me.template,
             data = editor["graphictemplate"][frameElement.id];
 
-        var mainNum = data ? (me._getObjLength(data[0]) / 2 ) : 4;
-        var subNum = data ? (me._getObjLength(data[1]) / 2 ) : 4;
+        var mainNum = data ? data["main"].length : 4;
+        var subNum = data ? data["other"].length : 4;
 
         arr.push(tpl.title);
         arr.push(tpl.section.replace("$$", "主料").replace("%%", me._addModule(mainNum)));
@@ -80,13 +80,6 @@ GraphicTemplate = {
         }
         return str;
     },
-    _getObjLength:function (obj) {
-        var num = 0;
-        for (var tmp in obj) {
-            num += 1;
-        }
-        return num;
-    },
     _deleteModule:function (tgt) {
         var node = tgt.parentNode;
         node.parentNode.removeChild(node);
@@ -97,9 +90,11 @@ GraphicTemplate = {
             var list = domUtils.getElementsByTagName(document, "div", "content");
 
             for (var i = 0, len = list.length; i < len; i++) {
-                var inputs = domUtils.getElementsByTagName(list[i], "input");
-                for (var j = 0, node; node = inputs[j++];) {
-                    node.value = data[i][j];
+                var arr = i == 0 ? data["main"] : data["other"];
+                var modules = domUtils.getElementsByTagName(list[i], "div", "module");
+                for (var j = 0, node; node = modules[j++];) {
+                    node.children[0].value = arr[j-1].name;
+                    node.children[1].value = arr[j-1].content;
                 }
             }
         }
@@ -107,13 +102,18 @@ GraphicTemplate = {
     savePageData:function () {
         editor["graphictemplate"][frameElement.id] = {};
         var data = editor["graphictemplate"][frameElement.id];
-        var list = domUtils.getElementsByTagName(document, "div", "content");
+        data["main"]=[];
+        data["other"]=[];
 
+        var list = domUtils.getElementsByTagName(document, "div", "content");
         for (var i = 0, len = list.length; i < len; i++) {
-            data[i] = {};
-            var inputs = domUtils.getElementsByTagName(list[i], "input");
-            for (var j = 0, node; node = inputs[j++];) {
-                data[i][j] = node.value;
+            var key = i == 0 ? "main" : "other";
+            var modules = domUtils.getElementsByTagName(list[i], "div", "module");
+            for (var j = 0, node; node = modules[j++];) {
+                var obj = {};
+                obj.name = node.children[0].value;
+                obj.content = node.children[1].value;
+                data[key].push(obj);
             }
         }
     }
