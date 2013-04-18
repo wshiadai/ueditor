@@ -4147,7 +4147,8 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                         'p{margin:5px 0;}'
                         + ( options.initialStyle || '' ) +
                         '</style></head><body' + (useBodyAsViewport ? ' class=\'view\'' : '') + '></body>';
-                if (options.customDomain && document.domain != location.hostname) {
+                //byxuheng  企业知道chrome下改变dommian插入video出不来
+                if (browser.ie&&options.customDomain && document.domain != location.hostname) {
                     html += '<script>window.parent.UE.instants[\'ueditorInstant' + me.uid + '\']._setup(document);</script></html>';
                     container.appendChild(domUtils.createElement(document, 'iframe', {
                         id: 'baidu_editor_' + me.uid,
@@ -10203,7 +10204,7 @@ baidu.editor.ui = {};
         },
         close: function (ok){
             if (this.fireEvent('close', ok) !== false) {
-//                this._hide();
+                this._hide();
             }
         }
     };
