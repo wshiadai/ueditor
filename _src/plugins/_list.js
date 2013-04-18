@@ -39,7 +39,7 @@ UE.plugins['list'] = function () {
         'disc':'exp-ul'
     };
 
-    me.setOpt( {
+    me.setOpt({
         'insertorderedlist':{
             'num':'',
             'num1':'',
@@ -57,182 +57,183 @@ UE.plugins['list'] = function () {
             'circle':'',
             'disc':'',
             'square':'',
-            'dash' : '',
+            'dash':'',
             'dot':''
         },
-        listDefaultPaddingLeft : '30',
-        listiconpath : 'http://bs.baidu.com/listicon/',
-        maxListLevel : 1//-1不限制
-    } );
+        listDefaultPaddingLeft:'30',
+        listiconpath:'http://bs.baidu.com/listicon/',
+        maxListLevel:1//-1不限制
+    });
     var liiconpath = me.options.listiconpath;
 
     //根据用户配置，调整customStyle
-    for(var s in customStyle){
-        if(!me.options.insertorderedlist.hasOwnProperty(s) && !me.options.insertunorderedlist.hasOwnProperty(s)){
+    for (var s in customStyle) {
+        if (!me.options.insertorderedlist.hasOwnProperty(s) && !me.options.insertunorderedlist.hasOwnProperty(s)) {
             delete customStyle[s];
         }
     }
 
     me.ready(function () {
         var customCss = [];
-        for(var p in customStyle){
-            if(p == 'dash' || p == 'dot'){
-                customCss.push('li.list-' + customStyle[p] + '{background-image:url(' + liiconpath +customStyle[p]+'.gif)}');
-                customCss.push('ul.custom_'+p+'{list-style:none;}ul.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
-            }else if(p == 'disc'){
+        for (var p in customStyle) {
+            if (p == 'dash' || p == 'dot') {
+                customCss.push('li.list-' + customStyle[p] + '{background-image:url(' + liiconpath + customStyle[p] + '.gif)}');
+                customCss.push('ul.custom_' + p + '{list-style:none;}ul.custom_' + p + ' li{background-position:0 3px;background-repeat:no-repeat}');
+            } else if (p == 'disc') {
                 customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/unsortlist.png);background-repeat:no-repeat;background-position: 11px 8px;}');
-            }else if(p == 'decimal'){
-                for(var i= 0;i<99;i++){
-                    customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(http://img.baidu.com/img/iknow/exp/edit/edit-num' +  i + '.png)}')
+            } else if (p == 'decimal') {
+                for (var i = 0; i < 99; i++) {
+                    customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(http://img.baidu.com/img/iknow/exp/edit/edit-num' + i + '.png)}')
                 }
-                customCss.push('ol.custom_'+p+'{list-style:none;}ol.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
-            }else{
-                for(var i= 0;i<99;i++){
-                    customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(' + liiconpath + 'list-'+customStyle[p] + i + '.gif)}')
+                customCss.push('ol.custom_' + p + '{list-style:none;}ol.custom_' + p + ' li{background-position:0 3px;background-repeat:no-repeat}');
+            } else {
+                for (var i = 0; i < 99; i++) {
+                    customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(' + liiconpath + 'list-' + customStyle[p] + i + '.gif)}')
                 }
-                customCss.push('ol.custom_'+p+'{list-style:none;}ol.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
+                customCss.push('ol.custom_' + p + '{list-style:none;}ol.custom_' + p + ' li{background-position:0 3px;background-repeat:no-repeat}');
             }
-            switch(p){
+            switch (p) {
                 case 'cn':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding-left:25px}');
-                    customCss.push('li.list-'+p+'-paddingleft-2{padding-left:40px}');
-                    customCss.push('li.list-'+p+'-paddingleft-3{padding-left:55px}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding-left:25px}');
+                    customCss.push('li.list-' + p + '-paddingleft-2{padding-left:40px}');
+                    customCss.push('li.list-' + p + '-paddingleft-3{padding-left:55px}');
                     break;
                 case 'cn1':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding-left:30px}');
-                    customCss.push('li.list-'+p+'-paddingleft-2{padding-left:40px}');
-                    customCss.push('li.list-'+p+'-paddingleft-3{padding-left:55px}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding-left:30px}');
+                    customCss.push('li.list-' + p + '-paddingleft-2{padding-left:40px}');
+                    customCss.push('li.list-' + p + '-paddingleft-3{padding-left:55px}');
                     break;
                 case 'cn2':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding-left:40px}');
-                    customCss.push('li.list-'+p+'-paddingleft-2{padding-left:55px}');
-                    customCss.push('li.list-'+p+'-paddingleft-3{padding-left:68px}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding-left:40px}');
+                    customCss.push('li.list-' + p + '-paddingleft-2{padding-left:55px}');
+                    customCss.push('li.list-' + p + '-paddingleft-3{padding-left:68px}');
                     break;
                 case 'num':
                 case 'num1':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding-left:25px}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding-left:25px}');
                     break;
                 case 'num2':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding-left:35px}');
-                    customCss.push('li.list-'+p+'-paddingleft-2{padding-left:40px}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding-left:35px}');
+                    customCss.push('li.list-' + p + '-paddingleft-2{padding-left:40px}');
                     break;
                 case 'dash':
-                    customCss.push('li.list-'+p+'-paddingleft{padding-left:35px}');
+                    customCss.push('li.list-' + p + '-paddingleft{padding-left:35px}');
                     break;
                 case 'dot':
-                    customCss.push('li.list-'+p+'-paddingleft{padding-left:20px}');
+                    customCss.push('li.list-' + p + '-paddingleft{padding-left:20px}');
                     break;
                 case 'decimal':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding:9px 0 9px 42px;+padding-bottom:1px;}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding:9px 0 9px 42px;+padding-bottom:1px;}');
                     break;
                 case 'disc':
-                    customCss.push('li.list-'+p+'-paddingleft{padding-left:41px}');
+                    customCss.push('li.list-' + p + '-paddingleft{padding-left:41px}');
             }
         }
         customCss.push('.list-paddingleft-1{padding-left:0}');
-        customCss.push('.list-paddingleft-2{padding-left:'+me.options.listDefaultPaddingLeft+'px}');
-        customCss.push('.list-paddingleft-3{padding-left:'+me.options.listDefaultPaddingLeft*2+'px}');
+        customCss.push('.list-paddingleft-2{padding-left:' + me.options.listDefaultPaddingLeft + 'px}');
+        customCss.push('.list-paddingleft-3{padding-left:' + me.options.listDefaultPaddingLeft * 2 + 'px}');
         //如果不给宽度会在自定应样式里出现滚动条
-        utils.cssRule('list', 'ol,ul{margin:0;pading:0;'+(browser.ie ? '' : 'width:95%')+'}li{clear:both;}'+customCss.join('\n'), me.document);
+        utils.cssRule('list', 'ol,ul{margin:0;pading:0;' + (browser.ie ? '' : 'width:95%') + '}li{clear:both;}' + customCss.join('\n'), me.document);
     });
 
-    function getStyle(node){
+    function getStyle(node) {
         var cls = node.className;
-        if(domUtils.hasClass(node,/custom_/)){
+        if (domUtils.hasClass(node, /custom_/)) {
             return cls.match(/custom_(\w+)/)[1]
         }
         return ''
     }
+
     //进入编辑器的li要套p标签
-    me.addInputRule(function(root){
-        utils.each(root.getNodesByTagName('li'),function(li){
+    me.addInputRule(function (root) {
+        utils.each(root.getNodesByTagName('li'), function (li) {
             var tmpP = UE.uNode.createElement('p');
-            for(var i= 0,ci;ci=li.children[i];){
-                if(ci.type == 'text' || dtd.$inline[ci.tagName]){
+            for (var i = 0, ci; ci = li.children[i];) {
+                if (ci.type == 'text' || dtd.$inline[ci.tagName]) {
                     tmpP.appendChild(ci);
-                }else{
-                    if(tmpP.firstChild()){
-                        li.insertBefore(tmpP,ci);
+                } else {
+                    if (tmpP.firstChild()) {
+                        li.insertBefore(tmpP, ci);
                         tmpP = UE.uNode.createElement('p');
                         i = i + 2;
-                    }else{
+                    } else {
                         i++;
                     }
 
                 }
             }
-            if(tmpP.firstChild() && !tmpP.parentNode){
+            if (tmpP.firstChild() && !tmpP.parentNode) {
                 li.appendChild(tmpP);
             }
         })
     });
     //调整索引标签
-    me.addListener('contentchange',function(){
-        utils.each(domUtils.getElementsByTagName(me.document,'ol ul'),function(node){
+    me.addListener('contentchange', function () {
+        utils.each(domUtils.getElementsByTagName(me.document, 'ol ul'), function (node) {
 
-            if(!domUtils.inDoc(node,me.document))
+            if (!domUtils.inDoc(node, me.document))
                 return;
-            var index = 0,type = 2,parent = node.parentNode;
-            if( domUtils.hasClass(node,/custom_/)){
-                if(!(/[ou]l/i.test(parent.tagName) && domUtils.hasClass(parent,/custom_/))){
+            var index = 0, type = 2, parent = node.parentNode;
+            if (domUtils.hasClass(node, /custom_/)) {
+                if (!(/[ou]l/i.test(parent.tagName) && domUtils.hasClass(parent, /custom_/))) {
                     type = 1;
                 }
-            }else{
-                if(/[ou]l/i.test(parent.tagName) && domUtils.hasClass(parent,/custom_/)){
+            } else {
+                if (/[ou]l/i.test(parent.tagName) && domUtils.hasClass(parent, /custom_/)) {
                     type = 3;
                 }
             }
             style = domUtils.getStyle(node, 'list-style-type');
             node.style.cssText = style ? 'list-style-type:' + style : '';
-            node.className = utils.trim(node.className.replace(/list-paddingleft-\w+/,'')) + ' list-paddingleft-' + type;
-            utils.each(domUtils.getElementsByTagName(node,'li'),function(li){
+            node.className = utils.trim(node.className.replace(/list-paddingleft-\w+/, '')) + ' list-paddingleft-' + type;
+            utils.each(domUtils.getElementsByTagName(node, 'li'), function (li) {
                 li.style.cssText && (li.style.cssText = '');
-                if(!li.firstChild){
+                if (!li.firstChild) {
                     domUtils.remove(li);
                     return;
                 }
-                if(li.parentNode !== node){
+                if (li.parentNode !== node) {
                     return;
                 }
                 index++;
-                if(domUtils.hasClass(node,/custom_/) ){
-                    var paddingLeft = 1,currentStyle = getStyle(node);
-                    if(node.tagName == 'OL'){
-                        if(currentStyle){
-                            switch(currentStyle){
+                if (domUtils.hasClass(node, /custom_/)) {
+                    var paddingLeft = 1, currentStyle = getStyle(node);
+                    if (node.tagName == 'OL') {
+                        if (currentStyle) {
+                            switch (currentStyle) {
                                 case 'cn' :
                                 case 'cn1':
                                 case 'cn2':
-                                    if(index > 10 && (index % 10 == 0 || index > 10 && index < 20)){
+                                    if (index > 10 && (index % 10 == 0 || index > 10 && index < 20)) {
                                         paddingLeft = 2
-                                    }else if(index > 20){
+                                    } else if (index > 20) {
                                         paddingLeft = 3
                                     }
                                     break;
                                 case 'num2' :
-                                    if(index > 9){
+                                    if (index > 9) {
                                         paddingLeft = 2
                                     }
                             }
                         }
-                        li.className = 'list-'+customStyle[currentStyle]+ index + ' ' + 'list-'+currentStyle+'-paddingleft-' + paddingLeft;
-                    }else{
-                        li.className = 'list-'+customStyle[currentStyle]  + ' ' + 'list-'+currentStyle+'-paddingleft';
+                        li.className = 'list-' + customStyle[currentStyle] + index + ' ' + 'list-' + currentStyle + '-paddingleft-' + paddingLeft;
+                    } else {
+                        li.className = 'list-' + customStyle[currentStyle] + ' ' + 'list-' + currentStyle + '-paddingleft';
                     }
-                }else{
-                    li.className = li.className.replace(/list-[\w\-]+/gi,'');
+                } else {
+                    li.className = li.className.replace(/list-[\w\-]+/gi, '');
                 }
                 var className = li.getAttribute('class');
-                if(className !== null && !className.replace(/\s/g,'')){
-                    domUtils.removeAttributes(li,'class')
+                if (className !== null && !className.replace(/\s/g, '')) {
+                    domUtils.removeAttributes(li, 'class')
                 }
             });
-            adjustList(node,node.tagName.toLowerCase(),getStyle(node)||domUtils.getStyle(node, 'list-style-type'),true)
+            adjustList(node, node.tagName.toLowerCase(), getStyle(node) || domUtils.getStyle(node, 'list-style-type'), true)
         })
     });
 
 
-    function adjustList(list, tag, style,ignoreEmpty) {
+    function adjustList(list, tag, style, ignoreEmpty) {
         var nextList = list.nextSibling;
         if (nextList && nextList.nodeType == 1 && nextList.tagName.toLowerCase() == tag && (getStyle(nextList) || domUtils.getStyle(nextList, 'list-style-type') || (tag == 'ol' ? 'decimal' : 'disc')) == style) {
             domUtils.moveChild(nextList, list);
@@ -240,30 +241,32 @@ UE.plugins['list'] = function () {
                 domUtils.remove(nextList);
             }
         }
-        if(nextList && domUtils.isFillChar(nextList)){
+        if (nextList && domUtils.isFillChar(nextList)) {
             domUtils.remove(nextList);
         }
         var preList = list.previousSibling;
         if (preList && preList.nodeType == 1 && preList.tagName.toLowerCase() == tag && (getStyle(preList) || domUtils.getStyle(preList, 'list-style-type') || (tag == 'ol' ? 'decimal' : 'disc')) == style) {
             domUtils.moveChild(list, preList);
         }
-        if(preList && domUtils.isFillChar(preList)){
+        if (preList && domUtils.isFillChar(preList)) {
             domUtils.remove(preList);
         }
         !ignoreEmpty && domUtils.isEmptyBlock(list) && domUtils.remove(list);
     }
 
-    function setListStyle(list,style){
-        if(customStyle[style]){
+    function setListStyle(list, style) {
+        if (customStyle[style]) {
             list.className = 'custom_' + style;
         }
-        if(style == "decimal" || style == "disc"){
+        if (style == "decimal" || style == "disc") {
             style = "none";
         }
-        try{
+        try {
             domUtils.setStyle(list, 'list-style-type', style);
-        }catch(e){}
+        } catch (e) {
+        }
     }
+
     function clearEmptySibling(node) {
         var tmpNode = node.previousSibling;
         if (tmpNode && domUtils.isEmptyBlock(tmpNode)) {
@@ -281,25 +284,27 @@ UE.plugins['list'] = function () {
             me.fireEvent('contentchange');
             me.undoManger && me.undoManger.save();
         }
-        function findList(node,filterFn){
-            while(node && !domUtils.isBody(node)){
-                if(filterFn(node)){
+
+        function findList(node, filterFn) {
+            while (node && !domUtils.isBody(node)) {
+                if (filterFn(node)) {
                     return null
                 }
-                if(node.nodeType == 1 && /[ou]l/i.test(node.tagName)){
+                if (node.nodeType == 1 && /[ou]l/i.test(node.tagName)) {
                     return node;
                 }
                 node = node.parentNode;
             }
             return null;
         }
+
         var keyCode = evt.keyCode || evt.which;
         if (keyCode == 13 && !evt.shiftKey) {//回车
             var range = me.selection.getRange(),
-                start = findList(range.startContainer,function (node) {
+                start = findList(range.startContainer, function (node) {
                     return node.tagName == 'TABLE';
                 }),
-                end = range.collapsed ? start : findList(range.endContainer,function (node) {
+                end = range.collapsed ? start : findList(range.endContainer, function (node) {
                     return node.tagName == 'TABLE';
                 });
 
@@ -454,11 +459,11 @@ UE.plugins['list'] = function () {
                 if (li && domUtils.isStartInblock(tmpRange)) {
                     start = domUtils.findParentByTagName(range.startContainer, 'p', true);
                     if (start && start !== li.firstChild) {
-                        var parentList = domUtils.findParentByTagName(start,['ol','ul']);
-                        domUtils.breakParent(start,parentList);
+                        var parentList = domUtils.findParentByTagName(start, ['ol', 'ul']);
+                        domUtils.breakParent(start, parentList);
                         clearEmptySibling(start);
                         me.fireEvent('contentchange');
-                        range.setStart(start,0).setCursor(false,true);
+                        range.setStart(start, 0).setCursor(false, true);
                         me.fireEvent('saveScene');
                         domUtils.preventDefault(evt);
                         return;
@@ -522,24 +527,24 @@ UE.plugins['list'] = function () {
                     if (li && !li.previousSibling) {
                         var parentList = li.parentNode;
                         var bk = range.createBookmark();
-                        if(domUtils.isTagNode(parentList.parentNode,'ol ul')){
-                            parentList.parentNode.insertBefore(li,parentList);
-                            if(domUtils.isEmptyNode(parentList)){
+                        if (domUtils.isTagNode(parentList.parentNode, 'ol ul')) {
+                            parentList.parentNode.insertBefore(li, parentList);
+                            if (domUtils.isEmptyNode(parentList)) {
                                 domUtils.remove(parentList)
                             }
-                        }else{
+                        } else {
 
-                            while(li.firstChild){
-                                parentList.parentNode.insertBefore(li.firstChild,parentList);
+                            while (li.firstChild) {
+                                parentList.parentNode.insertBefore(li.firstChild, parentList);
                             }
 
                             domUtils.remove(li);
-                            if(domUtils.isEmptyNode(parentList)){
+                            if (domUtils.isEmptyNode(parentList)) {
                                 domUtils.remove(parentList)
                             }
 
                         }
-                        range.moveToBookmark(bk).setCursor(false,true);
+                        range.moveToBookmark(bk).setCursor(false, true);
                         me.fireEvent('contentchange');
                         me.fireEvent('saveScene');
                         domUtils.preventDefault(evt);
@@ -557,98 +562,104 @@ UE.plugins['list'] = function () {
     });
 
     //处理tab键
-    me.addListener('tabkeydown',function(){
-        function listToArray(list){
+    me.addListener('tabkeydown', function () {
+        function listToArray(list) {
             var arr = [];
-            for(var p in list){
+            for (var p in list) {
                 arr.push(p)
             }
             return arr;
         }
+
         var range = me.selection.getRange(),
             listStyle = {
                 'OL':listToArray(me.options.insertorderedlist),
                 'UL':listToArray(me.options.insertunorderedlist)
             };
         //控制级数
-        function checkLevel(li){
-            if(me.options.maxListLevel != -1){
-                var level = li.parentNode,levelNum = 0;
-                while(/[ou]l/i.test(level.tagName)){
+        function checkLevel(li) {
+            if (me.options.maxListLevel != -1) {
+                var level = li.parentNode, levelNum = 0;
+                while (/[ou]l/i.test(level.tagName)) {
                     levelNum++;
                     level = level.parentNode;
                 }
-                if(levelNum >= me.options.maxListLevel){
+                if (levelNum >= me.options.maxListLevel) {
                     return true;
                 }
             }
         }
+
         //只以开始为准
         //todo 后续改进
         var li = domUtils.findParentByTagName(range.startContainer, 'li', true);
-        if(li){
+        if (li) {
 
             var bk;
-            if(range.collapsed){
-                if(checkLevel(li))
+            if (range.collapsed) {
+                if (checkLevel(li))
                     return true;
                 var parentLi = li.parentNode,
                     list = me.document.createElement(parentLi.tagName),
-                    index = utils.indexOf(listStyle[list.tagName], getStyle(parentLi)||domUtils.getComputedStyle(parentLi, 'list-style-type'));
+                    index = utils.indexOf(listStyle[list.tagName], getStyle(parentLi) || domUtils.getComputedStyle(parentLi, 'list-style-type'));
                 index = index + 1 == listStyle[list.tagName].length ? 0 : index + 1;
                 var currentStyle = listStyle[list.tagName][index];
-                setListStyle(list,currentStyle);
-                if(domUtils.isStartInblock(range)){
+                setListStyle(list, currentStyle);
+                if (domUtils.isStartInblock(range)) {
                     me.fireEvent('saveScene');
                     bk = range.createBookmark();
                     parentLi.insertBefore(list, li);
                     list.appendChild(li);
-                    adjustList(list,list.tagName.toLowerCase(),currentStyle);
+                    adjustList(list, list.tagName.toLowerCase(), currentStyle);
                     me.fireEvent('contentchange');
                     range.moveToBookmark(bk).select(true);
                     return true;
                 }
-            }else{
+            } else {
                 me.fireEvent('saveScene');
                 bk = range.createBookmark();
-                for(var i= 0,closeList,parents = domUtils.findParents(li),ci;ci=parents[i++];){
-                    if(domUtils.isTagNode(ci,'ol ul')){
+                for (var i = 0, closeList, parents = domUtils.findParents(li), ci; ci = parents[i++];) {
+                    if (domUtils.isTagNode(ci, 'ol ul')) {
                         closeList = ci;
                         break;
                     }
                 }
                 var current = li;
-                if(bk.end){
-                    while(current && !(domUtils.getPosition(current, bk.end) & domUtils.POSITION_FOLLOWING)){
-                        if(checkLevel(current)){
-                            current = domUtils.getNextDomNode(current,false,null,function(node){return node !== closeList});
+                if (bk.end) {
+                    while (current && !(domUtils.getPosition(current, bk.end) & domUtils.POSITION_FOLLOWING)) {
+                        if (checkLevel(current)) {
+                            current = domUtils.getNextDomNode(current, false, null, function (node) {
+                                return node !== closeList
+                            });
                             continue;
                         }
                         var parentLi = current.parentNode,
                             list = me.document.createElement(parentLi.tagName),
-                            index = utils.indexOf(listStyle[list.tagName], getStyle(parentLi)||domUtils.getComputedStyle(parentLi, 'list-style-type'));
+                            index = utils.indexOf(listStyle[list.tagName], getStyle(parentLi) || domUtils.getComputedStyle(parentLi, 'list-style-type'));
                         var currentIndex = index + 1 == listStyle[list.tagName].length ? 0 : index + 1;
                         var currentStyle = listStyle[list.tagName][currentIndex];
-                        setListStyle(list,currentStyle);
+                        setListStyle(list, currentStyle);
                         parentLi.insertBefore(list, current);
-                        while(current && !(domUtils.getPosition(current, bk.end) & domUtils.POSITION_FOLLOWING)){
+                        while (current && !(domUtils.getPosition(current, bk.end) & domUtils.POSITION_FOLLOWING)) {
                             li = current.nextSibling;
                             list.appendChild(current);
-                            if(!li || domUtils.isTagNode(li,'ol ul')){
-                                if(li){
-                                    while(li = li.firstChild){
-                                        if(li.tagName == 'LI'){
+                            if (!li || domUtils.isTagNode(li, 'ol ul')) {
+                                if (li) {
+                                    while (li = li.firstChild) {
+                                        if (li.tagName == 'LI') {
                                             break;
                                         }
                                     }
-                                }else{
-                                    li = domUtils.getNextDomNode(current,false,null,function(node){return node !== closeList});
+                                } else {
+                                    li = domUtils.getNextDomNode(current, false, null, function (node) {
+                                        return node !== closeList
+                                    });
                                 }
                                 break;
                             }
                             current = li;
                         }
-                        adjustList(list,list.tagName.toLowerCase(),currentStyle);
+                        adjustList(list, list.tagName.toLowerCase(), currentStyle);
                         current = li;
                     }
                 }
@@ -725,14 +736,14 @@ UE.plugins['list'] = function () {
                         var nodeStyle = getStyle(startParent) || domUtils.getComputedStyle(startParent, 'list-style-type') || (command.toLowerCase() == 'insertorderedlist' ? 'decimal' : 'disc');
                         if (startParent.tagName.toLowerCase() == tag && nodeStyle == style) {
                             for (var i = 0, ci, tmpFrag = me.document.createDocumentFragment(); ci = frag.childNodes[i++];) {
-                                if(domUtils.isTagNode(ci,'ol ul')){
-                                    utils.each(domUtils.getElementsByTagName(ci,'li'),function(li){
-                                        while(li.firstChild){
+                                if (domUtils.isTagNode(ci, 'ol ul')) {
+                                    utils.each(domUtils.getElementsByTagName(ci, 'li'), function (li) {
+                                        while (li.firstChild) {
                                             tmpFrag.appendChild(li.firstChild);
                                         }
 
                                     });
-                                }else{
+                                } else {
                                     while (ci.firstChild) {
                                         tmpFrag.appendChild(ci.firstChild);
                                     }
@@ -742,7 +753,7 @@ UE.plugins['list'] = function () {
                             tmp.parentNode.insertBefore(tmpFrag, tmp);
                         } else {
                             list = me.document.createElement(tag);
-                            setListStyle(list,style);
+                            setListStyle(list, style);
                             list.appendChild(frag);
                             tmp.parentNode.insertBefore(list, tmp);
                         }
@@ -890,9 +901,9 @@ UE.plugins['list'] = function () {
                         var li = range.document.createElement('li');
 
                         li.appendChild(tmpRange.extractContents());
-                        if(domUtils.isEmptyNode(li)){
+                        if (domUtils.isEmptyNode(li)) {
                             var tmpNode = range.document.createElement('p');
-                            while(li.firstChild){
+                            while (li.firstChild) {
                                 tmpNode.appendChild(li.firstChild)
                             }
                             li.appendChild(tmpNode);
@@ -904,11 +915,11 @@ UE.plugins['list'] = function () {
                 }
                 range.moveToBookmark(bk).collapse(true);
                 list = me.document.createElement(tag);
-                setListStyle(list,style);
+                setListStyle(list, style);
                 list.appendChild(frag);
                 range.insertNode(list);
                 //当前list上下看能否合并
-                adjustList(list, tag, style,true);
+                adjustList(list, tag, style, true);
                 //去掉冗余的tmpDiv
                 for (var i = 0, ci, tmpDivs = domUtils.getElementsByTagName(list, 'div'); ci = tmpDivs[i++];) {
                     if (ci.getAttribute('tmpDiv')) {
@@ -919,24 +930,24 @@ UE.plugins['list'] = function () {
 
             },
             queryCommandState:function (command) {
-                var range = this.selection.getRange(),ps;
+                var range = this.selection.getRange(), ps;
 
                 //标题
-                if(range.collapsed){
-                    ps = domUtils.findParentByTagName(range.startContainer,"h2") || domUtils.findParentByTagName(range.endContainer,"h2");
-                }else{
-                    ps = domUtils.findParentByTagName(range.startContainer,"h2");
+                if (range.collapsed) {
+                    ps = domUtils.findParentByTagName(range.startContainer, "h2") || domUtils.findParentByTagName(range.endContainer, "h2");
+                } else {
+                    ps = domUtils.findParentByTagName(range.startContainer, "h2");
                 }
-                if(ps){
+                if (ps) {
                     return -1;
                 }
 
                 //图文模板
-                var startElePath=this.selection.getStartElementPath();
-                var template=domUtils.filterNodeList(startElePath,function(node){
-                    return node.tagName.toLowerCase()=="iframe"&&domUtils.hasClass(node,"graphictemplate")
+                var startElePath = this.selection.getStartElementPath();
+                var template = domUtils.filterNodeList(startElePath, function (node) {
+                    return node.tagName.toLowerCase() == "iframe" && domUtils.hasClass(node, "graphictemplate")
                 });
-                if(template){
+                if (template) {
                     return -1;
                 }
                 return domUtils.filterNodeList(startElePath, command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
