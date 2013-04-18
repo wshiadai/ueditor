@@ -117,9 +117,6 @@
     width: 73px;
 }
 /*for link*/
-.edui-default .edui-for-link {
-    _display: inline !important;
-}
 
 .edui-default .edui-for-link .edui-icon
 ,.edui-default .edui-for-link .edui_disableIcon {
@@ -190,10 +187,6 @@
     background: url(../images/zhidao.png) 0 -181px no-repeat;
 }
 /*for insertvideo*/
-.edui-default .edui-for-insertvideo {
-    _display: inline !important;
-}
-
 .edui-default .edui-for-insertvideo .edui-icon,
 .edui-default .edui-for-insertvideo .edui_disableIcon {
     background:url(../images/zhidao.png) -61px 5px no-repeat
