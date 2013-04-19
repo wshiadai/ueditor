@@ -175,15 +175,6 @@
                     if (!/^[\s]*<object/i.test(flashContainer.innerHTML)) {
                         flashContainer.title = "您的Flash插件版本过低，请更新后再尝试！";
                     }
-                    //未登录提示
-                    if (!editor.options.isLogin) {
-                        var dom = ui.getDom(),
-                            label = $(dom.id + "_body").children[1];
-                        label.style.color = "#999";
-                        var icon = $(dom.id + "_body").children[0];
-                        domUtils.removeClasses(icon, ["edui-icon"]);
-                        domUtils.addClass(icon, "edui_disableIcon");
-                    }
                 });
 
                 return ui;

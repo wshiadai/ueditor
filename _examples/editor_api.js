@@ -40,9 +40,9 @@
             'ui/_button.js',
             'ui/_toolbar.js',
             'ui/dialog.js',
+            'ui/_attachpicker.js',
             'ui/_editorui.js',
-            'ui/_editor.js',
-            'ui/_attachpicker.js'
+            'ui/_editor.js'
         ],
         baseURL = '../_src/';
     for (var i=0,pi;pi = paths[i++];) {

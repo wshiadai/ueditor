@@ -254,7 +254,7 @@
             },
             onclick:function () {
                 if (editor.options.isLogin) {
-                    ik.qb.neweditor.showMap(editor);
+                    editor.fireEvent('showmap');
                 }
             },
             showText:true
@@ -355,6 +355,15 @@
 
         ui.addListener("renderReady", function () {
             setAttachPop();
+            if (!editor.options.isLogin) {
+                var dom = ui.getDom(),
+                    label = $(dom.id + "_body").children[1],
+                    icon = $(dom.id + "_body").children[0];
+                label.style.color = "#999";
+                dom.setAttribute("title", hoverTitle);
+                domUtils.removeClasses(icon, ["edui-icon"]);
+                domUtils.addClass(icon, "edui_disableIcon");
+            }
         });
         return ui;
     };
