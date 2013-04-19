@@ -930,7 +930,7 @@ UE.plugins['list'] = function () {
 
             },
             queryCommandState:function (command) {
-                var range = this.selection.getRange(), ps;
+                var range = this.selection.getRange(), ps,tpl;
 
                 //标题
                 if (range.collapsed) {
@@ -942,6 +942,17 @@ UE.plugins['list'] = function () {
                     return -1;
                 }
 
+                //图文模板
+                if(range.collapsed){
+                    tpl= domUtils.filterNodeList(this.selection.getStartElementPath(), "iframe");
+                }else{
+                    tpl = domUtils.findTagNamesInSelection(range, ["iframe"], function (node) {
+                        return /-template/.test(node.className);
+                    });
+                }
+                if (tpl) {
+                    return -1;
+                }
 
                 return domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
             },
