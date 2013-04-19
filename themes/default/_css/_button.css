@@ -16,7 +16,7 @@
     width: 23px !important;
 }
 .edui-default .edui-toolbar .edui-button .edui-button-wrap {
-    position: relative;
+    /*position: relative;*/
 }
 
 .edui-default .edui-toolbar .edui-button .edui-state-hover .edui-button-wrap {
