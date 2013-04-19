@@ -942,15 +942,7 @@ UE.plugins['list'] = function () {
                     return -1;
                 }
 
-                //图文模板
-                var startElePath = this.selection.getStartElementPath();
-                var template = domUtils.filterNodeList(startElePath, function (node) {
-                    return node.tagName.toLowerCase() == "iframe" && domUtils.hasClass(node, "graphictemplate")
-                });
-                if (template) {
-                    return -1;
-                }
-                return domUtils.filterNodeList(startElePath, command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
+                return domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
             },
             queryCommandValue:function (command) {
                 var node = domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul');
