@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 var GraphicTemplate = {
-    initPageByData:function () {
+    initPageByData: function () {
         var me = this,
             data = editor["graphictemplate"][frameElement.id];
 
@@ -16,7 +16,7 @@ var GraphicTemplate = {
         moveTemplate("J_drag");
         iframeAutoHeight();
     },
-    _addPageListener:function () {
+    _addPageListener: function () {
         var me = this;
 
         domUtils.on(G("J_systemask"), "click", function (e) {
@@ -48,9 +48,16 @@ var GraphicTemplate = {
                 default :
                     break;
             }
+            var list = domUtils.getElementsByTagName(document, "input");
+            for (var i = 0, node; node = list[i++];) {
+                node.style.borderColor = "#ddd";
+            }
+            if (tgt.tagName.toLowerCase() == "input") {
+                tgt.style.borderColor = "#77d068";
+            }
         });
     },
-    _showTab0:function (isTab0, cur) {
+    _showTab0: function (isTab0, cur) {
         var list = domUtils.getElementsByTagName(document, "div", "tab");
         if (isTab0) {
             domUtils.addClass(list[0], "cur");
@@ -62,21 +69,21 @@ var GraphicTemplate = {
         cur && (cur.checked = isTab0);
         iframeAutoHeight();
     },
-    _setBoxEdit:function (isEdit, cur) {
+    _setBoxEdit: function (isEdit, cur) {
         var money = G("J_money");
         money.readOnly = isEdit;
         money.style.cursor = isEdit ? "not-allowed" : "default";
         cur && (cur.checked = isEdit);
     },
-    _innerTxt:function (node) {
+    _innerTxt: function (node) {
         return   node.innerText || node.textContent || node.nodeValue;
     },
-    _setTextBox:function (data, list) {
+    _setTextBox: function (data, list) {
         for (var i = 0, id; id = list[i++];) {
             G(id).value = data[id];
         }
     },
-    _setCheckBox:function (data, containerId) {
+    _setCheckBox: function (data, containerId) {
         var list = domUtils.getElementsByTagName(G(containerId), "span");
         for (var i = 0, node; node = list[i++];) {
             if (data[node.id]) {
@@ -84,7 +91,7 @@ var GraphicTemplate = {
             }
         }
     },
-    _setRadioValue:function (data, list) {
+    _setRadioValue: function (data, list) {
         var me = this;
         for (var i = 0, obj; obj = list[i++];) {
             var cur = G(obj.id1);
@@ -99,7 +106,7 @@ var GraphicTemplate = {
             }
         }
     },
-    _setDrawdownBox:function (data, list) {
+    _setDrawdownBox: function (data, list) {
         for (var i = 0, id; id = list[i++];) {
             var cur = G(id);
             for (var j = 0, opt; opt = cur.options[j++];) {
@@ -109,7 +116,7 @@ var GraphicTemplate = {
             }
         }
     },
-    setPageData:function (data) {
+    setPageData: function (data) {
         if (data) {
             var me = this;
             //设置文本框值
@@ -120,14 +127,14 @@ var GraphicTemplate = {
             //设置单选框值
             me._setRadioValue(data, [
                 {
-                    id1:"J_free",
-                    id2:"J_pay",
-                    callBack:me._setBoxEdit
+                    id1: "J_free",
+                    id2: "J_pay",
+                    callBack: me._setBoxEdit
                 },
                 {
-                    id1:"J_pc",
-                    id2:"J_mobile",
-                    callBack:me._showTab0
+                    id1: "J_pc",
+                    id2: "J_mobile",
+                    callBack: me._showTab0
                 }
             ]);
             //设置下拉框值
@@ -135,12 +142,12 @@ var GraphicTemplate = {
         }
     },
 
-    _saveTextBox:function (data, list) {
+    _saveTextBox: function (data, list) {
         for (var i = 0, id; id = list[i++];) {
             data[id] = G(id).value;
         }
     },
-    _saveCheckBox:function (data, list) {
+    _saveCheckBox: function (data, list) {
         var node, txt;
         for (var i = 0, id; id = list[i++];) {
             node = G(id);
@@ -151,7 +158,7 @@ var GraphicTemplate = {
             data[id] = txt;
         }
     },
-    _saveRadioValue:function (data, list) {
+    _saveRadioValue: function (data, list) {
         var me = this;
         var cur, txt;
         for (var i = 0, id; id = list[i++];) {
@@ -166,7 +173,7 @@ var GraphicTemplate = {
             data[id] = txt;
         }
     },
-    savePageData:function () {
+    savePageData: function () {
         var me = this;
         editor["graphictemplate"][frameElement.id] = {};
         var data = editor["graphictemplate"][frameElement.id];

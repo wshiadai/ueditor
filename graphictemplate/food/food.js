@@ -56,6 +56,16 @@ GraphicTemplate = {
             } else if (domUtils.hasClass(tgt, "delete")) {
                 me._deleteModule(tgt);
             }
+
+            //focus边框变色
+            var list = domUtils.getElementsByTagName(document, "div","module");
+            for (var i = 0, node; node = list[i++];) {
+                domUtils.removeClasses(node,["focus"]);
+            }
+            var cur=domUtils.findParent(tgt,function(node){
+                return domUtils.hasClass(node,"module");
+            });
+            domUtils.addClass(cur,"focus");
         });
     },
     _addSection:function (tgt) {

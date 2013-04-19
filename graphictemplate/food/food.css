@@ -6,7 +6,8 @@
 .section .subtitle{float:left;font-weight: bold;font-family:microsoft Yahei;color: #333;color: #333;margin-left: 40px;width: 30px;height: 34px;line-height:34px;}
 .section .content{float: left;overflow: hidden;;width: 600px;}
 .content .module{float: left;margin-left: 20px;}
-.content .module input{float:left;border: 1px solid #e1e1e1;padding: 6px 0 6px 10px; vertical-align: middle;}
+.content .module input{float:left;border: 1px solid #e1e1e1;padding: 6px 0 6px 10px; vertical-align: middle;outline:0;}
+.content .module.focus input{border-color:#77d068;}
 .content .module .name{width: 149px;}
 .content .module .num{width: 90px;border-left: none;}
 .content .module .delete{float: left;margin: 12px 0 0 6px;width: 10px;height: 9px;background:url(../img/food.png) 0 0 no-repeat;cursor: pointer;}

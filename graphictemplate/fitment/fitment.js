@@ -27,6 +27,17 @@ GraphicTemplate = {
                 }
             }
         });
+
+        domUtils.on(document,"click",function(e){
+            var tgt = e.target || e.srcElement;
+            var list=domUtils.getElementsByTagName(document,"input");
+            for(var i= 0,node;node=list[i++];){
+                node.style.borderColor="#ddd";
+            }
+            if(tgt.tagName.toLowerCase()=="input"){
+                tgt.style.borderColor="#77d068";
+            }
+        });
     },
 
     _setTextBox:function (data, list) {
