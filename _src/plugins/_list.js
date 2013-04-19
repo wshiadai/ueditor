@@ -942,6 +942,7 @@ UE.plugins['list'] = function () {
                     return -1;
                 }
 
+
                 return domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
             },
             queryCommandValue:function (command) {

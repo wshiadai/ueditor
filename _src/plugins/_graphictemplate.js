@@ -13,6 +13,17 @@ UE.plugins['graphictemplate'] = function () {
                 "></iframe>";
 
             me.execCommand("inserthtml", ifr);
+        },
+        queryCommandState:function(){
+            var rng = this.selection.getRange().cloneRange();
+            if (rng.collapsed && rng.startContainer.nodeType == 3) {
+                rng.trimBoundary()
+            }
+            var rs = domUtils.findTagNamesInSelection(rng, ['li', 'img', 'iframe', 'sup', 'td', 'th', 'caption','em','i','strong','b']);
+            if (rs) {
+                return -1;
+            }
+            return 0;
         }
     };
 

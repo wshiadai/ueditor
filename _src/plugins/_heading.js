@@ -289,8 +289,6 @@ UE.plugins['heading'] = function () {
                 range2.setEndAfter(range2.startContainer)
             }
             var rs = domUtils.findTagNamesInSelection(range2, ['li', 'img', 'iframe', 'sup', 'td', 'th', 'caption','em','i','strong','b']);
-            var first = range2.startContainer.firstChild || false;
-            var bc = domUtils.isBlockElm(range2.startContainer) ? range2.startContainer : range2.startContainer.parentNode
             if (rs) {
                 return -1;
             }
@@ -300,6 +298,6 @@ UE.plugins['heading'] = function () {
             return 0;
         }
     }
-}
+};
 
 
