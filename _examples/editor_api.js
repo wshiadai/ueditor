@@ -5,7 +5,7 @@
     var paths  = [
             'editor.js',
             'core/browser.js',
-            'core/utils.js',
+            'core/_utils.js',
             'core/EventBase.js',
             'core/_dtd.js',
             'core/_domUtils.js',
