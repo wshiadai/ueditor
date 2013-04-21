@@ -51,7 +51,7 @@ UE.plugins['graphictemplate'] = function () {
             var val;
             if ((val = pi.getAttr('class')) && /-template/.test(val)) {
                 var tmpDiv = me.document.createElement('div');
-                var id= pi.getAttr("id");
+                id= pi.getAttr("id");
                 me.graphictemplate[id]=(new Function("return (" + pi.innerHTML() + ")"))();
                 tmpDiv.innerHTML = "<iframe  width='678'  align='center' scroling='no' frameborder='0'" +
                     "class='"+val+ "'" +
@@ -74,12 +74,9 @@ UE.plugins['graphictemplate'] = function () {
         var list = domUtils.getElementsByTagName(me.body, "iframe", function (node) {
             return domUtils.hasClass(node, "-template");
         });
-
         utils.each(list, function (node) {
             var tmp = node.getAttribute("height");
-            if (tmp) {
-                heightStorage.push(tmp);
-            }
+            heightStorage.push(tmp);
             node.removeAttribute("height");
         });
     });
