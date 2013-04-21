@@ -6,25 +6,25 @@
  * To change this template use File | Settings | File Templates.
  */
 GraphicTemplate = {
-    tid:0,
-    template:{
-        title:' <div class="title">美食食材</div>',
-        section:'<div class="section">' +
+    tid: 0,
+    template: {
+        title: ' <div class="title">美食食材</div>',
+        section: '<div class="section">' +
             '<div class="subtitle">$$</div>' +
             '<div class="content">%%</div>' +
             '</div>',
-        module:function () {
+        module: function () {
             return '<div class="module" id="' + (GraphicTemplate.tid++) + '">' +
-                '<input type="text" class="name" maxlength="8" />' +
-                '<input type="text" class="num"  maxlength="6" />' +
-                '<span class="delete"></span>' +
+                '<input type="text" class="name" maxlength="8" value="输入食材名称" />' +
+                '<input type="text" class="num"  maxlength="6" value="份量" />' +
+                '<a class="delete"></a>' +
                 ' </div>'
         },
-        foot:'<div class="foot">' +
-            '<div class="add">+ 添加食材</div>' +
+        foot: '<div class="foot">' +
+            '<a class="add">+ 添加食材</a>' +
             '</div>'
     },
-    initPageByData:function () {
+    initPageByData: function () {
         var me = this,
             arr = [],
             tpl = me.template,
@@ -47,28 +47,35 @@ GraphicTemplate = {
         moveTemplate("J_drag");
         iframeAutoHeight();
     },
-    _addPageListener:function () {
+    _addPageListener: function () {
         var me = this;
         domUtils.on(document, "click", function (e) {
             var tgt = e.target || e.srcElement;
+            //添加食材处理函数
             if (domUtils.hasClass(tgt, "add")) {
                 me._addSection(tgt);
             } else if (domUtils.hasClass(tgt, "delete")) {
                 me._deleteModule(tgt);
             }
 
-            //focus边框变色
-            var list = domUtils.getElementsByTagName(document, "div","module");
+            //focus时文本框交互
+            var list = domUtils.getElementsByTagName(document, "div", "module");
             for (var i = 0, node; node = list[i++];) {
-                domUtils.removeClasses(node,["focus"]);
+                domUtils.removeClasses(node, ["focus"]);
             }
-            var cur=domUtils.findParent(tgt,function(node){
-                return domUtils.hasClass(node,"module");
+            var cur = domUtils.findParent(tgt, function (node) {
+                return domUtils.hasClass(node, "module");
             });
-            domUtils.addClass(cur,"focus");
+            domUtils.addClass(cur, "focus");
+
+            //第一次删除文字、此后不删除
+            if (tgt.tagName.toLowerCase() == "input" && !domUtils.hasClass(tgt, "hasClick")) {
+                domUtils.addClass(tgt, "hasClick");
+                tgt.value = "";
+            }
         });
     },
-    _addSection:function (tgt) {
+    _addSection: function (tgt) {
         var me = this,
             tmpDiv = document.createElement("div");
 
@@ -83,19 +90,19 @@ GraphicTemplate = {
 
         iframeAutoHeight();
     },
-    _addModule:function (num) {
+    _addModule: function (num) {
         var me = this, str = "";
         for (var i = 0; i < num; i++) {
             str += me.template.module();
         }
         return str;
     },
-    _deleteModule:function (tgt) {
+    _deleteModule: function (tgt) {
         var node = tgt.parentNode;
         node.parentNode.removeChild(node);
     },
 
-    setPageData:function (data) {
+    setPageData: function (data) {
         if (data) {
             var list = domUtils.getElementsByTagName(document, "div", "content");
 
@@ -103,17 +110,17 @@ GraphicTemplate = {
                 var arr = i == 0 ? data["main"] : data["other"];
                 var modules = domUtils.getElementsByTagName(list[i], "div", "module");
                 for (var j = 0, node; node = modules[j++];) {
-                    node.children[0].value = arr[j-1].name;
-                    node.children[1].value = arr[j-1].content;
+                    node.children[0].value = arr[j - 1].name;
+                    node.children[1].value = arr[j - 1].content;
                 }
             }
         }
     },
-    savePageData:function () {
+    savePageData: function () {
         editor["graphictemplate"][frameElement.id] = {};
         var data = editor["graphictemplate"][frameElement.id];
-        data["main"]=[];
-        data["other"]=[];
+        data["main"] = [];
+        data["other"] = [];
 
         var list = domUtils.getElementsByTagName(document, "div", "content");
         for (var i = 0, len = list.length; i < len; i++) {

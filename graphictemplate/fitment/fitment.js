@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 GraphicTemplate = {
-    initPageByData:function () {
+    initPageByData: function () {
         var me = this,
             data = editor["graphictemplate"][frameElement.id];
 
@@ -16,7 +16,8 @@ GraphicTemplate = {
         moveTemplate("J_drag");
         iframeAutoHeight();
     },
-    _addPageListener:function () {
+    _addPageListener: function () {
+        //复选框交互
         domUtils.on(G("J_decorative"), "click", function (e) {
             var tgt = e.target || e.srcElement;
             if (domUtils.hasClass(tgt, "active")) {
@@ -28,24 +29,29 @@ GraphicTemplate = {
             }
         });
 
-        domUtils.on(document,"click",function(e){
+        //文本框单击交互
+        domUtils.on(document, "click", function (e) {
             var tgt = e.target || e.srcElement;
-            var list=domUtils.getElementsByTagName(document,"input");
-            for(var i= 0,node;node=list[i++];){
-                node.style.borderColor="#ddd";
+            var list = domUtils.getElementsByTagName(document, "input");
+            for (var i = 0, node; node = list[i++];) {
+                domUtils.removeClasses(node, ['focus']);
             }
-            if(tgt.tagName.toLowerCase()=="input"){
-                tgt.style.borderColor="#77d068";
+            if (tgt.tagName.toLowerCase() == "input") {
+                if (!domUtils.hasClass(tgt, "hasClick")) {
+                    domUtils.addClass(tgt, "hasClick");
+                    tgt.value = "";
+                }
+                domUtils.addClass(tgt, "focus")
             }
         });
     },
 
-    _setTextBox:function (data, list) {
+    _setTextBox: function (data, list) {
         for (var i = 0, id; id = list[i++];) {
             G(id).value = data[id];
         }
     },
-    _setCheckBox:function (data, containerId) {
+    _setCheckBox: function (data, containerId) {
         var list = domUtils.getElementsByTagName(G(containerId), "span");
         for (var i = 0, node; node = list[i++];) {
             if (data[node.id]) {
@@ -53,7 +59,7 @@ GraphicTemplate = {
             }
         }
     },
-    _setDrawdownBox:function (data, list) {
+    _setDrawdownBox: function (data, list) {
         for (var i = 0, id; id = list[i++];) {
             var cur = G(id);
             for (var j = 0, opt; opt = cur.options[j++];) {
@@ -63,7 +69,7 @@ GraphicTemplate = {
             }
         }
     },
-    setPageData:function (data) {
+    setPageData: function (data) {
         if (data) {
             var me = this;
             //设置文本框值
@@ -71,16 +77,16 @@ GraphicTemplate = {
             //设置复选框值
             me._setCheckBox(data, "J_decorative");
             //设置下拉框值
-            me._setDrawdownBox(data, ["J_quanbao",'J_hunfang']);
+            me._setDrawdownBox(data, ["J_quanbao", 'J_hunfang']);
         }
     },
 
-    _saveTextBox:function (data, list) {
+    _saveTextBox: function (data, list) {
         for (var i = 0, id; id = list[i++];) {
             data[id] = G(id).value;
         }
     },
-    _saveCheckBox:function (data, list) {
+    _saveCheckBox: function (data, list) {
         var node, txt;
         for (var i = 0, id; id = list[i++];) {
             node = G(id);
@@ -91,7 +97,7 @@ GraphicTemplate = {
             data[id] = txt;
         }
     },
-    savePageData:function () {
+    savePageData: function () {
         var me = this;
         editor["graphictemplate"][frameElement.id] = {};
         var data = editor["graphictemplate"][frameElement.id];
