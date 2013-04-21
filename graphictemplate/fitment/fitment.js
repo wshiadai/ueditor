@@ -37,10 +37,6 @@ GraphicTemplate = {
                 domUtils.removeClasses(node, ['focus']);
             }
             if (tgt.tagName.toLowerCase() == "input") {
-                if (!domUtils.hasClass(tgt, "hasClick")) {
-                    domUtils.addClass(tgt, "hasClick");
-                    tgt.value = "";
-                }
                 domUtils.addClass(tgt, "focus")
             }
         });
