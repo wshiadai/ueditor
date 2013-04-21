@@ -48,12 +48,18 @@ var GraphicTemplate = {
                 default :
                     break;
             }
+
+            //文本框单击交互
             var list = domUtils.getElementsByTagName(document, "input");
             for (var i = 0, node; node = list[i++];) {
-                node.style.borderColor = "#ddd";
+                domUtils.removeClasses(node, ['focus']);
             }
             if (tgt.tagName.toLowerCase() == "input") {
-                tgt.style.borderColor = "#77d068";
+                if (!domUtils.hasClass(tgt, "hasClick")) {
+                    domUtils.addClass(tgt, "hasClick");
+                    tgt.value = "";
+                }
+                domUtils.addClass(tgt, "focus")
             }
         });
     },
