@@ -51,9 +51,11 @@ UE.plugins['graphictemplate'] = function () {
             var val;
             if ((val = pi.getAttr('class')) && /-template/.test(val)) {
                 var tmpDiv = me.document.createElement('div');
+                var id= pi.getAttr("id");
+                me.graphictemplate[id]=(new Function("return (" + pi.innerHTML() + ")"))();
                 tmpDiv.innerHTML = "<iframe  width='678'  align='center' scroling='no' frameborder='0'" +
                     "class='"+val+ "'" +
-                    "id='" + pi.getAttr("id") + "'" +
+                    "id='" + id + "'" +
                     "src=" + me.options.graphictemplateUrlMap[val.replace("-template","")] +
                     "></iframe>";
 
