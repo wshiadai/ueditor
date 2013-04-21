@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 var GraphicTemplate = {
+    tagIndex: 0,
     initPageByData: function () {
         var me = this,
             data = editor["graphictemplate"][frameElement.id];
@@ -59,14 +60,25 @@ var GraphicTemplate = {
             }
         });
     },
+    _isEmpty: function (value) {
+        if (frameElement.getAttribute("hasempty")!="true") {
+            var res = !value.length;
+            frameElement.setAttribute("hasempty", res.toString());
+        }
+        return value;
+    },
+
     _showTab0: function (isTab0, cur) {
+        var me=this;
         var list = domUtils.getElementsByTagName(document, "div", "tab");
         if (isTab0) {
             domUtils.addClass(list[0], "cur");
             domUtils.removeClasses(list[1], "cur");
+            me.tabIndex = 0;
         } else {
             domUtils.addClass(list[1], "cur");
             domUtils.removeClasses(list[0], "cur");
+            me.tabIndex = 1;
         }
         cur && (cur.checked = isTab0);
         iframeAutoHeight();
@@ -145,8 +157,17 @@ var GraphicTemplate = {
     },
 
     _saveTextBox: function (data, list) {
-        for (var i = 0, id; id = list[i++];) {
-            data[id] = G(id).value;
+        var me = this;
+        for (var i = 0, tmp; tmp = list[i++];) {
+            if (utils.isString(tmp)) {
+                data[tmp] = (G(tmp).value);
+            } else {
+                var id = tmp['id'],
+                    index = tmp['tabIndex'];
+                if (!index || index == me.tabIndex) {
+                    data[id] = me._isEmpty((G(id).value));
+                }
+            }
         }
     },
     _saveCheckBox: function (data, list) {
@@ -181,8 +202,16 @@ var GraphicTemplate = {
         var data = editor["graphictemplate"][frameElement.id];
 
         //文本框保存值
-        me._saveTextBox(data, ["J_name", "J_size", "J_version", "J_systemtool",
-            "J_lang", "J_money", "J_systemNeed", "J_downloadlink"]);
+        me._saveTextBox(data, [
+            {id: "J_name", "tabIndex": 0},
+            {id: "J_size"},
+            {id: "J_version"},
+            {id: "J_lang"},
+            {id: "J_systemNeed"},
+            {id: "J_money", 'tabIndex': 1},
+            {id: "J_downloadlink"},
+            "J_systemtool"
+        ]);
 
         //复选狂保存值
         me._saveCheckBox(data, ["J_ios", "J_android", "J_winphone"]);

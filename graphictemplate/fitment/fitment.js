@@ -41,6 +41,14 @@ GraphicTemplate = {
             }
         });
     },
+    _isEmpty: function (value) {
+        var attr=frameElement.getAttribute('hasempty');
+        if(attr=="false"||!attr){
+            var res = !value.replace(/'[ \t\r\n]*'/g,"").length;
+            frameElement.setAttribute("hasempty", res.toString());
+        }
+       return value;
+    },
 
     _setTextBox: function (data, list) {
         for (var i = 0, id; id = list[i++];) {
@@ -78,8 +86,14 @@ GraphicTemplate = {
     },
 
     _saveTextBox: function (data, list) {
-        for (var i = 0, id; id = list[i++];) {
-            data[id] = G(id).value;
+        var me = this;
+        for (var i = 0, tmp; tmp = list[i++];) {
+            if (utils.isString(tmp)) {
+                data[tmp] = (G(tmp).value);
+            } else {
+                var id = tmp['id'];
+                data[id] = me._isEmpty((G(id).value));
+            }
         }
     },
     _saveCheckBox: function (data, list) {
@@ -99,8 +113,16 @@ GraphicTemplate = {
         var data = editor["graphictemplate"][frameElement.id];
 
         //文本框保存值
-        me._saveTextBox(data, ["J_shi", "J_ting", "J_wei",
-            "J_meter", "J_wan", "J_quanbao", "J_hunfang", "J_other"]);
+        me._saveTextBox(data, [
+            {id: "J_shi"},
+            {id: "J_ting"},
+            {id: "J_wei"},
+            {id: "J_meter"},
+            {id: "J_wan"},
+            "J_quanbao",
+            "J_hunfang",
+            "J_other"
+        ]);
 
         //复选狂保存值
         me._saveCheckBox(data, ["J_jianyue", "J_xiandai", "J_tianyuan",

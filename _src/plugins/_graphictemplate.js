@@ -4,22 +4,23 @@ UE.plugins['graphictemplate'] = function () {
     me["graphictemplate"] = {};
 
     me.commands['graphictemplate'] = {
-        execCommand:function (cmd, value) {
+        execCommand: function (cmd, value) {
+            id=parseInt(id);
             id += 1;
             var ifr = "<iframe  width='678'  align='center' scroling='no' frameborder='0'  " +
-                "class="+value+"-template " +
+                "class=" + value + "-template " +
                 "id='graphictemplate-" + id + "'" +
                 "src=" + me.options["graphictemplateUrlMap"][value] +
                 "></iframe>";
 
             me.execCommand("inserthtml", ifr);
         },
-        queryCommandState:function(){
+        queryCommandState: function () {
             var rng = this.selection.getRange().cloneRange();
             if (rng.collapsed && rng.startContainer.nodeType == 3) {
                 rng.trimBoundary()
             }
-            var rs = domUtils.findTagNamesInSelection(rng, ['li', 'img', 'iframe', 'sup', 'td', 'th', 'caption','em','i','strong','b']);
+            var rs = domUtils.findTagNamesInSelection(rng, ['li', 'img', 'iframe', 'sup', 'td', 'th', 'caption', 'em', 'i', 'strong', 'b']);
             if (rs) {
                 return -1;
             }
@@ -35,8 +36,9 @@ UE.plugins['graphictemplate'] = function () {
                 var str = utils.stringify(me['graphictemplate'][id]);
                 node.tagName = 'pre';
                 var attrs = {
-                    'class':node.getAttr('class'),
-                    'id':id
+                    'class': node.getAttr('class'),
+                    'hasempty': node.getAttr('hasempty'),
+                    'id': id
                 };
                 node.setAttr();
                 node.setAttr(attrs);
@@ -51,12 +53,12 @@ UE.plugins['graphictemplate'] = function () {
             var val;
             if ((val = pi.getAttr('class')) && /-template/.test(val)) {
                 var tmpDiv = me.document.createElement('div');
-                id= pi.getAttr("id");
-                me.graphictemplate[id]=(new Function("return (" + pi.innerHTML() + ")"))();
+                id = pi.getAttr("id").replace("graphictemplate-","");
+                me.graphictemplate[id] = (new Function("return (" + pi.innerHTML() + ")"))();
                 tmpDiv.innerHTML = "<iframe  width='678'  align='center' scroling='no' frameborder='0'" +
-                    "class='"+val+ "'" +
-                    "id='" + id + "'" +
-                    "src=" + me.options.graphictemplateUrlMap[val.replace("-template","")] +
+                    "class='" + val + "'" +
+                    "id='graphictemplate-" + id + "'" +
+                    "src=" + me.options.graphictemplateUrlMap[val.replace("-template", "")] +
                     "></iframe>";
 
                 var node = UE.uNode.createElement(tmpDiv.innerHTML);
