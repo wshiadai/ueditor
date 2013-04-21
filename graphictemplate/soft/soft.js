@@ -50,11 +50,11 @@ var GraphicTemplate = {
             }
 
             //文本框单击交互
-            var list = domUtils.getElementsByTagName(document, "input");
+            var list = domUtils.getElementsByTagName(document, "input select");
             for (var i = 0, node; node = list[i++];) {
                 domUtils.removeClasses(node, ['focus']);
             }
-            if (tgt.tagName.toLowerCase() == "input") {
+            if (/input|select/ig.test(tgt.tagName)) {
                 domUtils.addClass(tgt, "focus")
             }
         });

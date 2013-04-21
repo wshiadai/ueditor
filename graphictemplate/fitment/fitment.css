@@ -13,6 +13,7 @@
 .section .dropdownbox{padding-left: 10px;width: 80px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;outline: 0;}
 .section .textbox{ text-align:center;width: 46px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;outline:0}
 .section .textbox.focus{border-color:#77d068;color:#333;}
+.section .dropdownbox.focus{color:#333;}
 
 .section .decorativetxt{float:left;margin:0 10px 0 40px;}
 .section .decorative{float:left;overflow: hidden;width: 415px;}
