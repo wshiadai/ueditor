@@ -13,7 +13,7 @@ UE.plugins['graphictemplate'] = function () {
                 "src=" + me.options["graphictemplateUrlMap"][value] +
                 "></iframe>";
 
-            me.execCommand("inserthtml", ifr);
+            me.execCommand("inserthtml",'<p contenteditable="false">'+ifr+'</p>');
         },
         queryCommandState: function () {
             var rng = this.selection.getRange().cloneRange();

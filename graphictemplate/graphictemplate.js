@@ -32,36 +32,6 @@
     };
 
     /*
-     * 移动图文模板
-     * */
-//    moveTemplate = function (id) {
-//        var isSelect = false;
-//        domUtils.on(document, "click", function (e) {
-//            var tgt = e.target || e.srcElement;
-//            if (tgt.id == id) {
-//                var rng = editor.selection.getRange();
-//                rng.setStart(frameElement, 0);
-//                rng.setEnd(frameElement, 1);
-//                rng.select(true);
-//                isSelect = true;
-//            }
-//        });
-//        editor.addListener("click", function () {
-//            if (isSelect && frameElement) {
-//                var rng = editor.selection.getRange();
-//                var node = domUtils.findParentByTagName(rng.startContainer, "li");
-//                if (node) {
-//                    editor.body.style.cursor = "not-allowed";
-//                } else {
-//                    rng.insertNode(frameElement);
-//                }
-//                isSelect = false;
-//            } else {
-//                editor.body.style.cursor = "default";
-//            }
-//        });
-//    };
-    /*
      * iframe自动长高
      * */
     iframeAutoHeight = function () {
@@ -88,11 +58,7 @@
                 editor.moveTemplate("J_drag",document,frameElement);
                 iframeAutoHeight();
                 break;
-            case 'focus':
-                editor.body.contenteditable=false;
-                break;
             case 'blur':
-                editor.body.contenteditable=true;
                 GraphicTemplate.savePageData();
                 break;
             default :
