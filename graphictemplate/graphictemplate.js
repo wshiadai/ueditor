@@ -52,11 +52,10 @@
                 var node = domUtils.findParentByTagName(rng.startContainer, "li");
                 if (node) {
                     editor.body.style.cursor = "not-allowed";
-                    isSelect = false;
                 } else {
                     rng.insertNode(frameElement);
-                    isSelect = false;
                 }
+                isSelect = false;
             } else {
                 editor.body.style.cursor = "default";
             }
