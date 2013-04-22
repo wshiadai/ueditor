@@ -7123,7 +7123,7 @@ UE.plugins['paste'] = function() {
 
                 var brs = div.querySelectorAll('br');
                 for(i=0;ci=brs[i++];){
-                    if(/^apple-/.test(ci)){
+                    if(/^apple-/i.test(ci.className)){
                         domUtils.remove(ci);
                     }
                 }
@@ -7146,7 +7146,6 @@ UE.plugins['paste'] = function() {
 
             //过滤word粘贴过来的冗余属性
             html = UE.filterWord(html);
-
             var root = UE.htmlparser(html,true);
             //如果给了过滤规则就先进行过滤
             if(me.options.filterRules){
@@ -7160,9 +7159,14 @@ UE.plugins['paste'] = function() {
                 if(br && br.type == 'element' && br.tagName == 'br'){
                     root.removeChild(br)
                 }
+                utils.each(me.body.querySelectorAll('div'),function(node){
+                    if(domUtils.isEmptyBlock(node)){
+                        domUtils.remove(node)
+                    }
+                })
             }
             html = {'html':root.toHtml()};
-            me.fireEvent('beforepaste',html);
+            me.fireEvent('beforepaste',html,root);
             root = UE.htmlparser(html.html);
             //如果开启了纯文本模式
             if(me.queryCommandState('pasteplain')){
@@ -7176,7 +7180,7 @@ UE.plugins['paste'] = function() {
                 address = me.selection.getRange().createAddress(true);
                 me.execCommand( 'insertHtml',htmlContent,true);
             }
-            me.fireEvent("afterpaste");
+            me.fireEvent("afterpaste",html);
         }
     }
 
@@ -7307,8 +7311,19 @@ UE.plugins['list'] = function () {
         },
         listDefaultPaddingLeft : '30',
         listiconpath : 'http://bs.baidu.com/listicon/',
-        maxListLevel : 3//-1不限制
+        maxListLevel : -1//-1不限制
     } );
+    function listToArray(list){
+        var arr = [];
+        for(var p in list){
+            arr.push(p)
+        }
+        return arr;
+    }
+    var listStyle = {
+        'OL':listToArray(me.options.insertorderedlist),
+        'UL':listToArray(me.options.insertunorderedlist)
+    };
     var liiconpath = me.options.listiconpath;
 
     //根据用户配置，调整customStyle
@@ -7402,8 +7417,48 @@ UE.plugins['list'] = function () {
         if(domUtils.hasClass(node,/custom_/)){
             return cls.match(/custom_(\w+)/)[1]
         }
-        return ''
+        return domUtils.getStyle(node, 'list-style-type')
+
     }
+
+    me.addListener('beforepaste',function(type,html,root){
+        var me = this,
+            rng = me.selection.getRange(),li;
+
+        if(li = domUtils.findParentByTagName(rng.startContainer,'li',true)){
+            var list = li.parentNode,tagName = list.tagName == 'OL' ? 'ul':'ol';
+            utils.each(root.getNodesByTagName(tagName),function(n){
+                n.tagName = list.tagName;
+                n.setAttr();
+                if(n.parentNode === root){
+                    type = getStyle(list) || (list.tagName == 'OL' ? 'decimal' : 'disc')
+                }else{
+                    var className = n.parentNode.getAttr('class');
+                    if(className && /custom_/.test(className)){
+                        type = className.match(/custom_(\w+)/)[1]
+                    }else{
+                        type = n.parentNode.getStyle('list-style-type');
+                    }
+                    if(!type){
+                        type = list.tagName == 'OL' ? 'decimal' : 'disc';
+                    }
+                }
+                var index = utils.indexOf(listStyle[list.tagName], type);
+                if(n.parentNode !== root)
+                    index = index + 1 == listStyle[list.tagName].length ? 0 : index + 1;
+                var currentStyle = listStyle[list.tagName][index];
+                if(customStyle[currentStyle]){
+                    n.setAttr('class', 'custom_' + currentStyle)
+
+                }else{
+                    n.setStyle('list-style-type',currentStyle)
+                }
+            })
+
+        }
+
+        html.html = root.toHtml();
+    });
     //进入编辑器的li要套p标签
     me.addInputRule(function(root){
         utils.each(root.getNodesByTagName('li'),function(li){
@@ -7439,7 +7494,7 @@ UE.plugins['list'] = function () {
             };
         function checkListType(content,container){
             var span = container.firstChild();
-            if(span &&  span.type == 'element' && span.tagName == 'span' && /Wingdings/.test(span.getStyle('font-family'))){
+            if(span &&  span.type == 'element' && span.tagName == 'span' && /Wingdings|Symbol/.test(span.getStyle('font-family'))){
                 for(var p in unorderlisttype){
                     if(unorderlisttype[p] == span.data){
                         return p
@@ -7455,7 +7510,10 @@ UE.plugins['list'] = function () {
 
         }
         utils.each(root.getNodesByTagName('p'),function(node){
-
+            if(node.getAttr('class') != 'MsoListParagraph'){
+                return
+            }
+            node.setAttr('class','');
             function appendLi(list,p,type){
                 if(list.tagName == 'ol'){
                     p.innerHTML(p.innerHTML().replace(orderlisttype[type],''));
@@ -7485,7 +7543,9 @@ UE.plugins['list'] = function () {
                     appendLi(list,node,type);
                     node = tmp;
                 }
-
+                if(!list.parentNode && node && node.parentNode){
+                    node.parentNode.insertBefore(list,node)
+                }
             }
         })
     });
@@ -7500,7 +7560,19 @@ UE.plugins['list'] = function () {
 
             if(!domUtils.inDoc(node,doc))
                 return;
-            var index = 0,type = 2,parent = node.parentNode;
+
+            var parent = node.parentNode;
+            if(parent.tagName == node.tagName){
+                var nodeStyleType = getStyle(node) || (node.tagName == 'OL' ? 'decimal' : 'disc'),
+                    parentStyleType = getStyle(parent) || (parent.tagName == 'OL' ? 'decimal' : 'disc');
+                if(nodeStyleType == parentStyleType){
+                    var styleIndex = utils.indexOf(listStyle[node.tagName], nodeStyleType);
+                    styleIndex = styleIndex + 1 == listStyle[node.tagName].length ? 0 : styleIndex + 1;
+                    setListStyle(node,listStyle[node.tagName][styleIndex])
+                }
+
+            }
+            var index = 0,type = 2;
             if( domUtils.hasClass(node,/custom_/)){
                 if(!(/[ou]l/i.test(parent.tagName) && domUtils.hasClass(parent,/custom_/))){
                     type = 1;
@@ -7510,7 +7582,8 @@ UE.plugins['list'] = function () {
                     type = 3;
                 }
             }
-            style = domUtils.getStyle(node, 'list-style-type');
+
+            var style = domUtils.getStyle(node, 'list-style-type');
             node.style.cssText = style ? 'list-style-type:' + style : '';
             node.className = utils.trim(node.className.replace(/list-paddingleft-\w+/,'')) + ' list-paddingleft-' + type;
             utils.each(domUtils.getElementsByTagName(node,'li'),function(li){
@@ -7555,7 +7628,7 @@ UE.plugins['list'] = function () {
                     domUtils.removeAttributes(li,'class')
                 }
             });
-            !ignore && adjustList(node,node.tagName.toLowerCase(),getStyle(node)||domUtils.getStyle(node, 'list-style-type'),true)
+            !ignore && adjustList(node,node.tagName.toLowerCase(),getStyle(node)||domUtils.getStyle(node, 'list-style-type'),true);
         })
     }
     function adjustList(list, tag, style,ignoreEmpty) {
@@ -7888,24 +7961,15 @@ UE.plugins['list'] = function () {
         if (keyCode == 8) {
             var rng = me.selection.getRange(),list;
             if(list = domUtils.findParentByTagName(rng.startContainer,['ol', 'ul'],true)){
-                adjustList(list,list.tagName.toLowerCase(),getStyle(list)||domUtils.getComputedStyle(list,'list-style-type'))
+                adjustList(list,list.tagName.toLowerCase(),getStyle(list)||domUtils.getComputedStyle(list,'list-style-type'),true)
             }
         }
     });
     //处理tab键
     me.addListener('tabkeydown',function(){
-        function listToArray(list){
-            var arr = [];
-            for(var p in list){
-                arr.push(p)
-            }
-            return arr;
-        }
-        var range = me.selection.getRange(),
-            listStyle = {
-                'OL':listToArray(me.options.insertorderedlist),
-                'UL':listToArray(me.options.insertunorderedlist)
-            };
+
+        var range = me.selection.getRange();
+
         //控制级数
         function checkLevel(li){
             if(me.options.maxListLevel != -1){
@@ -7995,7 +8059,17 @@ UE.plugins['list'] = function () {
         }
 
     });
-
+    function getLi(start){
+        while(start && !domUtils.isBody(start)){
+            if(start.nodeName == 'TABLE'){
+                return null;
+            }
+            if(start.nodeName == 'LI'){
+                return start
+            }
+            start = start.parentNode;
+        }
+    }
     me.commands['insertorderedlist'] =
     me.commands['insertunorderedlist'] = {
             execCommand:function (command, style) {
@@ -8014,9 +8088,9 @@ UE.plugins['list'] = function () {
                 //range.shrinkBoundary();//.adjustmentBoundary();
                 range.adjustmentBoundary().shrinkBoundary();
                 var bko = range.createBookmark(true),
-                    start = domUtils.findParentByTagName(me.document.getElementById(bko.start), 'li'),
+                    start = getLi(me.document.getElementById(bko.start)),
                     modifyStart = 0,
-                    end = domUtils.findParentByTagName(me.document.getElementById(bko.end), 'li'),
+                    end =  getLi(me.document.getElementById(bko.end)),
                     modifyEnd = 0,
                     startParent, endParent,
                     list, tmp;
@@ -8244,7 +8318,7 @@ UE.plugins['list'] = function () {
                 list.appendChild(frag);
                 range.insertNode(list);
                 //当前list上下看能否合并
-                adjustList(list, tag, style,true);
+                adjustList(list, tag, style);
                 //去掉冗余的tmpDiv
                 for (var i = 0, ci, tmpDivs = domUtils.getElementsByTagName(list, 'div'); ci = tmpDivs[i++];) {
                     if (ci.getAttribute('tmpDiv')) {
@@ -8255,10 +8329,33 @@ UE.plugins['list'] = function () {
 
             },
             queryCommandState:function (command) {
-                return domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
+                var tag = command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul';
+                var path = this.selection.getStartElementPath();
+                for(var i= 0,ci;ci = path[i++];){
+                    if(ci.nodeName == 'TABLE'){
+                        return 0
+                    }
+                    if(tag == ci.nodeName.toLowerCase()){
+                        return 1
+                    };
+                }
+                return 0;
+
             },
             queryCommandValue:function (command) {
-                var node = domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul');
+                var tag = command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul';
+                var path = this.selection.getStartElementPath(),
+                    node;
+                for(var i= 0,ci;ci = path[i++];){
+                    if(ci.nodeName == 'TABLE'){
+                        node = null;
+                        break;
+                    }
+                    if(tag == ci.nodeName.toLowerCase()){
+                        node = ci;
+                        break;
+                    };
+                }
                 return node ? getStyle(node) || domUtils.getComputedStyle(node, 'list-style-type') : null;
             }
         };
