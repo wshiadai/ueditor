@@ -7,17 +7,7 @@
  */
 var GraphicTemplate = {
     tabIndex: 0,
-    initPageByData: function () {
-        var me = this,
-            data = editor["graphictemplate"][frameElement.id];
-
-        me._addPageListener();
-        me.setPageData(data);
-        me.savePageData();
-        moveTemplate("J_drag");
-        iframeAutoHeight();
-    },
-    _addPageListener: function () {
+    addPageListener: function () {
         var me = this;
 
         domUtils.on(G("J_systemask"), "click", function (e) {

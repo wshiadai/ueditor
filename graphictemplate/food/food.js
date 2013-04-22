@@ -24,11 +24,10 @@ GraphicTemplate = {
             '<a class="add">+ 添加食材</a>' +
             '</div>'
     },
-    initPageByData: function () {
+    initPage: function (data) {
         var me = this,
             arr = [],
-            tpl = me.template,
-            data = editor["graphictemplate"][frameElement.id];
+            tpl = me.template;
 
         var mainNum = data ? data["main"].length : 4;
         var subNum = data ? data["other"].length : 4;
@@ -40,14 +39,8 @@ GraphicTemplate = {
         arr.push(tpl.foot);
 
         G("J_main").innerHTML = arr.join('');
-
-        me._addPageListener();
-        me.setPageData(data);
-        me.savePageData();
-        moveTemplate("J_drag");
-        iframeAutoHeight();
     },
-    _addPageListener: function () {
+    addPageListener: function () {
         var me = this;
         domUtils.on(document, "click", function (e) {
             var tgt = e.target || e.srcElement;

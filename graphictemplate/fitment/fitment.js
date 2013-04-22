@@ -6,17 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 GraphicTemplate = {
-    initPageByData: function () {
-        var me = this,
-            data = editor["graphictemplate"][frameElement.id];
-
-        me._addPageListener();
-        me.setPageData(data);
-        me.savePageData();
-        moveTemplate("J_drag");
-        iframeAutoHeight();
-    },
-    _addPageListener: function () {
+    addPageListener: function () {
         //复选框交互
         domUtils.on(G("J_decorative"), "click", function (e) {
             var tgt = e.target || e.srcElement;
@@ -76,7 +66,6 @@ GraphicTemplate = {
             me._setDrawdownBox(data, ["J_quanbao", 'J_hunfang']);
         }
     },
-
 
     _setHasEmpty:function(arr){
         var str = /true/g.test(arr.join('')).toString();
