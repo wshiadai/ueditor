@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 var GraphicTemplate = {
-    tagIndex: 0,
+    tabIndex: 0,
     initPageByData: function () {
         var me = this,
             data = editor["graphictemplate"][frameElement.id];
@@ -35,10 +35,10 @@ var GraphicTemplate = {
             var tgt = e.target || e.srcElement;
             switch (tgt.id) {
                 case "J_pc":
-                    me._showTab0(true);
+                    me._showTab(true);
                     break;
                 case "J_mobile":
-                    me._showTab0(false);
+                    me._showTab(false);
                     break;
                 case "J_free":
                     me._setBoxEdit(true);
@@ -60,25 +60,17 @@ var GraphicTemplate = {
             }
         });
     },
-    _isEmpty: function (value) {
-        if (frameElement.getAttribute("hasempty")!="true") {
-            var res = !value.length;
-            frameElement.setAttribute("hasempty", res.toString());
-        }
-        return value;
-    },
 
-    _showTab0: function (isTab0, cur) {
-        var me=this;
+    _showTab: function (isTab0, cur) {
         var list = domUtils.getElementsByTagName(document, "div", "tab");
         if (isTab0) {
             domUtils.addClass(list[0], "cur");
             domUtils.removeClasses(list[1], "cur");
-            me.tabIndex = 0;
+            GraphicTemplate.tabIndex = 0;
         } else {
             domUtils.addClass(list[1], "cur");
             domUtils.removeClasses(list[0], "cur");
-            me.tabIndex = 1;
+            GraphicTemplate.tabIndex = 1;
         }
         cur && (cur.checked = isTab0);
         iframeAutoHeight();
@@ -148,7 +140,7 @@ var GraphicTemplate = {
                 {
                     id1: "J_pc",
                     id2: "J_mobile",
-                    callBack: me._showTab0
+                    callBack: me._showTab
                 }
             ]);
             //设置下拉框值
@@ -156,19 +148,32 @@ var GraphicTemplate = {
         }
     },
 
+    _setHasEmpty: function (arr) {
+        var str = /true/g.test(arr.join('')).toString();
+        frameElement.setAttribute("hasempty", str);
+    },
     _saveTextBox: function (data, list) {
         var me = this;
+        var arr = [], txt, res, id;
         for (var i = 0, tmp; tmp = list[i++];) {
             if (utils.isString(tmp)) {
                 data[tmp] = (G(tmp).value);
             } else {
-                var id = tmp['id'],
-                    index = tmp['tabIndex'];
-                if (!index || index == me.tabIndex) {
-                    data[id] = me._isEmpty((G(id).value));
+                id = tmp['id'];
+                txt = G(id).value;
+                data[id] = txt;
+
+                //判断当前tab下是否为空
+                var index = tmp["tabIndex"];
+                if (index == me.tabIndex || index===undefined) {
+                    if (id == "J_money" && G('J_free').checked)    continue;
+
+                    res = !txt.replace(/'[ \t\r\n]*'/g, "").length;
+                    arr.push(res);
                 }
             }
         }
+        me._setHasEmpty(arr);
     },
     _saveCheckBox: function (data, list) {
         var node, txt;

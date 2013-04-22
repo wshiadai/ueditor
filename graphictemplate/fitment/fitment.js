@@ -41,14 +41,6 @@ GraphicTemplate = {
             }
         });
     },
-    _isEmpty: function (value) {
-        var attr=frameElement.getAttribute('hasempty');
-        if(attr=="false"||!attr){
-            var res = !value.replace(/'[ \t\r\n]*'/g,"").length;
-            frameElement.setAttribute("hasempty", res.toString());
-        }
-       return value;
-    },
 
     _setTextBox: function (data, list) {
         for (var i = 0, id; id = list[i++];) {
@@ -85,16 +77,28 @@ GraphicTemplate = {
         }
     },
 
+
+    _setHasEmpty:function(arr){
+        var str = /true/g.test(arr.join('')).toString();
+        frameElement.setAttribute("hasempty", str);
+    },
     _saveTextBox: function (data, list) {
-        var me = this;
+        var me=this,
+            arr = [], txt, res, id;
         for (var i = 0, tmp; tmp = list[i++];) {
             if (utils.isString(tmp)) {
                 data[tmp] = (G(tmp).value);
             } else {
-                var id = tmp['id'];
-                data[id] = me._isEmpty((G(id).value));
+                id = tmp['id'];
+                txt = G(id).value;
+                data[id] = txt;
+
+                //判断是否为空
+                res = !txt.replace(/'[ \t\r\n]*'/g, "").length;
+                arr.push(res)
             }
         }
+       me._setHasEmpty(arr);
     },
     _saveCheckBox: function (data, list) {
         var node, txt;
