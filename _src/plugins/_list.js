@@ -944,7 +944,13 @@ UE.plugins['list'] = function () {
 
                 //图文模板
                 if(range.collapsed){
-                    tpl= domUtils.filterNodeList(this.selection.getStartElementPath(), "iframe");
+                    var start=range.startContainer;
+                    if(start){
+                        var node=start.previousSibling;
+                        if(node&&/iframe/i.test(node.tagName)){
+                            tpl=node;
+                        }
+                    }
                 }else{
                     tpl = domUtils.findTagNamesInSelection(range, ["iframe"], function (node) {
                         return /-template/.test(node.className);
