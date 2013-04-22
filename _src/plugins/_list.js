@@ -930,7 +930,7 @@ UE.plugins['list'] = function () {
 
             },
             queryCommandState:function (command) {
-                var range = this.selection.getRange(), ps,tpl;
+                var range = this.selection.getRange(), ps;
 
                 //标题
                 if (range.collapsed) {
@@ -943,22 +943,15 @@ UE.plugins['list'] = function () {
                 }
 
                 //图文模板
-                if(range.collapsed){
-                    var start=range.startContainer;
-                    if(start){
-                        var node=start.previousSibling;
-                        if(node&&/iframe/i.test(node.tagName)){
-                            tpl=node;
-                        }
-                    }
-                }else{
-                    tpl = domUtils.findTagNamesInSelection(range, ["iframe"], function (node) {
+                if(!range.collapsed){
+                   var tpl = domUtils.findTagNamesInSelection(range, ["iframe"], function (node) {
                         return /-template/.test(node.className);
                     });
+                    if (tpl) {
+                        return -1;
+                    }
                 }
-                if (tpl) {
-                    return -1;
-                }
+
 
                 return domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
             },
