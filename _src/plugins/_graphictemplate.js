@@ -93,4 +93,32 @@ UE.plugins['graphictemplate'] = function () {
         }
     });
 
+    me.moveTemplate = function (dragId,cxt,frameElement) {
+        var isSelect = false;
+        domUtils.on(cxt, "click", function (e) {
+            var tgt = e.target || e.srcElement;
+            if (tgt.id == dragId) {
+                var rng = me.selection.getRange();
+                rng.setStart(frameElement, 0);
+                rng.setEnd(frameElement, 1);
+                rng.select(true);
+                isSelect = true;
+            }
+        });
+        me.addListener("click", function () {
+            if (isSelect && frameElement) {
+                var rng = me.selection.getRange();
+                var node = domUtils.findParentByTagName(rng.startContainer, "li");
+                if (node) {
+                    me.body.style.cursor = "not-allowed";
+                } else {
+                    rng.insertNode(frameElement);
+                }
+                isSelect = false;
+            } else {
+                me.body.style.cursor = "default";
+            }
+        });
+    };
+
 };
