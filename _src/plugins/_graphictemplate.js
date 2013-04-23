@@ -3,11 +3,11 @@ UE.plugins['graphictemplate'] = function () {
     var id = 0;
 
     me["graphictemplate"] = {};
-    var tpl= me["graphictemplate"];
+    var tpl = me["graphictemplate"];
 
     me.commands['graphictemplate'] = {
         execCommand: function (cmd, value) {
-            id=parseInt(id);
+            id = parseInt(id);
             id += 1;
             var ifr = "<iframe  width='678'  align='center' scroling='no' frameborder='0'  " +
                 "class=" + value + "-template " +
@@ -15,7 +15,7 @@ UE.plugins['graphictemplate'] = function () {
                 "src=" + me.options["graphictemplateUrlMap"][value] +
                 "></iframe>";
 
-            me.execCommand("inserthtml",'<p contenteditable="false">'+ifr+'</p>');
+            me.execCommand("inserthtml", '<p contenteditable="false">' + ifr + '</p>');
         },
         queryCommandState: function () {
             var rng = this.selection.getRange().cloneRange();
@@ -55,7 +55,7 @@ UE.plugins['graphictemplate'] = function () {
             var val;
             if ((val = pi.getAttr('class')) && /-template/.test(val)) {
                 var tmpDiv = me.document.createElement('div');
-                id = pi.getAttr("id").replace("graphictemplate-","");
+                id = pi.getAttr("id").replace("graphictemplate-", "");
                 me.graphictemplate[id] = (new Function("return (" + pi.innerHTML() + ")"))();
                 tmpDiv.innerHTML = "<iframe  width='678'  align='center' scroling='no' frameborder='0'" +
                     "class='" + val + "'" +
@@ -96,30 +96,38 @@ UE.plugins['graphictemplate'] = function () {
     });
 
 
-    //移动模板
+    /*
+     *移动、关闭模板
+     */
     tpl.isSelect = false;
-    tpl.currentTemplate=null;
-
-    tpl.moveTemplate = function (dragId,win) {
-        var doc=win.document;
+    tpl.currentTemplate = null;
+    tpl.templateAction = function (win) {
+        var doc = win.document;
         domUtils.on(doc, "click", function (e) {
             var tgt = e.target || e.srcElement;
-            if (tgt.id == dragId) {
-                doc.getElementById("J_mask").style.display="";
-                me.graphictemplate.isSelect = true;
+            tpl.currentTemplate = win.frameElement;
+
+            switch (tgt.id) {
+                case "J_drag":
+                    doc.getElementById("J_mask").style.display = "";
+                    me.graphictemplate.isSelect = true;
+                    break;
+                case "J_close":
+                    domUtils.remove(tpl.currentTemplate.parentNode);
+                    break;
             }
-            tpl.currentTemplate=win.frameElement;
+
         });
     };
     me.addListener("click", function () {
-        var ifr= tpl.currentTemplate;
+        var ifr = tpl.currentTemplate;
         if (me.graphictemplate.isSelect && ifr) {
             var rng = me.selection.getRange();
             var node = domUtils.findParentByTagName(rng.startContainer, "li");
             if (node) {
                 me.body.style.cursor = "not-allowed";
             } else {
-                me.execCommand("inserthtml",ifr.parentNode.outerHTML);
+                me.execCommand("inserthtml", ifr.parentNode.outerHTML);
                 domUtils.remove(ifr.parentNode);
             }
             tpl.isSelect = false;
@@ -127,5 +135,4 @@ UE.plugins['graphictemplate'] = function () {
             me.body.style.cursor = "default";
         }
     });
-
 };

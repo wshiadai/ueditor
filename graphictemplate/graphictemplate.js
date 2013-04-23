@@ -54,7 +54,7 @@
             GraphicTemplate.addPageListener();
             GraphicTemplate.setPageData(data);
             GraphicTemplate.savePageData();
-            editor.graphictemplate.moveTemplate("J_drag", window);
+            editor.graphictemplate.templateAction(window);
             iframeAutoHeight();
         });
         /*
