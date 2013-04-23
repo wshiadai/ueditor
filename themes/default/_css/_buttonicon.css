@@ -44,25 +44,25 @@
 }
 
 .edui-default .edui-for-heading1 .edui-icon {
-    background-position: -362px -2px;
+    background-position: -242px -2px;
 }
 .edui-default .edui-for-heading1 .edui-state-hover .edui-icon {
-    background-position: -362px -42px;
+    background-position: -242px -42px;
 }
 .edui-default .edui-for-heading1 .edui-state-active .edui-icon,
 .edui-default .edui-for-heading1 .edui-state-checked .edui-icon {
-    background-position: -362px -82px;
+    background-position: -242px -82px;
 }
 
 .edui-default  .edui-toolbar  .edui-for-autotypeset .edui-icon {
     width:62px !important;
-    background-position: -478px -2px;
+    background-position: -358px -2px;
 }
 .edui-default  .edui-for-autotypeset  .edui-state-hover  .edui-icon {
-    background-position: -478px -42px;
+    background-position: -358px -42px;
 }
 .edui-default .edui-for-autotypeset .edui-state-active .edui-icon,.edui-default  .edui-for-autotypeset  .edui-state-checked  .edui-icon {
-    background-position: -478px -82px;
+    background-position: -358px -82px;
 }
 
 .edui-default  .edui-for-insertorderedlist .edui-icon {
@@ -86,33 +86,33 @@
 }
 
 .edui-default  .edui-for-insertimage .edui-icon {
-    background-position: -396px -2px
+    background-position: -276px -2px
 }
 .edui-default  .edui-for-insertimage .edui-state-hover  .edui-icon {
-    background-position: -396px -42px;
+    background-position: -276px -42px;
 }
 .edui-default .edui-for-insertimage .edui-state-active .edui-icon,.edui-default  .edui-for-insertimage .edui-state-checked  .edui-icon {
-    background-position: -396px -82px;
+    background-position: -276px -82px;
 }
 
 .edui-default  .edui-for-insertvideo .edui-icon {
-    background-position: -430px -2px;
+    background-position: -310px -2px;
 }
 .edui-default  .edui-for-insertvideo .edui-state-hover .edui-icon {
-    background-position: -430px -42px;
+    background-position: -310px -42px;
 }
 .edui-default .edui-for-insertvideo .edui-state-active .edui-icon,.edui-default  .edui-for-insertvideo .edui-state-checked .edui-icon {
-    background-position: -430px -82px;
+    background-position: -310px -82px;
 }
 
 .edui-default .edui-toolbar .edui-for-graphictemplate .edui-icon {
     width:76px !important;
-    background-position: -558px -2px;
+    background-position: -438px -2px;
 }
 .edui-default  .edui-for-graphictemplate .edui-state-hover .edui-icon {
-    background-position: -558px -42px;
+    background-position: -438px -42px;
 }
 .edui-default .edui-for-graphictemplate .edui-state-active .edui-icon,
 .edui-default  .edui-for-graphictemplate .edui-state-checked .edui-icon {
-    background-position: -558px -82px;
+    background-position: -438px -82px;
 }
