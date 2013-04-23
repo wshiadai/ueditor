@@ -19,7 +19,7 @@
                 <span class="key">名称:</span>
             </div>
             <div class="left">
-                <input type="text" id="J_name" maxlength="40" class="textbox wt1"/>
+                <input type="text" id="J_name" maxlength="40" class="textbox wt1" value='例:百度拼音输入法'/>
             </div>
         </div>
         <div class="section">
@@ -28,8 +28,8 @@
                 <span class="key">类型:</span>
             </div>
             <div class="left">
-                <label><input type="radio" name="type" id="J_pc" checked/>电脑</label>
-                <label><input type="radio" id="J_mobile" name="type"/>移动平台</label>
+                <label><input type="radio" name="type" class="radiobox" id="J_pc" checked/>电脑</label>
+                <label><input type="radio" id="J_mobile" class="radiobox"  name="type"/>移动平台</label>
             </div>
         </div>
         <div class="section">
@@ -94,8 +94,8 @@
                     <span class="key">价格:</span>
                 </div>
                 <div class="left">
-                    <label><input type="radio" name="price" id="J_free" checked/>免费</label>
-                    <label><input type="radio" name="price" id="J_pay"/>付费</label>
+                    <label><input type="radio" class="radiobox" name="price" id="J_free" checked/>免费</label>
+                    <label><input type="radio" class="radiobox" name="price" id="J_pay"/>付费</label>
                     <input type="text" class="textbox" id="J_money" maxlength="10" style="width: 78px;cursor: not-allowed;" readOnly=true />
                     <span class="unit">元</span>
                 </div>

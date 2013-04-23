@@ -11,6 +11,7 @@
 .section .rightarea{float:left;width: 300px;overflow: hidden;}
 .section .dropdownbox{padding-left: 10px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;width: 130px;outline: 0;}
 .section .textbox{ padding-left: 10px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;outline: 0;}
+.section .radiobox{ margin-right: 5px;}
 .section .textbox.focus{ border-color: #77d068;color:#333;}
 .section .dropdownbox.focus{color:#333;}
 .section .wt1{ width: 398px;}
