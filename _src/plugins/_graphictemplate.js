@@ -92,7 +92,6 @@ UE.plugins['graphictemplate'] = function () {
             tmp = node.getAttribute("hasempty");
             attrs.hasemptyStorage.push(tmp);
 
-            //设置一个中间高度，减少闪烁
             node.removeAttribute('height');
             node.removeAttribute('hasempty');
         });
