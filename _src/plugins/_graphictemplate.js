@@ -57,7 +57,7 @@ UE.plugins['graphictemplate'] = function () {
                 var tmpDiv = me.document.createElement('div');
                 id = pi.getAttr("id").replace("graphictemplate-", "");
                 me.graphictemplate[id] = (new Function("return (" + pi.innerHTML() + ")"))();
-                tmpDiv.innerHTML = "<iframe  width='678'  align='center' scroling='no' frameborder='0'" +
+                tmpDiv.innerHTML = "<iframe  width='678' height='300'  align='center' scroling='no' frameborder='0'" +
                     "class='" + val + "'" +
                     "id='graphictemplate-" + id + "'" +
                     "src=" + me.options.graphictemplateUrlMap[val.replace("-template", "")] +
@@ -81,7 +81,8 @@ UE.plugins['graphictemplate'] = function () {
         utils.each(list, function (node) {
             var tmp = node.getAttribute("height");
             heightStorage.push(tmp);
-            node.removeAttribute("height");
+            node.setAttribute("height",300);
+//            node.removeAttribute("height");
         });
     });
     me.addListener("aftergetscene", function () {
