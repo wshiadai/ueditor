@@ -1,7 +1,9 @@
 UE.plugins['graphictemplate'] = function () {
     var me = this;
     var id = 0;
+
     me["graphictemplate"] = {};
+    var tpl= me["graphictemplate"];
 
     me.commands['graphictemplate'] = {
         execCommand: function (cmd, value) {
@@ -93,32 +95,37 @@ UE.plugins['graphictemplate'] = function () {
         }
     });
 
-    var isSelect = false;
-    me.moveTemplate = function (dragId,cxt,frameElement) {
-        domUtils.on(cxt, "click", function (e) {
+
+    //移动模板
+    tpl.isSelect = false;
+    tpl.currentTemplate=null;
+
+    tpl.moveTemplate = function (dragId,win) {
+        var doc=win.document;
+        domUtils.on(doc, "click", function (e) {
             var tgt = e.target || e.srcElement;
             if (tgt.id == dragId) {
-                var node=cxt.getElementById("J_mask");
-                node.style.display="";
-                isSelect = true;
+                doc.getElementById("J_mask").style.display="";
+                me.graphictemplate.isSelect = true;
             }
-        });
-        me.addListener("click", function () {
-            if (isSelect && frameElement) {
-
-                var rng = me.selection.getRange();
-                var node = domUtils.findParentByTagName(rng.startContainer, "li");
-                if (node) {
-                    me.body.style.cursor = "not-allowed";
-                } else {
-                    me.execCommand("inserthtml",frameElement.parentNode.outerHTML);
-                    domUtils.remove(frameElement.parentNode);
-                }
-                isSelect = false;
-            } else {
-                me.body.style.cursor = "default";
-            }
+            tpl.currentTemplate=win.frameElement;
         });
     };
+    me.addListener("click", function () {
+        var ifr= tpl.currentTemplate;
+        if (me.graphictemplate.isSelect && ifr) {
+            var rng = me.selection.getRange();
+            var node = domUtils.findParentByTagName(rng.startContainer, "li");
+            if (node) {
+                me.body.style.cursor = "not-allowed";
+            } else {
+                me.execCommand("inserthtml",ifr.parentNode.outerHTML);
+                domUtils.remove(ifr.parentNode);
+            }
+            tpl.isSelect = false;
+        } else {
+            me.body.style.cursor = "default";
+        }
+    });
 
 };

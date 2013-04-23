@@ -48,14 +48,13 @@
          * 页面数据加载
          * */
         domUtils.on(window, 'load', function () {
-            var tpl = GraphicTemplate;
             var data = editor["graphictemplate"][frameElement.id];
 
-            tpl.initPage && tpl.initPage(data);
-            tpl.addPageListener();
-            tpl.setPageData(data);
-            tpl.savePageData();
-            editor.moveTemplate("J_drag", document, frameElement);
+            GraphicTemplate.initPage && GraphicTemplate.initPage(data);
+            GraphicTemplate.addPageListener();
+            GraphicTemplate.setPageData(data);
+            GraphicTemplate.savePageData();
+            editor.graphictemplate.moveTemplate("J_drag", window);
             iframeAutoHeight();
         });
         /*
@@ -63,6 +62,8 @@
          * */
         domUtils.on(browser.ie ? frameElement : window, "blur", function () {
             GraphicTemplate.savePageData();
+            //去掉选中状态
+            document.getElementById("J_mask").style.display="none";
         });
     }
 })();
