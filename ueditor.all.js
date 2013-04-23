@@ -798,6 +798,148 @@ utils.each(['String', 'Function', 'Array', 'Number', 'RegExp', 'Object'], functi
     }
 });
 /**
+ * Json转字符串
+ * @name value
+ * @grammar UE.utils.isNumber(obj)  => true|false
+ */
+utils.stringify=(function () {
+    /**
+     * 字符串处理时需要转义的字符表
+     * @private
+     */
+    var escapeMap = {
+        "\b": '\\b',
+        "\t": '\\t',
+        "\n": '\\n',
+        "\f": '\\f',
+        "\r": '\\r',
+        '"' : '\\"',
+        "\\": '\\\\'
+    };
+
+    /**
+     * 字符串序列化
+     * @private
+     */
+    function encodeString(source) {
+        if (/["\\\x00-\x1f]/.test(source)) {
+            source = source.replace(
+                /["\\\x00-\x1f]/g,
+                function (match) {
+                    var c = escapeMap[match];
+                    if (c) {
+                        return c;
+                    }
+                    c = match.charCodeAt();
+                    return "\\u00"
+                        + Math.floor(c / 16).toString(16)
+                        + (c % 16).toString(16);
+                });
+        }
+        return '"' + source + '"';
+    }
+
+    /**
+     * 数组序列化
+     * @private
+     */
+    function encodeArray(source) {
+        var result = ["["],
+            l = source.length,
+            preComma, i, item;
+
+        for (i = 0; i < l; i++) {
+            item = source[i];
+
+            switch (typeof item) {
+                case "undefined":
+                case "function":
+                case "unknown":
+                    break;
+                default:
+                    if(preComma) {
+                        result.push(',');
+                    }
+                    result.push(utils.stringify(item));
+                    preComma = 1;
+            }
+        }
+        result.push("]");
+        return result.join("");
+    }
+
+    /**
+     * 处理日期序列化时的补零
+     * @private
+     */
+    function pad(source) {
+        return source < 10 ? '0' + source : source;
+    }
+
+    /**
+     * 日期序列化
+     * @private
+     */
+    function encodeDate(source){
+        return '"' + source.getFullYear() + "-"
+            + pad(source.getMonth() + 1) + "-"
+            + pad(source.getDate()) + "T"
+            + pad(source.getHours()) + ":"
+            + pad(source.getMinutes()) + ":"
+            + pad(source.getSeconds()) + '"';
+    }
+
+    return function (value) {
+        switch (typeof value) {
+            case 'undefined':
+                return 'undefined';
+
+            case 'number':
+                return isFinite(value) ? String(value) : "null";
+
+            case 'string':
+                return encodeString(value);
+
+            case 'boolean':
+                return String(value);
+
+            default:
+                if (value === null) {
+                    return 'null';
+                } else if (utils.isArray(value)) {
+                    return encodeArray(value);
+                } else if (value instanceof Date) {
+                    return encodeDate(value);
+                } else {
+                    var result = ['{'],
+                        encode = utils.stringify,
+                        preComma,
+                        item;
+
+                    for (var key in value) {
+                        if (Object.prototype.hasOwnProperty.call(value, key)) {
+                            item = value[key];
+                            switch (typeof item) {
+                                case 'undefined':
+                                case 'unknown':
+                                case 'function':
+                                    break;
+                                default:
+                                    if (preComma) {
+                                        result.push(',');
+                                    }
+                                    preComma = 1;
+                                    result.push(encode(key) + ':' + encode(item));
+                            }
+                        }
+                    }
+                    result.push('}');
+                    return result.join('');
+                }
+        }
+    };
+})();
+/**
  * @file
  * @name UE.EventBase
  * @short EventBase
@@ -1756,8 +1898,8 @@ var domUtils = dom.domUtils = {
      */
     getElementsByTagName:function (node, name,filter) {
         if(filter && utils.isString(filter)){
-           var className = filter;
-           filter =  function(node){return domUtils.hasClass(node,className)}
+            var className = filter;
+            filter =  function(node){return domUtils.hasClass(node,className)}
         }
         name = utils.trim(name).replace(/[ ]{2,}/g,' ').split(' ');
         var arr = [];
@@ -7078,6 +7220,234 @@ UE.plugins['selectall'] = function(){
 };
 
 ///import core
+///import plugins/serialize.js
+///import plugins/undo.js
+///commands 查看源码
+///commandsName  Source
+///commandsTitle  查看源码
+(function (){
+    var sourceEditors = {
+        textarea: function (editor, holder){
+            var textarea = holder.ownerDocument.createElement('textarea');
+            textarea.style.cssText = 'position:absolute;resize:none;width:100%;height:100%;border:0;padding:0;margin:0;overflow-y:auto;';
+            // todo: IE下只有onresize属性可用... 很纠结
+            if (browser.ie && browser.version < 8) {
+                textarea.style.width = holder.offsetWidth + 'px';
+                textarea.style.height = holder.offsetHeight + 'px';
+                holder.onresize = function (){
+                    textarea.style.width = holder.offsetWidth + 'px';
+                    textarea.style.height = holder.offsetHeight + 'px';
+                };
+            }
+            holder.appendChild(textarea);
+            return {
+                setContent: function (content){
+                    textarea.value = content;
+                },
+                getContent: function (){
+                    return textarea.value;
+                },
+                select: function (){
+                    var range;
+                    if (browser.ie) {
+                        range = textarea.createTextRange();
+                        range.collapse(true);
+                        range.select();
+                    } else {
+                        //todo: chrome下无法设置焦点
+                        textarea.setSelectionRange(0, 0);
+                        textarea.focus();
+                    }
+                },
+                dispose: function (){
+                    holder.removeChild(textarea);
+                    // todo
+                    holder.onresize = null;
+                    textarea = null;
+                    holder = null;
+                }
+            };
+        },
+        codemirror: function (editor, holder){
+
+            var codeEditor = window.CodeMirror(holder, {
+                mode: "text/html",
+                tabMode: "indent",
+                lineNumbers: true,
+                lineWrapping:true
+            });
+            var dom = codeEditor.getWrapperElement();
+            dom.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;font-family:consolas,"Courier new",monospace;font-size:13px;';
+            codeEditor.getScrollerElement().style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;';
+            codeEditor.refresh();
+            return {
+                getCodeMirror:function(){
+                    return codeEditor;
+                },
+                setContent: function (content){
+                    codeEditor.setValue(content);
+                },
+                getContent: function (){
+                    return codeEditor.getValue();
+                },
+                select: function (){
+                    codeEditor.focus();
+                },
+                dispose: function (){
+                    holder.removeChild(dom);
+                    dom = null;
+                    codeEditor = null;
+                }
+            };
+        }
+    };
+
+    UE.plugins['source'] = function (){
+        var me = this;
+        var opt = this.options;
+        var sourceMode = false;
+        var sourceEditor;
+
+        opt.sourceEditor = browser.ie  ? 'textarea' : (opt.sourceEditor || 'codemirror');
+
+        me.setOpt({
+            sourceEditorFirst:false
+        });
+        function createSourceEditor(holder){
+            return sourceEditors[opt.sourceEditor == 'codemirror' && window.CodeMirror ? 'codemirror' : 'textarea'](me, holder);
+        }
+
+        var bakCssText;
+        //解决在源码模式下getContent不能得到最新的内容问题
+        var oldGetContent = me.getContent,
+            bakAddress;
+
+        me.commands['source'] = {
+            execCommand: function (){
+
+                sourceMode = !sourceMode;
+                if (sourceMode) {
+                    bakAddress = me.selection.getRange().createAddress(false,true);
+                    me.undoManger && me.undoManger.save(true);
+                    if(browser.gecko){
+                        me.body.contentEditable = false;
+                    }
+
+                    bakCssText = me.iframe.style.cssText;
+                    me.iframe.style.cssText += 'position:absolute;left:-32768px;top:-32768px;';
+                    var root = UE.htmlparser(me.getContent());
+
+                    var content = me.hasContents() ? root.toHtml(true) : '';
+
+                    sourceEditor = createSourceEditor(me.iframe.parentNode);
+
+                    sourceEditor.setContent(content);
+                    setTimeout(function (){
+                        sourceEditor.select();
+                        me.addListener('fullscreenchanged', function(){
+                            try{
+                                sourceEditor.getCodeMirror().refresh()
+                            }catch(e){}
+                        });
+                    });
+                    //重置getContent，源码模式下取值也能是最新的数据
+                    me.getContent = function (){
+                        return sourceEditor.getContent() || '<p>' + (browser.ie ? '' : '<br/>')+'</p>';
+                    };
+                } else {
+                    me.iframe.style.cssText = bakCssText;
+                    var cont = sourceEditor.getContent() || '<p>' + (browser.ie ? '' : '<br/>')+'</p>';
+                    me.setContent(cont);
+                    sourceEditor.dispose();
+                    sourceEditor = null;
+                    //还原getContent方法
+                    me.getContent = oldGetContent;
+                    var first = me.body.firstChild;
+                    //trace:1106 都删除空了，下边会报错，所以补充一个p占位
+                    if(!first){
+                        me.body.innerHTML = '<p>'+(browser.ie?'':'<br/>')+'</p>';
+                        first = me.body.firstChild;
+                    }
+                    //要在ifm为显示时ff才能取到selection,否则报错
+                    //这里不能比较位置了
+                    me.undoManger && me.undoManger.save(true);
+
+                    if(browser.gecko){
+
+                        var input = document.createElement('input');
+                        input.style.cssText = 'position:absolute;left:0;top:-32768px';
+
+                        document.body.appendChild(input);
+
+                        me.body.contentEditable = false;
+                        setTimeout(function(){
+                            domUtils.setViewportOffset(input, { left: -32768, top: 0 });
+                            input.focus();
+                            setTimeout(function(){
+                                me.body.contentEditable = true;
+                                me.selection.getRange().moveToAddress(bakAddress).select();
+                                domUtils.remove(input);
+                            });
+
+                        });
+                    }else{
+                        //ie下有可能报错，比如在代码顶头的情况
+                        try{
+                            me.selection.getRange().moveToAddress(bakAddress).select();
+                        }catch(e){}
+
+                    }
+                }
+                this.fireEvent('sourcemodechanged', sourceMode);
+            },
+            queryCommandState: function (){
+                return sourceMode|0;
+            },
+            notNeedUndo : 1
+        };
+        var oldQueryCommandState = me.queryCommandState;
+
+        me.queryCommandState = function (cmdName){
+            cmdName = cmdName.toLowerCase();
+            if (sourceMode) {
+                //源码模式下可以开启的命令
+                return cmdName in {
+                    'source' : 1,
+                    'fullscreen' : 1
+                } ? 1 : -1
+            }
+            return oldQueryCommandState.apply(this, arguments);
+        };
+
+        if(opt.sourceEditor == "codemirror"){
+
+            me.addListener("ready",function(){
+                utils.loadFile(document,{
+                    src : opt.codeMirrorJsUrl || opt.UEDITOR_HOME_URL + "third-party/codemirror/codemirror.js",
+                    tag : "script",
+                    type : "text/javascript",
+                    defer : "defer"
+                },function(){
+                    if(opt.sourceEditorFirst){
+                        setTimeout(function(){
+                            me.execCommand("source");
+                        },0);
+                    }
+                });
+                utils.loadFile(document,{
+                    tag : "link",
+                    rel : "stylesheet",
+                    type : "text/css",
+                    href : opt.codeMirrorCssUrl || opt.UEDITOR_HOME_URL + "third-party/codemirror/codemirror.css"
+                });
+
+            });
+        }
+
+    };
+
+})();
+///import core
 ///commands 字数统计
 ///commandsName  WordCount,wordCount
 ///commandsTitle  字数统计
@@ -7628,7 +7998,7 @@ UE.plugins['list'] = function () {
         'disc':'exp-ul'
     };
 
-    me.setOpt( {
+    me.setOpt({
         'insertorderedlist':{
             'num':'',
             'num1':'',
@@ -7646,182 +8016,183 @@ UE.plugins['list'] = function () {
             'circle':'',
             'disc':'',
             'square':'',
-            'dash' : '',
+            'dash':'',
             'dot':''
         },
-        listDefaultPaddingLeft : '30',
-        listiconpath : 'http://bs.baidu.com/listicon/',
-        maxListLevel : 1//-1不限制
-    } );
+        listDefaultPaddingLeft:'30',
+        listiconpath:'http://bs.baidu.com/listicon/',
+        maxListLevel:1//-1不限制
+    });
     var liiconpath = me.options.listiconpath;
 
     //根据用户配置，调整customStyle
-    for(var s in customStyle){
-        if(!me.options.insertorderedlist.hasOwnProperty(s) && !me.options.insertunorderedlist.hasOwnProperty(s)){
+    for (var s in customStyle) {
+        if (!me.options.insertorderedlist.hasOwnProperty(s) && !me.options.insertunorderedlist.hasOwnProperty(s)) {
             delete customStyle[s];
         }
     }
 
     me.ready(function () {
         var customCss = [];
-        for(var p in customStyle){
-            if(p == 'dash' || p == 'dot'){
-                customCss.push('li.list-' + customStyle[p] + '{background-image:url(' + liiconpath +customStyle[p]+'.gif)}');
-                customCss.push('ul.custom_'+p+'{list-style:none;}ul.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
-            }else if(p == 'disc'){
+        for (var p in customStyle) {
+            if (p == 'dash' || p == 'dot') {
+                customCss.push('li.list-' + customStyle[p] + '{background-image:url(' + liiconpath + customStyle[p] + '.gif)}');
+                customCss.push('ul.custom_' + p + '{list-style:none;}ul.custom_' + p + ' li{background-position:0 3px;background-repeat:no-repeat}');
+            } else if (p == 'disc') {
                 customCss.push('li.list-' + customStyle[p] + '{background-image:url(http://img.baidu.com/img/iknow/exp/global/unsortlist.png);background-repeat:no-repeat;background-position: 11px 8px;}');
-            }else if(p == 'decimal'){
-                for(var i= 0;i<99;i++){
-                    customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(http://img.baidu.com/img/iknow/exp/edit/edit-num' +  i + '.png)}')
+            } else if (p == 'decimal') {
+                for (var i = 0; i < 99; i++) {
+                    customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(http://img.baidu.com/img/iknow/exp/edit/edit-num' + i + '.png)}')
                 }
-                customCss.push('ol.custom_'+p+'{list-style:none;}ol.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
-            }else{
-                for(var i= 0;i<99;i++){
-                    customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(' + liiconpath + 'list-'+customStyle[p] + i + '.gif)}')
+                customCss.push('ol.custom_' + p + '{list-style:none;}ol.custom_' + p + ' li{background-position:0 3px;background-repeat:no-repeat}');
+            } else {
+                for (var i = 0; i < 99; i++) {
+                    customCss.push('li.list-' + customStyle[p] + i + '{background-image:url(' + liiconpath + 'list-' + customStyle[p] + i + '.gif)}')
                 }
-                customCss.push('ol.custom_'+p+'{list-style:none;}ol.custom_'+p+' li{background-position:0 3px;background-repeat:no-repeat}');
+                customCss.push('ol.custom_' + p + '{list-style:none;}ol.custom_' + p + ' li{background-position:0 3px;background-repeat:no-repeat}');
             }
-            switch(p){
+            switch (p) {
                 case 'cn':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding-left:25px}');
-                    customCss.push('li.list-'+p+'-paddingleft-2{padding-left:40px}');
-                    customCss.push('li.list-'+p+'-paddingleft-3{padding-left:55px}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding-left:25px}');
+                    customCss.push('li.list-' + p + '-paddingleft-2{padding-left:40px}');
+                    customCss.push('li.list-' + p + '-paddingleft-3{padding-left:55px}');
                     break;
                 case 'cn1':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding-left:30px}');
-                    customCss.push('li.list-'+p+'-paddingleft-2{padding-left:40px}');
-                    customCss.push('li.list-'+p+'-paddingleft-3{padding-left:55px}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding-left:30px}');
+                    customCss.push('li.list-' + p + '-paddingleft-2{padding-left:40px}');
+                    customCss.push('li.list-' + p + '-paddingleft-3{padding-left:55px}');
                     break;
                 case 'cn2':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding-left:40px}');
-                    customCss.push('li.list-'+p+'-paddingleft-2{padding-left:55px}');
-                    customCss.push('li.list-'+p+'-paddingleft-3{padding-left:68px}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding-left:40px}');
+                    customCss.push('li.list-' + p + '-paddingleft-2{padding-left:55px}');
+                    customCss.push('li.list-' + p + '-paddingleft-3{padding-left:68px}');
                     break;
                 case 'num':
                 case 'num1':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding-left:25px}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding-left:25px}');
                     break;
                 case 'num2':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding-left:35px}');
-                    customCss.push('li.list-'+p+'-paddingleft-2{padding-left:40px}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding-left:35px}');
+                    customCss.push('li.list-' + p + '-paddingleft-2{padding-left:40px}');
                     break;
                 case 'dash':
-                    customCss.push('li.list-'+p+'-paddingleft{padding-left:35px}');
+                    customCss.push('li.list-' + p + '-paddingleft{padding-left:35px}');
                     break;
                 case 'dot':
-                    customCss.push('li.list-'+p+'-paddingleft{padding-left:20px}');
+                    customCss.push('li.list-' + p + '-paddingleft{padding-left:20px}');
                     break;
                 case 'decimal':
-                    customCss.push('li.list-'+p+'-paddingleft-1{padding:9px 0 9px 42px;+padding-bottom:1px;}');
+                    customCss.push('li.list-' + p + '-paddingleft-1{padding:9px 0 9px 42px;+padding-bottom:1px;}');
                     break;
                 case 'disc':
-                    customCss.push('li.list-'+p+'-paddingleft{padding-left:41px}');
+                    customCss.push('li.list-' + p + '-paddingleft{padding-left:41px}');
             }
         }
         customCss.push('.list-paddingleft-1{padding-left:0}');
-        customCss.push('.list-paddingleft-2{padding-left:'+me.options.listDefaultPaddingLeft+'px}');
-        customCss.push('.list-paddingleft-3{padding-left:'+me.options.listDefaultPaddingLeft*2+'px}');
+        customCss.push('.list-paddingleft-2{padding-left:' + me.options.listDefaultPaddingLeft + 'px}');
+        customCss.push('.list-paddingleft-3{padding-left:' + me.options.listDefaultPaddingLeft * 2 + 'px}');
         //如果不给宽度会在自定应样式里出现滚动条
-        utils.cssRule('list', 'ol,ul{margin:0;pading:0;'+(browser.ie ? '' : 'width:95%')+'}li{clear:both;}'+customCss.join('\n'), me.document);
+        utils.cssRule('list', 'ol,ul{margin:0;pading:0;' + (browser.ie ? '' : 'width:95%') + '}li{clear:both;}' + customCss.join('\n'), me.document);
     });
 
-    function getStyle(node){
+    function getStyle(node) {
         var cls = node.className;
-        if(domUtils.hasClass(node,/custom_/)){
+        if (domUtils.hasClass(node, /custom_/)) {
             return cls.match(/custom_(\w+)/)[1]
         }
         return ''
     }
+
     //进入编辑器的li要套p标签
-    me.addInputRule(function(root){
-        utils.each(root.getNodesByTagName('li'),function(li){
+    me.addInputRule(function (root) {
+        utils.each(root.getNodesByTagName('li'), function (li) {
             var tmpP = UE.uNode.createElement('p');
-            for(var i= 0,ci;ci=li.children[i];){
-                if(ci.type == 'text' || dtd.$inline[ci.tagName]){
+            for (var i = 0, ci; ci = li.children[i];) {
+                if (ci.type == 'text' || dtd.$inline[ci.tagName]) {
                     tmpP.appendChild(ci);
-                }else{
-                    if(tmpP.firstChild()){
-                        li.insertBefore(tmpP,ci);
+                } else {
+                    if (tmpP.firstChild()) {
+                        li.insertBefore(tmpP, ci);
                         tmpP = UE.uNode.createElement('p');
                         i = i + 2;
-                    }else{
+                    } else {
                         i++;
                     }
 
                 }
             }
-            if(tmpP.firstChild() && !tmpP.parentNode){
+            if (tmpP.firstChild() && !tmpP.parentNode) {
                 li.appendChild(tmpP);
             }
         })
     });
     //调整索引标签
-    me.addListener('contentchange',function(){
-        utils.each(domUtils.getElementsByTagName(me.document,'ol ul'),function(node){
+    me.addListener('contentchange', function () {
+        utils.each(domUtils.getElementsByTagName(me.document, 'ol ul'), function (node) {
 
-            if(!domUtils.inDoc(node,me.document))
+            if (!domUtils.inDoc(node, me.document))
                 return;
-            var index = 0,type = 2,parent = node.parentNode;
-            if( domUtils.hasClass(node,/custom_/)){
-                if(!(/[ou]l/i.test(parent.tagName) && domUtils.hasClass(parent,/custom_/))){
+            var index = 0, type = 2, parent = node.parentNode;
+            if (domUtils.hasClass(node, /custom_/)) {
+                if (!(/[ou]l/i.test(parent.tagName) && domUtils.hasClass(parent, /custom_/))) {
                     type = 1;
                 }
-            }else{
-                if(/[ou]l/i.test(parent.tagName) && domUtils.hasClass(parent,/custom_/)){
+            } else {
+                if (/[ou]l/i.test(parent.tagName) && domUtils.hasClass(parent, /custom_/)) {
                     type = 3;
                 }
             }
             style = domUtils.getStyle(node, 'list-style-type');
             node.style.cssText = style ? 'list-style-type:' + style : '';
-            node.className = utils.trim(node.className.replace(/list-paddingleft-\w+/,'')) + ' list-paddingleft-' + type;
-            utils.each(domUtils.getElementsByTagName(node,'li'),function(li){
+            node.className = utils.trim(node.className.replace(/list-paddingleft-\w+/, '')) + ' list-paddingleft-' + type;
+            utils.each(domUtils.getElementsByTagName(node, 'li'), function (li) {
                 li.style.cssText && (li.style.cssText = '');
-                if(!li.firstChild){
+                if (!li.firstChild) {
                     domUtils.remove(li);
                     return;
                 }
-                if(li.parentNode !== node){
+                if (li.parentNode !== node) {
                     return;
                 }
                 index++;
-                if(domUtils.hasClass(node,/custom_/) ){
-                    var paddingLeft = 1,currentStyle = getStyle(node);
-                    if(node.tagName == 'OL'){
-                        if(currentStyle){
-                            switch(currentStyle){
+                if (domUtils.hasClass(node, /custom_/)) {
+                    var paddingLeft = 1, currentStyle = getStyle(node);
+                    if (node.tagName == 'OL') {
+                        if (currentStyle) {
+                            switch (currentStyle) {
                                 case 'cn' :
                                 case 'cn1':
                                 case 'cn2':
-                                    if(index > 10 && (index % 10 == 0 || index > 10 && index < 20)){
+                                    if (index > 10 && (index % 10 == 0 || index > 10 && index < 20)) {
                                         paddingLeft = 2
-                                    }else if(index > 20){
+                                    } else if (index > 20) {
                                         paddingLeft = 3
                                     }
                                     break;
                                 case 'num2' :
-                                    if(index > 9){
+                                    if (index > 9) {
                                         paddingLeft = 2
                                     }
                             }
                         }
-                        li.className = 'list-'+customStyle[currentStyle]+ index + ' ' + 'list-'+currentStyle+'-paddingleft-' + paddingLeft;
-                    }else{
-                        li.className = 'list-'+customStyle[currentStyle]  + ' ' + 'list-'+currentStyle+'-paddingleft';
+                        li.className = 'list-' + customStyle[currentStyle] + index + ' ' + 'list-' + currentStyle + '-paddingleft-' + paddingLeft;
+                    } else {
+                        li.className = 'list-' + customStyle[currentStyle] + ' ' + 'list-' + currentStyle + '-paddingleft';
                     }
-                }else{
-                    li.className = li.className.replace(/list-[\w\-]+/gi,'');
+                } else {
+                    li.className = li.className.replace(/list-[\w\-]+/gi, '');
                 }
                 var className = li.getAttribute('class');
-                if(className !== null && !className.replace(/\s/g,'')){
-                    domUtils.removeAttributes(li,'class')
+                if (className !== null && !className.replace(/\s/g, '')) {
+                    domUtils.removeAttributes(li, 'class')
                 }
             });
-            adjustList(node,node.tagName.toLowerCase(),getStyle(node)||domUtils.getStyle(node, 'list-style-type'),true)
+            adjustList(node, node.tagName.toLowerCase(), getStyle(node) || domUtils.getStyle(node, 'list-style-type'), true)
         })
     });
 
 
-    function adjustList(list, tag, style,ignoreEmpty) {
+    function adjustList(list, tag, style, ignoreEmpty) {
         var nextList = list.nextSibling;
         if (nextList && nextList.nodeType == 1 && nextList.tagName.toLowerCase() == tag && (getStyle(nextList) || domUtils.getStyle(nextList, 'list-style-type') || (tag == 'ol' ? 'decimal' : 'disc')) == style) {
             domUtils.moveChild(nextList, list);
@@ -7829,30 +8200,32 @@ UE.plugins['list'] = function () {
                 domUtils.remove(nextList);
             }
         }
-        if(nextList && domUtils.isFillChar(nextList)){
+        if (nextList && domUtils.isFillChar(nextList)) {
             domUtils.remove(nextList);
         }
         var preList = list.previousSibling;
         if (preList && preList.nodeType == 1 && preList.tagName.toLowerCase() == tag && (getStyle(preList) || domUtils.getStyle(preList, 'list-style-type') || (tag == 'ol' ? 'decimal' : 'disc')) == style) {
             domUtils.moveChild(list, preList);
         }
-        if(preList && domUtils.isFillChar(preList)){
+        if (preList && domUtils.isFillChar(preList)) {
             domUtils.remove(preList);
         }
         !ignoreEmpty && domUtils.isEmptyBlock(list) && domUtils.remove(list);
     }
 
-    function setListStyle(list,style){
-        if(customStyle[style]){
+    function setListStyle(list, style) {
+        if (customStyle[style]) {
             list.className = 'custom_' + style;
         }
-        if(style == "decimal" || style == "disc"){
+        if (style == "decimal" || style == "disc") {
             style = "none";
         }
-        try{
+        try {
             domUtils.setStyle(list, 'list-style-type', style);
-        }catch(e){}
+        } catch (e) {
+        }
     }
+
     function clearEmptySibling(node) {
         var tmpNode = node.previousSibling;
         if (tmpNode && domUtils.isEmptyBlock(tmpNode)) {
@@ -7870,25 +8243,27 @@ UE.plugins['list'] = function () {
             me.fireEvent('contentchange');
             me.undoManger && me.undoManger.save();
         }
-        function findList(node,filterFn){
-            while(node && !domUtils.isBody(node)){
-                if(filterFn(node)){
+
+        function findList(node, filterFn) {
+            while (node && !domUtils.isBody(node)) {
+                if (filterFn(node)) {
                     return null
                 }
-                if(node.nodeType == 1 && /[ou]l/i.test(node.tagName)){
+                if (node.nodeType == 1 && /[ou]l/i.test(node.tagName)) {
                     return node;
                 }
                 node = node.parentNode;
             }
             return null;
         }
+
         var keyCode = evt.keyCode || evt.which;
         if (keyCode == 13 && !evt.shiftKey) {//回车
             var range = me.selection.getRange(),
-                start = findList(range.startContainer,function (node) {
+                start = findList(range.startContainer, function (node) {
                     return node.tagName == 'TABLE';
                 }),
-                end = range.collapsed ? start : findList(range.endContainer,function (node) {
+                end = range.collapsed ? start : findList(range.endContainer, function (node) {
                     return node.tagName == 'TABLE';
                 });
 
@@ -8043,11 +8418,11 @@ UE.plugins['list'] = function () {
                 if (li && domUtils.isStartInblock(tmpRange)) {
                     start = domUtils.findParentByTagName(range.startContainer, 'p', true);
                     if (start && start !== li.firstChild) {
-                        var parentList = domUtils.findParentByTagName(start,['ol','ul']);
-                        domUtils.breakParent(start,parentList);
+                        var parentList = domUtils.findParentByTagName(start, ['ol', 'ul']);
+                        domUtils.breakParent(start, parentList);
                         clearEmptySibling(start);
                         me.fireEvent('contentchange');
-                        range.setStart(start,0).setCursor(false,true);
+                        range.setStart(start, 0).setCursor(false, true);
                         me.fireEvent('saveScene');
                         domUtils.preventDefault(evt);
                         return;
@@ -8111,24 +8486,24 @@ UE.plugins['list'] = function () {
                     if (li && !li.previousSibling) {
                         var parentList = li.parentNode;
                         var bk = range.createBookmark();
-                        if(domUtils.isTagNode(parentList.parentNode,'ol ul')){
-                            parentList.parentNode.insertBefore(li,parentList);
-                            if(domUtils.isEmptyNode(parentList)){
+                        if (domUtils.isTagNode(parentList.parentNode, 'ol ul')) {
+                            parentList.parentNode.insertBefore(li, parentList);
+                            if (domUtils.isEmptyNode(parentList)) {
                                 domUtils.remove(parentList)
                             }
-                        }else{
+                        } else {
 
-                            while(li.firstChild){
-                                parentList.parentNode.insertBefore(li.firstChild,parentList);
+                            while (li.firstChild) {
+                                parentList.parentNode.insertBefore(li.firstChild, parentList);
                             }
 
                             domUtils.remove(li);
-                            if(domUtils.isEmptyNode(parentList)){
+                            if (domUtils.isEmptyNode(parentList)) {
                                 domUtils.remove(parentList)
                             }
 
                         }
-                        range.moveToBookmark(bk).setCursor(false,true);
+                        range.moveToBookmark(bk).setCursor(false, true);
                         me.fireEvent('contentchange');
                         me.fireEvent('saveScene');
                         domUtils.preventDefault(evt);
@@ -8146,98 +8521,104 @@ UE.plugins['list'] = function () {
     });
 
     //处理tab键
-    me.addListener('tabkeydown',function(){
-        function listToArray(list){
+    me.addListener('tabkeydown', function () {
+        function listToArray(list) {
             var arr = [];
-            for(var p in list){
+            for (var p in list) {
                 arr.push(p)
             }
             return arr;
         }
+
         var range = me.selection.getRange(),
             listStyle = {
                 'OL':listToArray(me.options.insertorderedlist),
                 'UL':listToArray(me.options.insertunorderedlist)
             };
         //控制级数
-        function checkLevel(li){
-            if(me.options.maxListLevel != -1){
-                var level = li.parentNode,levelNum = 0;
-                while(/[ou]l/i.test(level.tagName)){
+        function checkLevel(li) {
+            if (me.options.maxListLevel != -1) {
+                var level = li.parentNode, levelNum = 0;
+                while (/[ou]l/i.test(level.tagName)) {
                     levelNum++;
                     level = level.parentNode;
                 }
-                if(levelNum >= me.options.maxListLevel){
+                if (levelNum >= me.options.maxListLevel) {
                     return true;
                 }
             }
         }
+
         //只以开始为准
         //todo 后续改进
         var li = domUtils.findParentByTagName(range.startContainer, 'li', true);
-        if(li){
+        if (li) {
 
             var bk;
-            if(range.collapsed){
-                if(checkLevel(li))
+            if (range.collapsed) {
+                if (checkLevel(li))
                     return true;
                 var parentLi = li.parentNode,
                     list = me.document.createElement(parentLi.tagName),
-                    index = utils.indexOf(listStyle[list.tagName], getStyle(parentLi)||domUtils.getComputedStyle(parentLi, 'list-style-type'));
+                    index = utils.indexOf(listStyle[list.tagName], getStyle(parentLi) || domUtils.getComputedStyle(parentLi, 'list-style-type'));
                 index = index + 1 == listStyle[list.tagName].length ? 0 : index + 1;
                 var currentStyle = listStyle[list.tagName][index];
-                setListStyle(list,currentStyle);
-                if(domUtils.isStartInblock(range)){
+                setListStyle(list, currentStyle);
+                if (domUtils.isStartInblock(range)) {
                     me.fireEvent('saveScene');
                     bk = range.createBookmark();
                     parentLi.insertBefore(list, li);
                     list.appendChild(li);
-                    adjustList(list,list.tagName.toLowerCase(),currentStyle);
+                    adjustList(list, list.tagName.toLowerCase(), currentStyle);
                     me.fireEvent('contentchange');
                     range.moveToBookmark(bk).select(true);
                     return true;
                 }
-            }else{
+            } else {
                 me.fireEvent('saveScene');
                 bk = range.createBookmark();
-                for(var i= 0,closeList,parents = domUtils.findParents(li),ci;ci=parents[i++];){
-                    if(domUtils.isTagNode(ci,'ol ul')){
+                for (var i = 0, closeList, parents = domUtils.findParents(li), ci; ci = parents[i++];) {
+                    if (domUtils.isTagNode(ci, 'ol ul')) {
                         closeList = ci;
                         break;
                     }
                 }
                 var current = li;
-                if(bk.end){
-                    while(current && !(domUtils.getPosition(current, bk.end) & domUtils.POSITION_FOLLOWING)){
-                        if(checkLevel(current)){
-                            current = domUtils.getNextDomNode(current,false,null,function(node){return node !== closeList});
+                if (bk.end) {
+                    while (current && !(domUtils.getPosition(current, bk.end) & domUtils.POSITION_FOLLOWING)) {
+                        if (checkLevel(current)) {
+                            current = domUtils.getNextDomNode(current, false, null, function (node) {
+                                return node !== closeList
+                            });
                             continue;
                         }
                         var parentLi = current.parentNode,
                             list = me.document.createElement(parentLi.tagName),
-                            index = utils.indexOf(listStyle[list.tagName], getStyle(parentLi)||domUtils.getComputedStyle(parentLi, 'list-style-type'));
+                            index = utils.indexOf(listStyle[list.tagName], getStyle(parentLi) || domUtils.getComputedStyle(parentLi, 'list-style-type'));
                         var currentIndex = index + 1 == listStyle[list.tagName].length ? 0 : index + 1;
                         var currentStyle = listStyle[list.tagName][currentIndex];
-                        setListStyle(list,currentStyle);
+                        setListStyle(list, currentStyle);
                         parentLi.insertBefore(list, current);
-                        while(current && !(domUtils.getPosition(current, bk.end) & domUtils.POSITION_FOLLOWING)){
+                        while (current && !(domUtils.getPosition(current, bk.end) & domUtils.POSITION_FOLLOWING)) {
                             li = current.nextSibling;
                             list.appendChild(current);
-                            if(!li || domUtils.isTagNode(li,'ol ul')){
-                                if(li){
-                                    while(li = li.firstChild){
-                                        if(li.tagName == 'LI'){
+                            if (!li || domUtils.isTagNode(li, 'ol ul')) {
+                                if (li) {
+                                    while (li = li.firstChild) {
+                                        if (li.tagName == 'LI') {
                                             break;
                                         }
                                     }
-                                }else{
-                                    li = domUtils.getNextDomNode(current,false,null,function(node){return node !== closeList});
+                                } else {
+                                    li = domUtils.getNextDomNode(current, false, null, function (node) {
+                                        return node !== closeList
+                                    });
                                 }
                                 break;
                             }
                             current = li;
                         }
-                        adjustList(list,list.tagName.toLowerCase(),currentStyle);
+                        adjustList(list, list.tagName.toLowerCase(), currentStyle);
                         current = li;
                     }
                 }
@@ -8314,14 +8695,14 @@ UE.plugins['list'] = function () {
                         var nodeStyle = getStyle(startParent) || domUtils.getComputedStyle(startParent, 'list-style-type') || (command.toLowerCase() == 'insertorderedlist' ? 'decimal' : 'disc');
                         if (startParent.tagName.toLowerCase() == tag && nodeStyle == style) {
                             for (var i = 0, ci, tmpFrag = me.document.createDocumentFragment(); ci = frag.childNodes[i++];) {
-                                if(domUtils.isTagNode(ci,'ol ul')){
-                                    utils.each(domUtils.getElementsByTagName(ci,'li'),function(li){
-                                        while(li.firstChild){
+                                if (domUtils.isTagNode(ci, 'ol ul')) {
+                                    utils.each(domUtils.getElementsByTagName(ci, 'li'), function (li) {
+                                        while (li.firstChild) {
                                             tmpFrag.appendChild(li.firstChild);
                                         }
 
                                     });
-                                }else{
+                                } else {
                                     while (ci.firstChild) {
                                         tmpFrag.appendChild(ci.firstChild);
                                     }
@@ -8331,7 +8712,7 @@ UE.plugins['list'] = function () {
                             tmp.parentNode.insertBefore(tmpFrag, tmp);
                         } else {
                             list = me.document.createElement(tag);
-                            setListStyle(list,style);
+                            setListStyle(list, style);
                             list.appendChild(frag);
                             tmp.parentNode.insertBefore(list, tmp);
                         }
@@ -8479,9 +8860,9 @@ UE.plugins['list'] = function () {
                         var li = range.document.createElement('li');
 
                         li.appendChild(tmpRange.extractContents());
-                        if(domUtils.isEmptyNode(li)){
+                        if (domUtils.isEmptyNode(li)) {
                             var tmpNode = range.document.createElement('p');
-                            while(li.firstChild){
+                            while (li.firstChild) {
                                 tmpNode.appendChild(li.firstChild)
                             }
                             li.appendChild(tmpNode);
@@ -8493,11 +8874,11 @@ UE.plugins['list'] = function () {
                 }
                 range.moveToBookmark(bk).collapse(true);
                 list = me.document.createElement(tag);
-                setListStyle(list,style);
+                setListStyle(list, style);
                 list.appendChild(frag);
                 range.insertNode(list);
                 //当前list上下看能否合并
-                adjustList(list, tag, style,true);
+                adjustList(list, tag, style, true);
                 //去掉冗余的tmpDiv
                 for (var i = 0, ci, tmpDivs = domUtils.getElementsByTagName(list, 'div'); ci = tmpDivs[i++];) {
                     if (ci.getAttribute('tmpDiv')) {
@@ -8508,15 +8889,29 @@ UE.plugins['list'] = function () {
 
             },
             queryCommandState:function (command) {
-                var range = this.selection.getRange(),ps;
-                if(range.collapsed){
-                    ps = domUtils.findParentByTagName(range.startContainer,"h2") || domUtils.findParentByTagName(range.endContainer,"h2");
-                }else{
-                    ps = domUtils.findParentByTagName(range.startContainer,"h2");
+                var range = this.selection.getRange(), ps;
+
+                //标题
+                if (range.collapsed) {
+                    ps = domUtils.findParentByTagName(range.startContainer, "h2") || domUtils.findParentByTagName(range.endContainer, "h2");
+                } else {
+                    ps = domUtils.findParentByTagName(range.startContainer, "h2");
                 }
-                if(ps){
+                if (ps) {
                     return -1;
                 }
+
+                //图文模板
+                if(!range.collapsed){
+                   var tpl = domUtils.findTagNamesInSelection(range, ["iframe"], function (node) {
+                        return /-template/.test(node.className);
+                    });
+                    if (tpl) {
+                        return -1;
+                    }
+                }
+
+
                 return domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
             },
             queryCommandValue:function (command) {
@@ -8969,7 +9364,7 @@ UE.plugins['autoheight'] = function () {
         if(isFullscreen)return;
         timer = setTimeout(function () {
 
-        if (me.queryCommandState && me.queryCommandState('source') != 1) {
+            if (me.queryCommandState && me.queryCommandState('source') != 1) {
                 if (!span) {
                     span = me.document.createElement('span');
                     //trace:1764
@@ -8997,6 +9392,7 @@ UE.plugins['autoheight'] = function () {
     });
     me.addListener('destroy', function () {
         me.removeListener('contentchange', adjustHeight);
+        me.removeListener('autoHeight', adjustHeight);
         me.removeListener('afterinserthtml',adjustHeight);
         me.removeListener('keyup', adjustHeight);
         me.removeListener('mouseup', adjustHeight);
@@ -9010,7 +9406,8 @@ UE.plugins['autoheight'] = function () {
         bakOverflow = doc.body.style.overflowY;
         doc.body.style.overflowY = 'hidden';
         me.addListener('contentchange', adjustHeight);
-        me.addListener('afterinserthtml',adjustHeight)
+        me.addListener('autoHeight', adjustHeight);
+        me.addListener('afterinserthtml',adjustHeight);
         me.addListener('keyup', adjustHeight);
         me.addListener('mouseup', adjustHeight);
         //ff不给事件算得不对
@@ -9024,6 +9421,7 @@ UE.plugins['autoheight'] = function () {
         me.body.style.overflowY = bakOverflow || '';
 
         me.removeListener('contentchange', adjustHeight);
+        me.removeListener('autoHeight', adjustHeight);
         me.removeListener('keyup', adjustHeight);
         me.removeListener('mouseup', adjustHeight);
         me.autoHeightEnabled = false;
@@ -9178,6 +9576,100 @@ UE.plugins['autoheight'] = function () {
         });
 	};
 
+/**
+ * @description 纯文本粘贴
+ * @name puretxtpaste
+ * @author zhanyi
+ */
+
+UE.plugins['pasteplain'] = function () {
+    var me = this;
+    me.setOpt({
+        'pasteplain':false,
+        'filterTxtRules':function () {
+            function transP(node) {
+                node.tagName = 'p';
+                node.setStyle();
+            }
+
+            return {
+                //直接删除及其字节点内容
+                '-':'script style object iframe embed input select',
+                'p':{$:{}},
+                'br':{$:{}},
+                div:function (node) {
+                    var tmpNode, p = UE.uNode.createElement('p');
+                    while (tmpNode = node.firstChild()) {
+                        if (tmpNode.type == 'text' || !UE.dom.dtd.$block[tmpNode.tagName]) {
+                            p.appendChild(tmpNode);
+                        } else {
+                            if (p.firstChild()) {
+                                node.parentNode.insertBefore(p, node);
+                                p = UE.uNode.createElement('p');
+                            } else {
+                                node.parentNode.insertBefore(tmpNode, node);
+                            }
+                        }
+                    }
+                    if (p.firstChild()) {
+                        node.parentNode.insertBefore(p, node);
+                    }
+                    node.parentNode.removeChild(node);
+                },
+                ol:function (node) {
+                    node.parentNode.removeChild(node, true)
+                },
+                ul:function (node) {
+                    node.parentNode.removeChild(node, true)
+                },
+
+                dl:function (node) {
+                    node.parentNode.removeChild(node, true)
+                },
+                dt:function (node) {
+                    node.parentNode.removeChild(node, true)
+                },
+                dd:function (node) {
+                    node.parentNode.removeChild(node, true)
+                },
+                'li':function (node) {
+                    node.parentNode.removeChild(node, true)
+                },
+                'caption':transP,
+                'th':transP,
+                'tr':transP,
+                'h1':transP, 'h2':transP, 'h3':transP, 'h4':transP, 'h5':transP, 'h6':transP,
+                'img':function (node) {
+                    var src = node.getAttr("src");
+                    var reg = /(http:)?\/\/hiphotos.baidu.com\/exp\/pic\/item\S*.jpg/ig;
+                    if (!reg.test(src)) {
+                        node.parentNode.removeChild(node, true);
+                    }
+                },
+                'td':function (node) {
+                    //没有内容的td直接删掉
+                    var txt = !!node.innerText();
+                    if (txt) {
+                        node.parentNode.insertAfter(UE.uNode.createText(' &nbsp; &nbsp;'), node);
+                    }
+                    node.parentNode.removeChild(node, node.innerText())
+                }
+            }
+        }()
+    });
+    //暂时这里支持一下老版本的属性
+    var pasteplain = me.options.pasteplain;
+
+    me.commands['pasteplain'] = {
+        queryCommandState:function () {
+            return pasteplain;
+        },
+        execCommand:function () {
+            pasteplain = !pasteplain | 0;
+        },
+        notNeedUndo:1
+    };
+};
 ///import core
 ///import plugins/inserthtml.js
 ///commands 视频
@@ -9256,27 +9748,27 @@ UE.plugins['video'] = function (){
  * @name baidu.editor.execCommands
  * @param    {String}    cmdName    bold加粗。italic斜体。subscript上标。superscript下标。
  */
-UE.plugins['basestyle'] = function(){
+UE.plugins['basestyle'] = function () {
 
     var basestyles = {
-            'bold':['strong','b'],
-            'italic':['em','i'],
-            'subscript':['sub'],
-            'superscript':['sup']
+            'bold': ['strong', 'b'],
+            'italic': ['em', 'i'],
+            'subscript': ['sub'],
+            'superscript': ['sup']
         },
-        getObj = function(editor,tagNames){
-            return domUtils.filterNodeList(editor.selection.getStartElementPath(),tagNames);
+        getObj = function (editor, tagNames) {
+            return domUtils.filterNodeList(editor.selection.getStartElementPath(), tagNames);
         },
         me = this;
     //添加快捷键
     me.addshortcutkey({
-        "Bold" : "ctrl+66",//^B
-        "Italic" : "ctrl+73", //^I
-        "Underline" : "ctrl+85"//^U
+        "Bold": "ctrl+66",//^B
+        "Italic": "ctrl+73", //^I
+        "Underline": "ctrl+85"//^U
     });
-    me.addInputRule(function(root){
-        utils.each(root.getNodesByTagName('b i'),function(node){
-            switch (node.tagName){
+    me.addInputRule(function (root) {
+        utils.each(root.getNodesByTagName('b i'), function (node) {
+            switch (node.tagName) {
                 case 'b':
                     node.tagName = 'strong';
                     break;
@@ -9285,45 +9777,44 @@ UE.plugins['basestyle'] = function(){
             }
         });
     });
-    for ( var style in basestyles ) {
-        (function( cmd, tagNames ) {
+    for (var style in basestyles) {
+        (function (cmd, tagNames) {
             me.commands[cmd] = {
-                execCommand : function( cmdName ) {
-                    var range = me.selection.getRange(),obj = getObj(this,tagNames);
-                    if ( range.collapsed ) {
-                        if ( obj ) {
-                            var tmpText =  me.document.createTextNode('');
-                            range.insertNode( tmpText ).removeInlineStyle( tagNames );
+                execCommand: function (cmdName) {
+                    var range = me.selection.getRange(), obj = getObj(this, tagNames);
+                    if (range.collapsed) {
+                        if (obj) {
+                            var tmpText = me.document.createTextNode('');
+                            range.insertNode(tmpText).removeInlineStyle(tagNames);
                             range.setStartBefore(tmpText);
                             domUtils.remove(tmpText);
                         } else {
-                            var tmpNode = range.document.createElement( tagNames[0] );
-                            if(cmdName == 'superscript' || cmdName == 'subscript'){
+                            var tmpNode = range.document.createElement(tagNames[0]);
+                            if (cmdName == 'superscript' || cmdName == 'subscript') {
                                 tmpText = me.document.createTextNode('');
                                 range.insertNode(tmpText)
-                                    .removeInlineStyle(['sub','sup'])
+                                    .removeInlineStyle(['sub', 'sup'])
                                     .setStartBefore(tmpText)
                                     .collapse(true);
                             }
-                            range.insertNode( tmpNode ).setStart( tmpNode, 0 );
+                            range.insertNode(tmpNode).setStart(tmpNode, 0);
                         }
-                        range.collapse( true );
+                        range.collapse(true);
                     } else {
-                        if(cmdName == 'superscript' || cmdName == 'subscript'){
-                            if(!obj || obj.tagName.toLowerCase() != cmdName){
-                                range.removeInlineStyle(['sub','sup']);
+                        if (cmdName == 'superscript' || cmdName == 'subscript') {
+                            if (!obj || obj.tagName.toLowerCase() != cmdName) {
+                                range.removeInlineStyle(['sub', 'sup']);
                             }
                         }
-                        obj ? range.removeInlineStyle( tagNames ) : range.applyInlineStyle( tagNames[0] );
+                        obj ? range.removeInlineStyle(tagNames) : range.applyInlineStyle(tagNames[0]);
                     }
                     range.select();
                 },
-                queryCommandState : function() {
-                    var range = me.selection.getRange();
-                    return getObj(this,["h2"])?-1:(getObj(this,tagNames) ? 1 : 0)
+                queryCommandState: function () {
+                    return getObj(this, ["h2", "iframe"]) ? -1 : (getObj(this, tagNames) ? 1 : 0)
                 }
             };
-        })( style, basestyles[style] );
+        })(style, basestyles[style]);
     }
 };
 
@@ -9619,8 +10110,6 @@ UE.plugins['heading'] = function () {
                 range2.setEndAfter(range2.startContainer)
             }
             var rs = domUtils.findTagNamesInSelection(range2, ['li', 'img', 'iframe', 'sup', 'td', 'th', 'caption','em','i','strong','b']);
-            var first = range2.startContainer.firstChild || false;
-            var bc = domUtils.isBlockElm(range2.startContainer) ? range2.startContainer : range2.startContainer.parentNode
             if (rs) {
                 return -1;
             }
@@ -9630,44 +10119,56 @@ UE.plugins['heading'] = function () {
             return 0;
         }
     }
-}
+};
 
 
 
 UE.plugins['graphictemplate'] = function () {
     var me = this;
-    me["graphictemplate"]={};
     var id = 0;
 
+    me["graphictemplate"] = {};
+    var tpl = me["graphictemplate"];
 
     me.commands['graphictemplate'] = {
-        execCommand:function (cmd,value) {
+        execCommand: function (cmd, value) {
+            id = parseInt(id);
             id += 1;
-            var ifr = "<iframe  width='678'  align='center' scroling='no' frameborder='0'" +
-                "class='foodtemplate'" +
-                "id='" + id + "'" +
+            var ifr = "<iframe  width='678'  align='center' scroling='no' frameborder='0'  " +
+                "class=" + value + "-template " +
+                "id='graphictemplate-" + id + "'" +
                 "src=" + me.options["graphictemplateUrlMap"][value] +
                 "></iframe>";
 
-            me.execCommand("inserthtml", ifr);
+            me.execCommand("inserthtml", '<p contenteditable="false">' + ifr + '</p>');
         },
-        queryCommandState:function () {
-
+        queryCommandState: function () {
+            var rng = this.selection.getRange().cloneRange();
+            if (rng.collapsed && rng.startContainer.nodeType == 3) {
+                rng.trimBoundary()
+            }
+            var rs = domUtils.findTagNamesInSelection(rng, ['li', 'img', 'iframe', 'sup', 'td', 'th', 'caption', 'em', 'i', 'strong', 'b']);
+            if (rs) {
+                return -1;
+            }
+            return 0;
         }
     };
 
+    /*
+     *转换数据
+     */
     me.addOutputRule(function (root) {
         utils.each(root.getNodesByTagName('iframe'), function (node) {
-            var val;
-            if ((val = node.getAttr('class')) && /foodtemplate/.test(val)) {
-                var id=node.getAttr('id');
-                var str =me['graphictemplate'][id];
+            var val = node.getAttr('class');
+            if (val && /-template/.test(val)) {
+                var id = node.getAttr('id');
+                var str = utils.stringify(me['graphictemplate'][id]);
                 node.tagName = 'pre';
                 var attrs = {
-                    'data-type':val,
-                    'class':node.getAttr('class'),
-                    'id':id,
-                    'src':node.getAttr('src')
+                    'class': node.getAttr('class'),
+                    'hasempty': node.getAttr('hasempty'),
+                    'id': id
                 };
                 node.setAttr();
                 node.setAttr(attrs);
@@ -9680,15 +10181,14 @@ UE.plugins['graphictemplate'] = function () {
         var me = this;
         utils.each(root.getNodesByTagName('pre'), function (pi) {
             var val;
-            if (val = pi.getAttr('class') && /foodtemplate/.test(val)) {
+            if ((val = pi.getAttr('class')) && /-template/.test(val)) {
                 var tmpDiv = me.document.createElement('div');
-                var data = (new Function('return' + pi.innerHTML()))();
-
-                tmpDiv.innerHTML = "<iframe  width='600' height='210' unselectable='on' align='center' scroling='no' frameborder='0'" +
-                    "id='" + pi.getAttr("id") + "'" +
-                    "src=" + pi.getAttr("src") +
-                    "class='" + pi.getAttr("class") + "'" +
-                    "data_type='" + val + "'" +
+                id = pi.getAttr("id").replace("graphictemplate-", "");
+                me.graphictemplate[id] = (new Function("return (" + pi.innerHTML() + ")"))();
+                tmpDiv.innerHTML = "<iframe  width='678' height='300'  align='center' scroling='no' frameborder='0'" +
+                    "class='" + val + "'" +
+                    "id='graphictemplate-" + id + "'" +
+                    "src=" + me.options.graphictemplateUrlMap[val.replace("-template", "")] +
                     "></iframe>";
 
                 var node = UE.uNode.createElement(tmpDiv.innerHTML);
@@ -9698,30 +10198,98 @@ UE.plugins['graphictemplate'] = function () {
         });
     });
 
-    //销毁被删除iframe对应的数据
-    me.addListener("contentchange",function(){
 
-    });
+    /*
+     *缓存所有iframe改变属性，阻止undo属性改变时重复保存
+     */
+    var attrs = {
+        heightStorage: [],
+        hasemptyStorage: []
+    };
+    me.addListener("beforegetscene", function () {
+        //清空
+        attrs = {
+            heightStorage: [],
+            hasemptyStorage: []
+        };
 
-    //缓存所有iframe高度，阻止undo属性改变时重复保存
-    var heightStorage=[];
-    me.addListener("beforegetscene",function(){
-        heightStorage=[];
-        utils.each(domUtils.getElementsByTagName(me.body,"iframe","foodtemplate"),function(node){
-            var tmp=node.getAttribute("height");
-            if(tmp){
-                heightStorage.push(tmp);
-            }
-            node.removeAttribute("height");
+        var list = domUtils.getElementsByTagName(me.body, "iframe", function (node) {
+            return domUtils.hasClass(node, "-template");
+        });
+        utils.each(list, function (node) {
+            var tmp = node.getAttribute("height");
+            attrs.heightStorage.push(tmp);
+            tmp = node.getAttribute("hasempty");
+            attrs.hasemptyStorage.push(tmp);
+
+            node.removeAttribute('height');
+            node.removeAttribute('hasempty');
         });
     });
-    me.addListener("aftergetscene",function(){
-        if(heightStorage.length){
-            utils.each(domUtils.getElementsByTagName(me.body,"iframe","foodtemplate"),function(node,i){
-                node.setAttribute("height",heightStorage[i]);
+    me.addListener("aftergetscene", function () {
+        if (attrs.heightStorage.length) {
+            var list = domUtils.getElementsByTagName(me.body, "iframe", function (node) {
+                return domUtils.hasClass(node, "-template");
+            });
+            utils.each(list, function (node, i) {
+                node.setAttribute("height", attrs.heightStorage [i]);
+                node.setAttribute("hasempty", attrs.hasemptyStorage [i]);
             });
         }
     });
+
+
+    /*
+     *移动、关闭模板
+     */
+    tpl.isSelect = false;
+    tpl.currentTemplate = null;
+    tpl.templateAction = function (win) {
+        var doc = win.document;
+        domUtils.on(doc, "click", function (e) {
+            var tgt = e.target || e.srcElement;
+            tpl.currentTemplate = win.frameElement;
+
+            switch (tgt.id) {
+                case "J_drag":
+                    doc.getElementById("J_mask").style.display = "";
+                    me.graphictemplate.isSelect = true;
+                    break;
+                case "J_close":
+                    domUtils.remove(tpl.currentTemplate.parentNode);
+                    break;
+            }
+
+        });
+    };
+    me.addListener("click", function () {
+        var ifr = tpl.currentTemplate;
+        if (me.graphictemplate.isSelect && ifr) {
+            var rng = me.selection.getRange();
+            var node = domUtils.findParentByTagName(rng.startContainer, "li");
+            if (node) {
+                me.body.style.cursor = "not-allowed";
+            } else {
+                me.execCommand("inserthtml", ifr.parentNode.outerHTML);
+                domUtils.remove(ifr.parentNode);
+            }
+            tpl.isSelect = false;
+        } else {
+            me.body.style.cursor = "default";
+        }
+    });
+
+    /*
+     * iframe自动长高
+     * */
+    tpl.iframeAutoHeight = function (frameElement) {
+        if (browser.ie && browser.version < 8) {
+            frameElement.height = frameElement.Document.body.scrollHeight
+        } else {
+            frameElement.height = frameElement.contentDocument.body.scrollHeight;
+        }
+        me.fireEvent("autoHeight");
+    };
 };
 
 var baidu = baidu || {};
@@ -10472,6 +11040,7 @@ baidu.editor.ui = {};
                 '</div></div>';
         },
         postRender: function (){
+            this.fireEvent( "renderReady" );
             this.Stateful_postRender();
             this.setDisabled(this.disabled)
         },
@@ -10507,13 +11076,13 @@ baidu.editor.ui = {};
             return '<div id="##" class="edui-graphictemplatepicker %%">' +
                 '<div class="edui-graphictemplatepicker-body">' +
                 '<div onclick="$$._onClick(event);"  class="edui-graphictemplatepicker-item" stateful>' +
-                    '<div class="edui-label" _type="food">美食食材</div>' +
+                '<div class="edui-label" _type="food">美食食材</div>' +
                 '</div>' +
                 '<div onclick="$$._onClick(event);"  class="edui-graphictemplatepicker-item" stateful>' +
-                    '<div class="edui-label" _type="fitment">家居装修</div>' +
+                '<div class="edui-label" _type="fitment">家居装修</div>' +
                 '</div>' +
                 '<div onclick="$$._onClick(event);" class="edui-graphictemplatepicker-item" stateful>' +
-                    '<div class="edui-label"  _type="soft">软件信息</div>' +
+                '<div class="edui-label"  _type="soft">软件信息</div>' +
                 '</div>' +
                 '</div>' +
                 '</div>';
@@ -10863,23 +11432,23 @@ baidu.editor.ui = {};
     };
 
     var iframeUrlMap = {
-        'insertvideo':'~/dialogs/_video/video.html'
+        'insertvideo': '~/dialogs/_video/video.html'
     };
     //为工具栏添加按钮，以下都是统一的按钮触发命令，所以写在一起
-    var btnCmds = ['undo', 'redo', 'bold', 'italic', 'autotypeset', 'insertorderedlist', 'insertunorderedlist', 'heading1'];
+    var btnCmds = ['source', 'undo', 'redo', 'bold', 'italic', 'autotypeset', 'insertorderedlist', 'insertunorderedlist', 'heading1'];
 
     for (var i = 0, ci; ci = btnCmds[i++];) {
         ci = ci.toLowerCase();
         editorui[ci] = function (cmd) {
             return function (editor) {
                 var ui = new editorui.Button({
-                    className:'edui-for-' + cmd,
-                    title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
-                    onclick:function () {
+                    className: 'edui-for-' + cmd,
+                    title: editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
+                    onclick: function () {
                         editor.execCommand(cmd);
                     },
-                    theme:editor.options.theme,
-                    showText:false
+                    theme: editor.options.theme,
+                    showText: false
                 });
                 editorui.buttons[cmd] = ui;
                 editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
@@ -10900,7 +11469,7 @@ baidu.editor.ui = {};
     }
 
     var dialogBtns = {
-        ok:['insertvideo']
+        ok: ['insertvideo']
     };
 
     for (var p in dialogBtns) {
@@ -10919,26 +11488,26 @@ baidu.editor.ui = {};
                         //没有iframeUrl不创建dialog
                         if (iframeUrl) {
                             dialog = new editorui.Dialog(utils.extend({
-                                iframeUrl:editor.ui.mapUrl(iframeUrl),
-                                editor:editor,
-                                className:'edui-for-' + cmd,
-                                title:title,
-                                closeDialog:editor.getLang("closeDialog")
+                                iframeUrl: editor.ui.mapUrl(iframeUrl),
+                                editor: editor,
+                                className: 'edui-for-' + cmd,
+                                title: title,
+                                closeDialog: editor.getLang("closeDialog")
                             }, type == 'ok' ? {
-                                buttons:[
+                                buttons: [
                                     {
-                                        className:'edui-okbutton',
-                                        label:editor.getLang("ok"),
-                                        editor:editor,
-                                        onclick:function () {
+                                        className: 'edui-okbutton',
+                                        label: editor.getLang("ok"),
+                                        editor: editor,
+                                        onclick: function () {
                                             dialog.close(true);
                                         }
                                     },
                                     {
-                                        className:'edui-cancelbutton',
-                                        label:editor.getLang("cancel"),
-                                        editor:editor,
-                                        onclick:function () {
+                                        className: 'edui-cancelbutton',
+                                        label: editor.getLang("cancel"),
+                                        editor: editor,
+                                        onclick: function () {
                                             dialog.close(false);
                                         }
                                     }
@@ -10949,9 +11518,9 @@ baidu.editor.ui = {};
                         }
 
                         var ui = new editorui.Button({
-                            className:'edui-for-' + cmd,
-                            title:title,
-                            onclick:function () {
+                            className: 'edui-for-' + cmd,
+                            title: title,
+                            onclick: function () {
                                 if (dialog) {
                                     switch (cmd) {
                                         case "wordimage":
@@ -10974,13 +11543,13 @@ baidu.editor.ui = {};
                                     }
                                 }
                             },
-                            theme:editor.options.theme,
-                            disabled:cmd == 'scrawl' && editor.queryCommandState("scrawl") == -1
+                            theme: editor.options.theme,
+                            disabled: cmd == 'scrawl' && editor.queryCommandState("scrawl") == -1
                         });
                         editorui.buttons[cmd] = ui;
                         editor.addListener('selectionchange', function () {
                             //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
-                            var unNeedCheckState = {'edittable':1};
+                            var unNeedCheckState = {'edittable': 1};
                             if (cmd in unNeedCheckState)return;
 
                             var state = editor.queryCommandState(cmd);
@@ -11001,19 +11570,19 @@ baidu.editor.ui = {};
     editorui["graphictemplate"] = function (editor) {
         var cmd = "graphictemplate",
             graphictemplatePop = new baidu.editor.ui.Popup({
-                content:new baidu.editor.ui.GraphicTemplatePicker({editor:editor}),
-                editor:editor,
-                className:'edui-graphictemplatePop'
+                content: new baidu.editor.ui.GraphicTemplatePicker({editor: editor}),
+                editor: editor,
+                className: 'edui-graphictemplatePop'
             });
         graphictemplatePop.render();
         var ui = new editorui.Button({
-            className:'edui-for-' + cmd,
-            title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
-            onclick:function () {
+            className: 'edui-for-' + cmd,
+            title: editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
+            onclick: function () {
                 graphictemplatePop.showAnchor(this.getDom());
             },
-            theme:editor.options.theme,
-            showText:false
+            theme: editor.options.theme,
+            showText: false
         });
         editorui.buttons[cmd] = ui;
         editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
@@ -11031,7 +11600,61 @@ baidu.editor.ui = {};
         return ui;
     };
 
-
+    editorui['insertimage'] = function (editor) {
+        var cmd = 'insertimage';
+        var ui = new editorui.Button({
+            className: 'edui-for-' + cmd,
+            title: editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
+            getHtmlTpl: function () {
+                return '<div id="##" class="edui-box %%">' +
+                    '<div id="##_state" stateful>' +
+                    '<div class="%%-wrap"><div id="##_body" unselectable="on" ' + (this.title ? 'title="' + this.title + '"' : '') +
+                    ' class="%%-body" onmousedown="return false;" onclick="return $$._onClick();">' +
+                    (this.showIcon ? '<div class="edui-box edui-icon"></div>' : '') +
+                    (this.showText ? '<div class="edui-box edui-label">' + this.label + '</div>' : '') +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div id="ue_containerId" class="ue_flash"></div>' +
+                    '</div>';
+            },
+            theme: editor.options.theme,
+            showText: false
+        });
+        editorui.buttons[cmd] = ui;
+        ui.addListener("renderReady", function () {
+            domUtils.on(ui.getDom(), ["mouseover", 'mouseout', 'mousedown', 'mouseup'], function (e) {
+                switch (e.type) {
+                    case "mouseover":
+                        ui.addState("hover");
+                        break;
+                    case "mouseout":
+                        ui.removeState("hover");
+                        ui.removeState("active");
+                        break;
+                    case "mousedown":
+                        ui.addState("active");
+                        break;
+                    case "mouseup":
+                        ui.removeState("active");
+                        break;
+                }
+            });
+        });
+        editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
+            var state = editor.queryCommandState(cmd);
+            if (state == -1) {
+                ui.setDisabled(true);
+                ui.setChecked(false);
+            } else {
+                if (!uiReady) {
+                    ui.setDisabled(false);
+                    ui.setChecked(state);
+                }
+            }
+        });
+        return ui;
+    };
 })();
 
 ///import core

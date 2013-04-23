@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="../graphictemplate.js"></script>
+    <link rel="stylesheet" type="text/css" href="soft.css">
+</head>
+<body>
+<div class="wrapper">
+    <div class="head">
+        <div class="drag" id="J_drag"></div>
+        <a class="close" id="J_close"></a>
+    </div>
+    <div class="main">
+        <div class="title">软件基本信息</div>
+        <div class="section">
+            <div class="left">
+                <span class="star">*</span>
+                <span class="key">名称:</span>
+            </div>
+            <div class="left">
+                <input type="text" id="J_name" maxlength="40" class="textbox wt1" value='例:百度拼音输入法'/>
+            </div>
+        </div>
+        <div class="section">
+            <div class="left">
+                <span class="star">*</span>
+                <span class="key">类型:</span>
+            </div>
+            <div class="left">
+                <label><input type="radio" name="type" class="radiobox" id="J_pc" checked/>电脑</label>
+                <label><input type="radio" id="J_mobile" class="radiobox"  name="type"/>移动平台</label>
+            </div>
+        </div>
+        <div class="section">
+            <div class="leftarea">
+                <div class="left">
+                    <span class="star">*</span>
+                    <span class="key">大小:</span>
+                </div>
+                <div class="left">
+                    <input type="text" class="textbox wt2" maxlength="10" value="10MB" id="J_size"/>
+                </div>
+            </div>
+            <div class="rightarea">
+                <div class="left">
+                    <span class="star">*</span>
+                    <span class="key">版本:</span>
+                </div>
+                <div class="left">
+                    <input type="text wt2" class="textbox" maxlength="10" id="J_version"/>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="leftarea">
+                <div class="left">
+                    <span class="type">类别:</span>
+                </div>
+                <div class="left">
+                    <select class="dropdownbox" id="J_type">
+                        <option value="系统工具1">系统工具1</option>
+                        <option value="系统工具2">系统工具2</option>
+                        <option value="系统工具3">系统工具3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="rightarea">
+                <div class="left">
+                    <span class="star">*</span>
+                    <span class="key">语言:</span>
+                </div>
+                <div class="left">
+                    <input type="text wt2" class="textbox" maxlength="10" id="J_lang" value="中文"/>
+                </div>
+            </div>
+        </div>
+        <div class="tab cur">
+            <div class="section">
+                <div class="left">
+                    <span class="star">*</span>
+                    <span class="key">系统需求:</span>
+                </div>
+                <div class="left">
+                    <input type="text" class="textbox wt1" id="J_systemNeed" maxlength="40"  value="windows Mac OS X Linux"/>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab">
+            <div class="section">
+                <div class="left">
+                    <span class="star">*</span>
+                    <span class="key">价格:</span>
+                </div>
+                <div class="left">
+                    <label><input type="radio" class="radiobox" name="price" id="J_free" checked/>免费</label>
+                    <label><input type="radio" class="radiobox" name="price" id="J_pay"/>付费</label>
+                    <input type="text" class="textbox" id="J_money" maxlength="10" style="width: 78px;cursor: not-allowed;" readOnly=true />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+            <div class="section">
+                <span class="decorativetxt">系统要求:</span>
+
+                <div class="decorative" id="J_systemask">
+                    <span class="way active" id="J_ios" style="width:47px">IOS</span>
+                    <span class="way" id="J_android"  style="width:68px">Android</span>
+                    <span class="way" id="J_winphone"  style="width:108px">Windows Phone</span>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="left">
+                <span class="star">*</span>
+                <span class="key">下载地址:</span>
+            </div>
+            <div class="left">
+                <input type="text" class="textbox wt1" maxlength="60" id="J_downloadlink" value="http://"/>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mask" id="J_mask" style="display: none"></div>
+
+<script type="text/javascript" src="soft.js"></script>
+</body>
+</html>

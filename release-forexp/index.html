@@ -3,22 +3,34 @@
 <head>
     <title>expdemo</title>
     <meta charset="utf-8">
-    <script type="text/javascript" charset="utf-8" src="editor_config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="editor_all.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../ueditor.all.js"></script>
 </head>
 <body>
 <div>
-    <script  id="editor" type="text/plain"></script>
+    <script  id="editor" type="text/plain">
+    </script>
 </div>
 <script type="text/javascript">
-    var ed = UE.getEditor("editor");
-    ed.addListener("beforegetcontent",function(){
+    var ue = UE.getEditor("editor");
+    var domUtils= UE.dom.domUtils;
+    ue.addListener("beforegetcontent",function(){
         var links = domUtils.getElementsByTagName(this.document,"a");
         for(var i= 0,link;link=links[i++];){
-            UE.dom.domUtils.remove(link,true)
+            domUtils.remove(link,true)
         }
     });
-    //    ed.addListener("keydown",function(){
+
+    //    ue.ready(function(){
+    //        var str='<p>'+
+    //                '<pre class="food-template" id="graphictemplate-1" >'+
+    //        '{"main":[{"name":"123","content":"123"},{"name":"","content":""},{"name":"","content":""},{"name":"","content":""}],"other":[{"name":"","content":""},{"name":"","content":""},{"name":"","content":""},{"name":"","content":""}]}'+
+    //                '</pre>'+
+    //                '</p>';
+    //        ue.setContent(str);
+    //    });
+
+    //    ue.addListener("keydown",function(){
     //        var start = this.selection.getStart(),
     //                range = this.selection.getRange();
     //        if(start.tagName.toLowerCase() == "img"&&range.collapsed){

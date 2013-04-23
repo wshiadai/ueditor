@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="../graphictemplate.js"></script>
+    <link rel="stylesheet" type="text/css" href="fitment.css">
+</head>
+<body>
+<div class="wrapper">
+    <div class="head">
+        <div class="drag" id="J_drag"></div>
+        <a class="close" id="J_close"></a>
+    </div>
+<div class="main">
+    <div class="title">装修基本信息</div>
+    <div class="section">
+        <div class="left">
+            <span class="star">*</span>
+            <span class="key">户型:</span>
+        </div>
+        <div class="left">
+            <input type="text"  id="J_shi" maxlength="2" class="textbox"/>
+            <span class="unit">室</span>
+            <input type="text"  id="J_ting" maxlength="2" class="textbox"/>
+            <span class="unit">厅</span>
+            <input type="text"   id="J_wei" maxlength="2" class="textbox"/>
+            <span class="unit">卫</span>
+        </div>
+    </div>
+    <div class="section">
+        <div class="leftarea">
+            <div class="left">
+                <span class="star">*</span>
+                <span class="key" >面积:</span>
+            </div>
+            <div class="left">
+                <input type="text" id="J_meter" maxlength="8" class="textbox"/>
+                <span class="unit">平米</span>
+            </div>
+        </div>
+        <div class="rightarea">
+            <div class="left">
+                <span class="star">*</span>
+                <span class="key">装修预算:</span>
+            </div>
+            <div class="left">
+                <input type="text" class="textbox" maxlength="8" style="width: 78px;" id="J_wan"/>
+                <span class="unit">万</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="leftarea">
+            <div class="left">
+                <span class="star">*</span>
+                <span class="key">方式:</span>
+            </div>
+            <div class="left">
+                <select class="dropdownbox" id="J_quanbao">
+                    <option value="全包1">全包1</option>
+                    <option value="全包2">全包2</option>
+                </select>
+            </div>
+        </div>
+        <div class="rightarea">
+            <div class="left">
+                <span class="star">*</span>
+                <span class="key">装修用途:</span>
+            </div>
+            <div class="left">
+                <select class="dropdownbox" id="J_hunfang">
+                    <option value="婚房1">婚房1</option>
+                    <option value="婚房2">婚房2</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <span class="decorativetxt">装修风格:</span>
+        <div class="decorative" id="J_decorative">
+            <span class="way active" id="J_jianyue">简约</span>
+            <span class="way" id="J_tianyuan">田园</span>
+            <span class="way" id="J_meishi">美式</span>
+            <span class="way" id="J_zhongshi">中式</span>
+            <span class="way" id="J_rishi">日式</span>
+            <span class="way" id="J_beiou">北欧</span>
+            <span class="way" id="J_dizhonghai">地中海</span>
+            <span class="way" id="J_dongnanya">东南亚</span>
+            <input type="text" class="other textbox" maxlength="8" value="其他风格" id="J_other"/>
+        </div>
+</div>
+</div>
+</div>
+<div class="mask" id="J_mask" style="display: none"></div>
+
+<script type="text/javascript" src="fitment.js"></script>
+</body>
+</html>

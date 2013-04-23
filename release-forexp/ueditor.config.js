@@ -19,13 +19,110 @@
      * 因此，UEditor提供了针对不同页面的编辑器可单独配置的根路径，具体来说，在需要实例化编辑器的页面最顶部写上如下代码即可。当然，需要令此处的URL等于对应的配置。
      * window.UEDITOR_HOME_URL = "/xxxx/xxxx/";
      */
-    var URL;
+    var URL = window.UEDITOR_HOME_URL || (function () {
 
-    /**
-     * 此处配置写法适用于UEditor小组成员开发使用，外部部署用户请按照上述说明方式配置即可，建议保留下面两行，以兼容可在具体每个页面配置window.UEDITOR_HOME_URL的功能。
-     */
-    var tmp = location.protocol.indexOf("file")==-1 ? location.pathname : location.href;
-    URL = window.UEDITOR_HOME_URL||tmp.substr(0,tmp.lastIndexOf("\/")+1).replace("_examples/","").replace("website/","");//这里你可以配置成ueditor目录在您网站的相对路径或者绝对路径（指以http开头的绝对路径）
+        function PathStack() {
+
+            this.documentURL = self.document.URL || self.location.href;
+
+            this.separator = '/';
+            this.separatorPattern = /\\|\//g;
+            this.currentDir = './';
+            this.currentDirPattern = /^[.]\/]/;
+
+            this.path = this.documentURL;
+            this.stack = [];
+
+            this.push(this.documentURL);
+
+        }
+
+        PathStack.isParentPath = function (path) {
+            return path === '..';
+        };
+
+        PathStack.hasProtocol = function (path) {
+            return !!PathStack.getProtocol(path);
+        };
+
+        PathStack.getProtocol = function (path) {
+
+            var protocol = /^[^:]*:\/*/.exec(path);
+
+            return protocol ? protocol[0] : null;
+
+        };
+
+        PathStack.prototype = {
+            push: function (path) {
+
+                this.path = path;
+
+                update.call(this);
+                parse.call(this);
+
+                return this;
+
+            },
+            getPath: function () {
+                return this + "";
+            },
+            toString: function () {
+                return this.protocol + ( this.stack.concat(['']) ).join(this.separator);
+            }
+        };
+
+        function update() {
+
+            var protocol = PathStack.getProtocol(this.path || '');
+
+            if (protocol) {
+
+                //根协议
+                this.protocol = protocol;
+
+                //local
+                this.localSeparator = /\\|\//.exec(this.path.replace(protocol, ''))[0];
+
+                this.stack = [];
+            } else {
+                protocol = /\\|\//.exec(this.path);
+                protocol && (this.localSeparator = protocol[0]);
+            }
+
+        }
+
+        function parse() {
+
+            var parsedStack = this.path.replace(this.currentDirPattern, '');
+
+            if (PathStack.hasProtocol(this.path)) {
+                parsedStack = parsedStack.replace(this.protocol, '');
+            }
+
+            parsedStack = parsedStack.split(this.localSeparator);
+            parsedStack.length = parsedStack.length - 1;
+
+            for (var i = 0, tempPath, root = this.stack; tempPath = parsedStack[ i ]; i++) {
+
+                if (PathStack.isParentPath(tempPath)) {
+                    root.pop();
+                } else {
+                    root.push(tempPath);
+                }
+
+            }
+
+        }
+
+        var currentPath = document.getElementsByTagName('script');
+
+        currentPath = currentPath[ currentPath.length - 1 ].src;
+
+        return new PathStack().push(currentPath) + "";
+
+
+    })();
 
     /**
      * 配置项主体。注意，此处所有涉及到路径的配置别遗漏URL变量。
@@ -33,60 +130,63 @@
     window.UEDITOR_CONFIG = {
 
         //为编辑器实例添加一个路径，这个不能被注释
-        UEDITOR_HOME_URL : URL
+        UEDITOR_HOME_URL: URL
 
         //图片上传配置区
-        ,imageUrl:URL+"php/imageUp.php"             //图片上传提交地址
-        ,imagePath:URL + "php/"                     //图片修正地址，引用了fixedImagePath,如有特殊需求，可自行配置
-       //,imageFieldName:"upfile"                   //图片数据的key,若此处修改，需要在后台对应文件修改对应参数
+        , imageUrl: URL + "php/imageUp.php"             //图片上传提交地址
+        , imagePath: URL + "php/"                     //图片修正地址，引用了fixedImagePath,如有特殊需求，可自行配置
+        //,imageFieldName:"upfile"                   //图片数据的key,若此处修改，需要在后台对应文件修改对应参数
         //,compressSide:0                            //等比压缩的基准，确定maxImageSideLength参数的参照对象。0为按照最长边，1为按照宽度，2为按照高度
         //,maxImageSideLength:900                    //上传图片最大允许的边长，超过会自动等比缩放,不缩放就设置一个比较大的值，更多设置在image.html中
 
         //涂鸦图片配置区
-        ,scrawlUrl:URL+"php/scrawlUp.php"           //涂鸦上传地址
-        ,scrawlPath:URL+"php/"                            //图片修正地址，同imagePath
+        , scrawlUrl: URL + "php/scrawlUp.php"           //涂鸦上传地址
+        , scrawlPath: URL + "php/"                            //图片修正地址，同imagePath
 
         //附件上传配置区
-        ,fileUrl:URL+"php/fileUp.php"               //附件上传提交地址
-        ,filePath:URL + "php/"                   //附件修正地址，同imagePath
+        , fileUrl: URL + "php/fileUp.php"               //附件上传提交地址
+        , filePath: URL + "php/"                   //附件修正地址，同imagePath
         //,fileFieldName:"upfile"                    //附件提交的表单名，若此处修改，需要在后台对应文件修改对应参数
 
-         //远程抓取配置区
+        //远程抓取配置区
         //,catchRemoteImageEnable:true               //是否开启远程图片抓取,默认开启
-        ,catcherUrl:URL +"php/getRemoteImage.php"   //处理远程图片抓取的地址
-        ,catcherPath:URL + "php/"                  //图片修正地址，同imagePath
+        , catcherUrl: URL + "php/getRemoteImage.php"   //处理远程图片抓取的地址
+        , catcherPath: URL + "php/"                  //图片修正地址，同imagePath
         //,catchFieldName:"upfile"                   //提交到后台远程图片uri合集，若此处修改，需要在后台对应文件修改对应参数
         //,separater:'ue_separate_ue'               //提交至后台的远程图片地址字符串分隔符
         //,localDomain:[]                            //本地顶级域名，当开启远程图片抓取时，除此之外的所有其它域名下的图片都将被抓取到本地,默认不抓取127.0.0.1和localhost
 
         //图片在线管理配置区
-        ,imageManagerUrl:URL + "php/imageManager.php"       //图片在线管理的处理地址
-        ,imageManagerPath:URL + "php/"                                    //图片修正地址，同imagePath
+        , imageManagerUrl: URL + "php/imageManager.php"       //图片在线管理的处理地址
+        , imageManagerPath: URL + "php/"                                    //图片修正地址，同imagePath
 
         //屏幕截图配置区
-        ,snapscreenHost: '127.0.0.1'                                  //屏幕截图的server端文件所在的网站地址或者ip，请不要加http://
-        ,snapscreenServerUrl: URL +"php/imageUp.php" //屏幕截图的server端保存程序，UEditor的范例代码为“URL +"server/upload/php/snapImgUp.php"”
-        ,snapscreenPath: URL + "php/"
+        , snapscreenHost: '127.0.0.1'                                  //屏幕截图的server端文件所在的网站地址或者ip，请不要加http://
+        , snapscreenServerUrl: URL + "php/imageUp.php" //屏幕截图的server端保存程序，UEditor的范例代码为“URL +"server/upload/php/snapImgUp.php"”
+        , snapscreenPath: URL + "php/"
         //,snapscreenServerPort: 80                                    //屏幕截图的server端端口
         //,snapscreenImgAlign: ''                                //截图的图片默认的排版方式
 
         //word转存配置区
-        ,wordImageUrl:URL + "php/imageUp.php"             //word转存提交地址
-        ,wordImagePath:URL + "php/"                       //
+        , wordImageUrl: URL + "php/imageUp.php"             //word转存提交地址
+        , wordImagePath: URL + "php/"                       //
         //,wordImageFieldName:"upfile"                     //word转存表单名若此处修改，需要在后台对应文件修改对应参数
 
         //获取视频数据的地址
-        ,getMovieUrl:URL+"php/getMovie.php"                   //视频数据获取地址
+        , getMovieUrl: URL + "php/getMovie.php"                   //视频数据获取地址
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
-        ,toolbars:[[ 'undo', 'redo','|','bold', 'italic' ,'|','insertorderedlist', 'insertunorderedlist','|','heading1','insertimage', 'insertvideo','autotypeset']]
+        , toolbars: [
+            ['source', 'undo', 'redo', '|', 'bold', 'italic' , '|', 'insertorderedlist', 'insertunorderedlist', '|', 'heading1'
+                , 'insertimage', 'insertvideo', '|' , 'autotypeset', '|', 'graphictemplate']
+        ]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
-        ,labelMap:{
-            'anchor':'', 'undo':''
-        }
+//        ,labelMap:{
+//            'anchor':'', 'undo':''
+//        }
         //webAppKey
         //百度应用的APIkey，每个站长必须首先去百度官网注册一个key后方能正常使用app功能
-        ,webAppKey:""
+        //,webAppKey:""
 
         //语言配置项,默认是zh-cn。有需要的话也可以使用如下这样的方式来自动多语言切换，当然，前提条件是lang文件夹下存在对应的语言文件：
         //lang值也可以通过自动获取 (navigator.language||navigator.browserLanguage ||navigator.userLanguage).toLowerCase()
@@ -107,10 +207,10 @@
         //常用配置项目
         //,isShow : true    //默认显示编辑器
 
-        ,initialContent:''    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
+        , initialContent: ''    //初始化编辑器的内容,也可以通过textarea/script给值，看官网例子
 
-        ,initialFrameWidth:600  //初始化编辑器宽度,默认1000
-        ,initialFrameHeight:420  //初始化编辑器高度,默认320
+        , initialFrameWidth: 800  //初始化编辑器宽度,默认1000
+        , initialFrameHeight: 800  //初始化编辑器高度,默认320
 
         //,autoClearinitialContent:true //是否自动清除编辑器初始内容，注意：如果focus属性设置为true,这个也为真，那么编辑器一上来就会触发导致初始化的内容看不到了
 
@@ -130,12 +230,15 @@
 
         //,imagePopup:true      //图片操作的浮层开关，默认打开
 
-        ,initialStyle:'body{margin:0;font-size:14px;padding:14px 55px;line-height:24px;}'   //编辑器内部样式,可以用来改变字体等
+        , initialStyle: 'body{margin:0;font-size:14px;padding:14px 55px;line-height:24px;}'   //编辑器内部样式,可以用来改变字体等
 
+
+        //,autoSyncData:true //自动同步编辑器要提交的数据
         //,emotionLocalization:false //是否开启表情本地化，默认关闭。若要开启请确保emotion文件夹下包含官网提供的images表情文件夹
 
-        ,pasteplain:true  //是否纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
-
+        , pasteplain: true  //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
+        //纯文本粘贴模式下的过滤规则
+        //, 'filterTxtRules':{}
         //,allHtmlEnabled:false //提交到后台的数据是否包含整个html字符串
         //iframeUrlMap
         //dialog内容的路径 ～会被替换成URL,垓属性一旦打开，将覆盖所有的dialog的默认路径
@@ -241,7 +344,7 @@
 //           ]
 
         //wordCount
-        ,wordCount:false          //是否开启字数统计
+        , wordCount: false          //是否开启字数统计
         //,maximumWords:10000       //允许的最大字符数
         //字数统计提示，{#count}代表当前字数，{#leave}代表还可以输入多少字符数,留空支持多语言自动切换，否则按此配置显示
         //,wordCountMsg:''   //当前已输入 {#count} 个字符，您还可以输入{#leave} 个字符
@@ -296,8 +399,8 @@
         //,indentValue:'2em'
 
         //pageBreakTag
-        //分页标识符,默认是_baidu_page_break_tag_
-        //,pageBreakTag:'_baidu_page_break_tag_'
+        //分页标识符,默认是_ueditor_page_break_tag_
+        //,pageBreakTag:'_ueditor_page_break_tag_'
 
         //sourceEditor
         //源码的查看方式,codemirror 是代码高亮，textarea是文本框,默认是codemirror
@@ -329,6 +432,14 @@
         //      indentValue : '2em'             //行首缩进的大小
         //  },
         //填写过滤规则
-        //filterRules : {}
+//            , filterRules:{
+//            }
+
+        /*-----------forexp-------*/
+        , graphictemplateUrlMap: {
+            'food': URL + 'graphictemplate/food/food.html',
+            'fitment': URL + 'graphictemplate/fitment/fitment.html',
+            'soft': URL + 'graphictemplate/soft/soft.html'
+        }
     };
 })();
