@@ -35,7 +35,7 @@
         'insertvideo':'~/dialogs/_video/video.html'
     };
     //为工具栏添加按钮，以下都是统一的按钮触发命令，所以写在一起
-    var btnCmds = ['source','undo', 'redo', 'bold', 'italic', 'autotypeset', 'insertorderedlist', 'insertunorderedlist', 'heading1',"insertimage"];
+    var btnCmds = ['source','undo', 'redo', 'bold', 'italic', 'autotypeset', 'insertorderedlist', 'insertunorderedlist', 'heading1'];
 
     for (var i = 0, ci; ci = btnCmds[i++];) {
         ci = ci.toLowerCase();
@@ -200,5 +200,5 @@
         return ui;
     };
 
-
+    editorui['insertphoto']
 })();
