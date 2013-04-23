@@ -134,7 +134,7 @@ var GraphicTemplate = {
                 }
             ]);
             //设置下拉框值
-            me._setDrawdownBox(data, ["J_systemtool"]);
+            me._setDrawdownBox(data, ["J_type"]);
         }
     },
 
@@ -205,7 +205,7 @@ var GraphicTemplate = {
             {id: "J_systemNeed"},
             {id: "J_money", 'tabIndex': 1},
             {id: "J_downloadlink"},
-            "J_systemtool"
+            "J_type"
         ]);
 
         //复选狂保存值
