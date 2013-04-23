@@ -9,7 +9,7 @@ UE.plugins['graphictemplate'] = function () {
         execCommand: function (cmd, value) {
             id = parseInt(id);
             id += 1;
-            var ifr = "<iframe  width='678' height='340'  align='center' scroling='no' frameborder='0'  " +
+            var ifr = "<iframe  width='678'  align='center' scroling='no' frameborder='0'  " +
                 "class=" + value + "-template " +
                 "id='graphictemplate-" + id + "'" +
                 "src=" + me.options["graphictemplateUrlMap"][value] +
@@ -71,27 +71,40 @@ UE.plugins['graphictemplate'] = function () {
     });
 
 
-    //缓存所有iframe高度，阻止undo属性改变时重复保存
-    var heightStorage = [];
+    //缓存所有iframe改变属性，阻止undo属性改变时重复保存
+    var attrs = {
+        heightStorage: [],
+        hasemptyStorage: []
+    };
     me.addListener("beforegetscene", function () {
-        heightStorage = [];
+        //清空
+        attrs = {
+            heightStorage: [],
+            hasemptyStorage: []
+        };
+
         var list = domUtils.getElementsByTagName(me.body, "iframe", function (node) {
             return domUtils.hasClass(node, "-template");
         });
         utils.each(list, function (node) {
             var tmp = node.getAttribute("height");
-            heightStorage.push(tmp);
+            attrs.heightStorage.push(tmp);
+            tmp = node.getAttribute("hasempty");
+            attrs.hasemptyStorage.push(tmp);
+
             //设置一个中间高度，减少闪烁
-            node.setAttribute('height',340);
+            node.removeAttribute('height');
+            node.removeAttribute('hasempty');
         });
     });
     me.addListener("aftergetscene", function () {
-        if (heightStorage.length) {
+        if (attrs.heightStorage.length) {
             var list = domUtils.getElementsByTagName(me.body, "iframe", function (node) {
                 return domUtils.hasClass(node, "-template");
             });
             utils.each(list, function (node, i) {
-                node.setAttribute("height", heightStorage[i]);
+                node.setAttribute("height", attrs.heightStorage [i]);
+                node.setAttribute("hasempty", attrs.hasemptyStorage [i]);
             });
         }
     });
