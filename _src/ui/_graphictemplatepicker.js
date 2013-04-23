@@ -74,10 +74,12 @@
         getStateDom: function () {
             return this.target;
         },
-//        _onClick: function (event) {
-//            this.editor.execCommand("graphictemplate");
-//            Popup.postHide(e);
-//        },
+        _onClick:function (evt) {
+            Popup.postHide(evt);
+            if (!this.isDisabled()) {
+                this.fireEvent('click');
+            }
+        },
         _UIBase_render: UIBase.prototype.render
     };
     utils.inherits(GraphicTemplatePicker, UIBase);
