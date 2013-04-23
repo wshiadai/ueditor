@@ -31,6 +31,7 @@
                 '</div></div>';
         },
         postRender: function (){
+            this.fireEvent( "renderReady" );
             this.Stateful_postRender();
             this.setDisabled(this.disabled)
         },

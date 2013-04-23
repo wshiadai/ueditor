@@ -32,23 +32,23 @@
     };
 
     var iframeUrlMap = {
-        'insertvideo':'~/dialogs/_video/video.html'
+        'insertvideo': '~/dialogs/_video/video.html'
     };
     //为工具栏添加按钮，以下都是统一的按钮触发命令，所以写在一起
-    var btnCmds = ['source','undo', 'redo', 'bold', 'italic', 'autotypeset', 'insertorderedlist', 'insertunorderedlist', 'heading1'];
+    var btnCmds = ['source', 'undo', 'redo', 'bold', 'italic', 'autotypeset', 'insertorderedlist', 'insertunorderedlist', 'heading1'];
 
     for (var i = 0, ci; ci = btnCmds[i++];) {
         ci = ci.toLowerCase();
         editorui[ci] = function (cmd) {
             return function (editor) {
                 var ui = new editorui.Button({
-                    className:'edui-for-' + cmd,
-                    title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
-                    onclick:function () {
+                    className: 'edui-for-' + cmd,
+                    title: editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
+                    onclick: function () {
                         editor.execCommand(cmd);
                     },
-                    theme:editor.options.theme,
-                    showText:false
+                    theme: editor.options.theme,
+                    showText: false
                 });
                 editorui.buttons[cmd] = ui;
                 editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
@@ -69,7 +69,7 @@
     }
 
     var dialogBtns = {
-        ok:['insertvideo']
+        ok: ['insertvideo']
     };
 
     for (var p in dialogBtns) {
@@ -88,26 +88,26 @@
                         //没有iframeUrl不创建dialog
                         if (iframeUrl) {
                             dialog = new editorui.Dialog(utils.extend({
-                                iframeUrl:editor.ui.mapUrl(iframeUrl),
-                                editor:editor,
-                                className:'edui-for-' + cmd,
-                                title:title,
-                                closeDialog:editor.getLang("closeDialog")
+                                iframeUrl: editor.ui.mapUrl(iframeUrl),
+                                editor: editor,
+                                className: 'edui-for-' + cmd,
+                                title: title,
+                                closeDialog: editor.getLang("closeDialog")
                             }, type == 'ok' ? {
-                                buttons:[
+                                buttons: [
                                     {
-                                        className:'edui-okbutton',
-                                        label:editor.getLang("ok"),
-                                        editor:editor,
-                                        onclick:function () {
+                                        className: 'edui-okbutton',
+                                        label: editor.getLang("ok"),
+                                        editor: editor,
+                                        onclick: function () {
                                             dialog.close(true);
                                         }
                                     },
                                     {
-                                        className:'edui-cancelbutton',
-                                        label:editor.getLang("cancel"),
-                                        editor:editor,
-                                        onclick:function () {
+                                        className: 'edui-cancelbutton',
+                                        label: editor.getLang("cancel"),
+                                        editor: editor,
+                                        onclick: function () {
                                             dialog.close(false);
                                         }
                                     }
@@ -118,9 +118,9 @@
                         }
 
                         var ui = new editorui.Button({
-                            className:'edui-for-' + cmd,
-                            title:title,
-                            onclick:function () {
+                            className: 'edui-for-' + cmd,
+                            title: title,
+                            onclick: function () {
                                 if (dialog) {
                                     switch (cmd) {
                                         case "wordimage":
@@ -143,13 +143,13 @@
                                     }
                                 }
                             },
-                            theme:editor.options.theme,
-                            disabled:cmd == 'scrawl' && editor.queryCommandState("scrawl") == -1
+                            theme: editor.options.theme,
+                            disabled: cmd == 'scrawl' && editor.queryCommandState("scrawl") == -1
                         });
                         editorui.buttons[cmd] = ui;
                         editor.addListener('selectionchange', function () {
                             //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
-                            var unNeedCheckState = {'edittable':1};
+                            var unNeedCheckState = {'edittable': 1};
                             if (cmd in unNeedCheckState)return;
 
                             var state = editor.queryCommandState(cmd);
@@ -170,19 +170,19 @@
     editorui["graphictemplate"] = function (editor) {
         var cmd = "graphictemplate",
             graphictemplatePop = new baidu.editor.ui.Popup({
-                content:new baidu.editor.ui.GraphicTemplatePicker({editor:editor}),
-                editor:editor,
-                className:'edui-graphictemplatePop'
+                content: new baidu.editor.ui.GraphicTemplatePicker({editor: editor}),
+                editor: editor,
+                className: 'edui-graphictemplatePop'
             });
         graphictemplatePop.render();
         var ui = new editorui.Button({
-            className:'edui-for-' + cmd,
-            title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
-            onclick:function () {
+            className: 'edui-for-' + cmd,
+            title: editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
+            onclick: function () {
                 graphictemplatePop.showAnchor(this.getDom());
             },
-            theme:editor.options.theme,
-            showText:false
+            theme: editor.options.theme,
+            showText: false
         });
         editorui.buttons[cmd] = ui;
         editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
@@ -200,12 +200,12 @@
         return ui;
     };
 
-    editorui['insertimage']= function (editor) {
-        var cmd='insertimage';
+    editorui['insertimage'] = function (editor) {
+        var cmd = 'insertimage';
         var ui = new editorui.Button({
-            className:'edui-for-' + cmd,
-            title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
-            getHtmlTpl:function(){
+            className: 'edui-for-' + cmd,
+            title: editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
+            getHtmlTpl: function () {
                 return '<div id="##" class="edui-box %%">' +
                     '<div id="##_state" stateful>' +
                     '<div class="%%-wrap"><div id="##_body" unselectable="on" ' + (this.title ? 'title="' + this.title + '"' : '') +
@@ -218,10 +218,29 @@
                     '<div id="ue_containerId" class="ue_flash"></div>' +
                     '</div>';
             },
-            theme:editor.options.theme,
-            showText:false
+            theme: editor.options.theme,
+            showText: false
         });
         editorui.buttons[cmd] = ui;
+        ui.addListener("renderReady", function () {
+            domUtils.on(ui.getDom(), ["mouseover", 'mouseout', 'mousedown', 'mouseup'], function (e) {
+                switch (e.type) {
+                    case "mouseover":
+                        ui.addState("hover");
+                        break;
+                    case "mouseout":
+                        ui.removeState("hover");
+                        ui.removeState("active");
+                        break;
+                    case "mousedown":
+                        ui.addState("active");
+                        break;
+                    case "mouseup":
+                        ui.removeState("active");
+                        break;
+                }
+            });
+        });
         editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
             var state = editor.queryCommandState(cmd);
             if (state == -1) {
