@@ -30,6 +30,9 @@ UE.plugins['graphictemplate'] = function () {
         }
     };
 
+    /*
+     *转换数据
+     */
     me.addOutputRule(function (root) {
         utils.each(root.getNodesByTagName('iframe'), function (node) {
             var val = node.getAttr('class');
@@ -71,7 +74,9 @@ UE.plugins['graphictemplate'] = function () {
     });
 
 
-    //缓存所有iframe改变属性，阻止undo属性改变时重复保存
+    /*
+     *缓存所有iframe改变属性，阻止undo属性改变时重复保存
+     */
     var attrs = {
         heightStorage: [],
         hasemptyStorage: []
