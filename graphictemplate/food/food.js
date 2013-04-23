@@ -92,7 +92,11 @@ GraphicTemplate = {
     },
     _deleteModule: function (tgt) {
         var node = tgt.parentNode;
-        node.parentNode.removeChild(node);
+        var content = node.parentNode;
+        var list = domUtils.getElementsByTagName(content, "div", "module");
+        if (list.length > 1) {
+            content.removeChild(node);
+        }
     },
 
     setPageData: function (data) {
