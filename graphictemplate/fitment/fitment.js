@@ -118,7 +118,7 @@ GraphicTemplate = {
         ]);
 
         //复选狂保存值
-        me._saveCheckBox(data, ["J_jianyue", "J_xiandai", "J_tianyuan",
-            "J_zhongshi", "J_hunda", "J_oushi", "J_dizhonghai"]);
+        me._saveCheckBox(data, ["J_jianyue","J_tianyuan",'J_meishi',"J_zhongshi",,'J_rishi',
+            "J_beiou", "J_dizhonghai", "J_dongnanya"]);
     }
 };
