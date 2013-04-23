@@ -9,7 +9,7 @@ UE.plugins['graphictemplate'] = function () {
         execCommand: function (cmd, value) {
             id = parseInt(id);
             id += 1;
-            var ifr = "<iframe  width='678'  align='center' scroling='no' frameborder='0'  " +
+            var ifr = "<iframe  width='678' height='340'  align='center' scroling='no' frameborder='0'  " +
                 "class=" + value + "-template " +
                 "id='graphictemplate-" + id + "'" +
                 "src=" + me.options["graphictemplateUrlMap"][value] +
@@ -81,7 +81,8 @@ UE.plugins['graphictemplate'] = function () {
         utils.each(list, function (node) {
             var tmp = node.getAttribute("height");
             heightStorage.push(tmp);
-            node.removeAttribute("height");
+            //设置一个中间高度，减少闪烁
+            node.setAttribute('height',340);
         });
     });
     me.addListener("aftergetscene", function () {
