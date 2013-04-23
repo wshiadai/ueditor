@@ -148,4 +148,16 @@ UE.plugins['graphictemplate'] = function () {
             me.body.style.cursor = "default";
         }
     });
+
+    /*
+     * iframe自动长高
+     * */
+    tpl.iframeAutoHeight = function (frameElement) {
+        if (browser.ie && browser.version < 8) {
+            frameElement.height = frameElement.Document.body.scrollHeight
+        } else {
+            frameElement.height = frameElement.contentDocument.body.scrollHeight;
+        }
+        me.fireEvent("autoHeight");
+    };
 };

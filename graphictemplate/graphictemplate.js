@@ -34,17 +34,6 @@
         };
 
         /*
-         * iframe自动长高
-         * */
-        iframeAutoHeight = function () {
-            if (browser.ie && browser.version < 8) {
-                frameElement.height = frameElement.Document.body.scrollHeight
-            } else {
-                frameElement.height = frameElement.contentDocument.body.scrollHeight;
-            }
-            editor.fireEvent("autoHeight");
-        };
-        /*
          * 页面数据加载
          * */
         domUtils.on(window, 'load', function () {
@@ -55,7 +44,7 @@
             GraphicTemplate.setPageData(data);
             GraphicTemplate.savePageData();
             editor.graphictemplate.templateAction(window);
-            iframeAutoHeight();
+            editor.graphictemplate.iframeAutoHeight(frameElement)
         });
         /*
          * 页面数据保存

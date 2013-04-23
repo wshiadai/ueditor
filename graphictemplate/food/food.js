@@ -83,7 +83,7 @@ GraphicTemplate = {
             content.appendChild(tmpDiv.children[0]);
         }
 
-        iframeAutoHeight();
+        editor.graphictemplate.iframeAutoHeight(frameElement)
     },
     _addModule: function (num) {
         var me = this, str = "";

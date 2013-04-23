@@ -63,7 +63,8 @@ var GraphicTemplate = {
             GraphicTemplate.tabIndex = 1;
         }
         cur && (cur.checked = isTab0);
-        iframeAutoHeight();
+
+        editor.graphictemplate.iframeAutoHeight(frameElement);
     },
     _setBoxEdit: function (isEdit, cur) {
         var money = G("J_money");
