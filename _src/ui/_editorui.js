@@ -200,5 +200,43 @@
         return ui;
     };
 
-    editorui['insertphoto']
+    editorui['insertimage']= function (editor) {
+        var cmd='insertimage';
+        var ui = new editorui.Button({
+            className:'edui-for-' + cmd,
+            title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
+            onclick:function () {
+                editor.execCommand(cmd);
+            },
+            getHtmlTpl:function(){
+                return '<div id="##" class="edui-box %%">' +
+                    '<div id="##_state" stateful>' +
+                    '<div class="%%-wrap"><div id="##_body" unselectable="on" ' + (this.title ? 'title="' + this.title + '"' : '') +
+                    ' class="%%-body" onmousedown="return false;" onclick="return $$._onClick();">' +
+                    (this.showIcon ? '<div class="edui-box edui-icon"></div>' : '') +
+                    (this.showText ? '<div class="edui-box edui-label">' + this.label + '</div>' : '') +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div id="ue_containerId" class="ue_flash"></div>' +
+                    '</div>';
+            },
+            theme:editor.options.theme,
+            showText:false
+        });
+        editorui.buttons[cmd] = ui;
+        editor.addListener('selectionchange', function (type, causeByUi, uiReady) {
+            var state = editor.queryCommandState(cmd);
+            if (state == -1) {
+                ui.setDisabled(true);
+                ui.setChecked(false);
+            } else {
+                if (!uiReady) {
+                    ui.setDisabled(false);
+                    ui.setChecked(state);
+                }
+            }
+        });
+        return ui;
+    };
 })();
