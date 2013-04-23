@@ -29,12 +29,6 @@ UE.plugins['graphictemplate'] = function () {
             return 0;
         }
     };
-//    me.commands['insertfood'] = {
-//        queryCommandState: function () {
-//
-//        }
-//    };
-
 
     me.addOutputRule(function (root) {
         utils.each(root.getNodesByTagName('iframe'), function (node) {

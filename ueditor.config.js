@@ -441,10 +441,5 @@
             'fitment': URL + 'graphictemplate/fitment/fitment.html',
             'soft': URL + 'graphictemplate/soft/soft.html'
         }
-        , graphictemplateLabel: {
-            'insertfood': '美食食材',
-            'insertfitment': '家居装修',
-            'insertsoft': '软件信息'
-        }
     };
 })();

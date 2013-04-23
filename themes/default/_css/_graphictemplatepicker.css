@@ -12,9 +12,6 @@
     overflow: hidden;
     border-bottom: 1px solid #ccc;
 }
-.edui-default .edui-graphictemplatepicker-item .edui-box{
-    width:100%;
-}
-.edui-default .edui-graphictemplatepicker-body .edui-graphictemplatepicker-item .edui-state-hover {
+.edui-default .edui-graphictemplatepicker-body .edui-graphictemplatepicker-item.edui-state-hover {
     background-color: #f9fdf8;
 }
