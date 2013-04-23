@@ -51,7 +51,10 @@ body {
 
 .wrapper .head{overflow: hidden;}
 .wrapper .head .drag{cursor: move;width: 50px;height: 20px;float:left;}
-.wrapper .head .close{width: 14px;height: 13px;margin:10px 10px 0 0;float:right;background: url(img/close.png)  -1px -1px no-repeat;cursor:pointer;}
+.wrapper .head .close{width: 14px;height: 13px;margin:10px 10px 0 0;float:right;background: url(img/close.png)  -1px 0 no-repeat;cursor:pointer;}
+.wrapper .head .close:hover{background-position:-1px -18px}
+.wrapper .head .close:active{background-position:-1px -36px }
+
 
 .mask{width:100%;height:100%;position: absolute;top:0;left:0;z-index: 1000;
     background-color:#085ea7;opacity: 0.7; filter: alpha(opacity = 70);}
