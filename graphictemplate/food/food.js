@@ -39,8 +39,8 @@ GraphicTemplate = {
         arr.push(tpl.foot);
 
         G("J_main").innerHTML = arr.join('');
-        //默认为true、不需要检查数据
-        frameElement.setAttribute("hasempty","true");
+        //默认为false、不需要检查数据
+        frameElement.setAttribute("hasempty","false");
     },
     addPageListener: function () {
         var me = this;
