@@ -205,9 +205,6 @@
         var ui = new editorui.Button({
             className:'edui-for-' + cmd,
             title:editor.options.labelMap[cmd] || editor.getLang("labelMap." + cmd) || '',
-            onclick:function () {
-                editor.execCommand(cmd);
-            },
             getHtmlTpl:function(){
                 return '<div id="##" class="edui-box %%">' +
                     '<div id="##_state" stateful>' +
