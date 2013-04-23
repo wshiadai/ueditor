@@ -23,7 +23,7 @@
         ajax = UE.ajax;
 
         utils.loadFile(document, {
-            href: editor.options.themePath + editor.options.theme + "/dialogbase.css?cache=" + Math.random(),
+            href: "../graphictemplate.css?cache=" + Math.random(),
             tag: "link",
             type: "text/css",
             rel: "stylesheet"
