@@ -94,7 +94,9 @@
 .edui-default .edui-for-insertimage .edui-state-active .edui-icon,.edui-default  .edui-for-insertimage .edui-state-checked  .edui-icon {
     background-position: -396px -82px;
 }
-
+.edui-default .edui-for-insertimage .ue_flash{
+    position: absolute;z-index: 9999;width: 30px;height: 30px;top:0;left:0;
+}
 .edui-default  .edui-for-insertvideo .edui-icon {
     background-position: -430px -2px;
 }
