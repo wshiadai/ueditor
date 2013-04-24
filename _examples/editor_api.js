@@ -11,7 +11,7 @@
             'core/domUtils.js',
             'core/Range.js',
             'core/Selection.js',
-            'core/Editor.js',
+            'core/_Editor.js',
             'core/filterword.js',
             'core/node.js',
             'core/htmlparser.js',
@@ -22,7 +22,7 @@
             'plugins/_image.js',
             'plugins/selectall.js',
             'plugins/wordcount.js',
-            'plugins/undo.js',
+            'plugins/_undo.js',
             'plugins/paste.js',           //粘贴时候的提示依赖了UI
             'plugins/list.js',
             'plugins/enterkey.js',

@@ -87,12 +87,9 @@ UE.plugins['undo'] = function () {
 
         this.restore = function () {
             var scene = this.list[this.index];
-            var root = UE.htmlparser(scene.content.replace(fillchar, ''));
-            me.filterInputRule(root);
             //trace:873
             //去掉展位符
-            me.document.body.innerHTML = root.toHtml();
-            me.fireEvent('afterscencerestore');
+            me.document.body.innerHTML = scene.content.replace(fillchar, '');
             //处理undo后空格不展位的问题
             if (browser.ie) {
                 utils.each(domUtils.getElementsByTagName(me.document,'td th caption p'),function(node){
@@ -101,38 +98,32 @@ UE.plugins['undo'] = function () {
                     }
                 })
             }
-
-            try{
-                new dom.Range(me.document).moveToAddress(scene.address).select();
-            }catch(e){}
-
+            new dom.Range(me.document).moveToAddress(scene.address).select();
             this.update();
             this.clearKey();
             //不能把自己reset了
             me.fireEvent('reset', true);
         };
 
-        this.getScene = function (notSetCursor) {
+        this.getScene = function () {
             var rng = me.selection.getRange(),
                 restoreAddress = rng.createAddress(),
                 rngAddress = rng.createAddress(false,true);
 
             me.fireEvent('beforegetscene');
-            var root = UE.htmlparser(me.body.innerHTML.replace(fillchar, ''));
-            me.filterOutputRule(root);
-            var cont = root.toHtml();
+            var cont = me.body.innerHTML.replace(fillchar, '');
             browser.ie && (cont = cont.replace(/>&nbsp;</g, '><').replace(/\s*</g, '<').replace(/>\s*/g, '>'));
             me.fireEvent('aftergetscene');
             try{
-               !notSetCursor && rng.moveToAddress(restoreAddress).select(true);
+                rng.moveToAddress(restoreAddress).select(true);
             }catch(e){}
             return {
                 address:rngAddress,
                 content:cont
             }
         };
-        this.save = function (notCompareRange,notSetCursor) {
-            var currentScene = this.getScene(notSetCursor),
+        this.save = function (notCompareRange) {
+            var currentScene = this.getScene(),
                 lastScene = this.list[this.index];
             //内容相同位置相同不存
             if (lastScene && lastScene.content == currentScene.content &&
@@ -226,7 +217,7 @@ UE.plugins['undo'] = function () {
                 return;
             if (me.undoManger.list.length == 0 || ((keyCode == 8 || keyCode == 46) && lastKeyCode != keyCode)) {
                 me.fireEvent('contentchange');
-                me.undoManger.save(true,true);
+                me.undoManger.save(true);
                 lastKeyCode = keyCode;
                 return;
             }
@@ -241,7 +232,7 @@ UE.plugins['undo'] = function () {
             if (keycont >= maxInputCount || me.undoManger.mousedown) {
                 if (me.selection.getRange().collapsed)
                     me.fireEvent('contentchange');
-                me.undoManger.save(false,true);
+                me.undoManger.save();
                 me.undoManger.mousedown = false;
             }
         }

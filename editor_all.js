@@ -4367,7 +4367,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          *     return false //编辑器没有内容 ，getContent直接返回空
          * })
          */
-        getContent:function (cmd, fn, isPreview, notSetCursor) {
+        getContent:function (cmd,fn,isPreview,notSetCursor) {
             var me = this;
             if (cmd && utils.isFunction(cmd)) {
                 fn = cmd;
@@ -6701,12 +6701,9 @@ UE.plugins['undo'] = function () {
 
         this.restore = function () {
             var scene = this.list[this.index];
-            var root = UE.htmlparser(scene.content.replace(fillchar, ''));
-            me.filterInputRule(root);
             //trace:873
             //去掉展位符
-            me.document.body.innerHTML = root.toHtml();
-            me.fireEvent('afterscencerestore');
+            me.document.body.innerHTML = scene.content.replace(fillchar, '');
             //处理undo后空格不展位的问题
             if (browser.ie) {
                 utils.each(domUtils.getElementsByTagName(me.document,'td th caption p'),function(node){
@@ -6715,11 +6712,7 @@ UE.plugins['undo'] = function () {
                     }
                 })
             }
-
-            try{
-                new dom.Range(me.document).moveToAddress(scene.address).select();
-            }catch(e){}
-
+            new dom.Range(me.document).moveToAddress(scene.address).select();
             this.update();
             this.clearKey();
             //不能把自己reset了
@@ -6732,21 +6725,19 @@ UE.plugins['undo'] = function () {
                 rngAddress = rng.createAddress(false,true);
 
             me.fireEvent('beforegetscene');
-            var root = UE.htmlparser(me.body.innerHTML.replace(fillchar, ''));
-            me.filterOutputRule(root);
-            var cont = root.toHtml();
+            var cont = me.body.innerHTML.replace(fillchar, '');
             browser.ie && (cont = cont.replace(/>&nbsp;</g, '><').replace(/\s*</g, '<').replace(/>\s*/g, '>'));
             me.fireEvent('aftergetscene');
             try{
-               !notSetCursor && rng.moveToAddress(restoreAddress).select(true);
+                !notSetCursor && rng.moveToAddress(restoreAddress).select(true);
             }catch(e){}
             return {
                 address:rngAddress,
                 content:cont
             }
         };
-        this.save = function (notCompareRange,notSetCursor) {
-            var currentScene = this.getScene(notSetCursor),
+        this.save = function (notCompareRange, notSetCursor) {
+            var currentScene = this.getScene(),
                 lastScene = this.list[this.index];
             //内容相同位置相同不存
             if (lastScene && lastScene.content == currentScene.content &&
