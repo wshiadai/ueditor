@@ -435,7 +435,7 @@
          *     return false //编辑器没有内容 ，getContent直接返回空
          * })
          */
-        getContent:function (cmd,fn) {
+        getContent:function (cmd, fn, isPreview, notSetCursor) {
             var me = this;
             if (cmd && utils.isFunction(cmd)) {
                 fn = cmd;
@@ -453,7 +453,7 @@
             me.fireEvent( 'aftergetcontent', cmd );
 
             try{
-                range.moveToAddress(address).select(true);
+                !notSetCursor && range.moveToAddress(address).select(true);
             }catch(e){}
 
             return  root.toHtml();
@@ -998,7 +998,7 @@
          * editor.getLang(true)
          */
         getContentLength:function (ingoneHtml, tagNames) {
-            var count = this.getContent().length;
+            var count = this.getContent(false,false,false,true).length;
             if (ingoneHtml) {
                 tagNames = (tagNames || []).concat([ 'hr', 'img', 'iframe']);
                 count = this.getContentTxt().replace(/[\t\r\n]+/g, '').length;

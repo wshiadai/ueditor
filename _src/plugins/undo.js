@@ -226,7 +226,7 @@ UE.plugins['undo'] = function () {
                 return;
             if (me.undoManger.list.length == 0 || ((keyCode == 8 || keyCode == 46) && lastKeyCode != keyCode)) {
                 me.fireEvent('contentchange');
-                me.undoManger.save(true);
+                me.undoManger.save(true,true);
                 lastKeyCode = keyCode;
                 return;
             }

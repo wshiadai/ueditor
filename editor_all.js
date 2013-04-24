@@ -4367,7 +4367,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          *     return false //编辑器没有内容 ，getContent直接返回空
          * })
          */
-        getContent:function (cmd,fn) {
+        getContent:function (cmd, fn, isPreview, notSetCursor) {
             var me = this;
             if (cmd && utils.isFunction(cmd)) {
                 fn = cmd;
@@ -4385,7 +4385,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             me.fireEvent( 'aftergetcontent', cmd );
 
             try{
-                range.moveToAddress(address).select(true);
+                !notSetCursor && range.moveToAddress(address).select(true);
             }catch(e){}
 
             return  root.toHtml();
@@ -4930,7 +4930,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          * editor.getLang(true)
          */
         getContentLength:function (ingoneHtml, tagNames) {
-            var count = this.getContent().length;
+            var count = this.getContent(false,false,false,true).length;
             if (ingoneHtml) {
                 tagNames = (tagNames || []).concat([ 'hr', 'img', 'iframe']);
                 count = this.getContentTxt().replace(/[\t\r\n]+/g, '').length;
@@ -6701,9 +6701,12 @@ UE.plugins['undo'] = function () {
 
         this.restore = function () {
             var scene = this.list[this.index];
+            var root = UE.htmlparser(scene.content.replace(fillchar, ''));
+            me.filterInputRule(root);
             //trace:873
             //去掉展位符
-            me.document.body.innerHTML = scene.content.replace(fillchar, '');
+            me.document.body.innerHTML = root.toHtml();
+            me.fireEvent('afterscencerestore');
             //处理undo后空格不展位的问题
             if (browser.ie) {
                 utils.each(domUtils.getElementsByTagName(me.document,'td th caption p'),function(node){
@@ -6712,32 +6715,38 @@ UE.plugins['undo'] = function () {
                     }
                 })
             }
-            new dom.Range(me.document).moveToAddress(scene.address).select();
+
+            try{
+                new dom.Range(me.document).moveToAddress(scene.address).select();
+            }catch(e){}
+
             this.update();
             this.clearKey();
             //不能把自己reset了
             me.fireEvent('reset', true);
         };
 
-        this.getScene = function () {
+        this.getScene = function (notSetCursor) {
             var rng = me.selection.getRange(),
                 restoreAddress = rng.createAddress(),
                 rngAddress = rng.createAddress(false,true);
 
             me.fireEvent('beforegetscene');
-            var cont = me.body.innerHTML.replace(fillchar, '');
+            var root = UE.htmlparser(me.body.innerHTML.replace(fillchar, ''));
+            me.filterOutputRule(root);
+            var cont = root.toHtml();
             browser.ie && (cont = cont.replace(/>&nbsp;</g, '><').replace(/\s*</g, '<').replace(/>\s*/g, '>'));
             me.fireEvent('aftergetscene');
             try{
-                rng.moveToAddress(restoreAddress).select(true);
+               !notSetCursor && rng.moveToAddress(restoreAddress).select(true);
             }catch(e){}
             return {
                 address:rngAddress,
                 content:cont
             }
         };
-        this.save = function (notCompareRange) {
-            var currentScene = this.getScene(),
+        this.save = function (notCompareRange,notSetCursor) {
+            var currentScene = this.getScene(notSetCursor),
                 lastScene = this.list[this.index];
             //内容相同位置相同不存
             if (lastScene && lastScene.content == currentScene.content &&
@@ -6831,7 +6840,7 @@ UE.plugins['undo'] = function () {
                 return;
             if (me.undoManger.list.length == 0 || ((keyCode == 8 || keyCode == 46) && lastKeyCode != keyCode)) {
                 me.fireEvent('contentchange');
-                me.undoManger.save(true);
+                me.undoManger.save(true,true);
                 lastKeyCode = keyCode;
                 return;
             }
@@ -6846,7 +6855,7 @@ UE.plugins['undo'] = function () {
             if (keycont >= maxInputCount || me.undoManger.mousedown) {
                 if (me.selection.getRange().collapsed)
                     me.fireEvent('contentchange');
-                me.undoManger.save();
+                me.undoManger.save(false,true);
                 me.undoManger.mousedown = false;
             }
         }
@@ -8501,7 +8510,7 @@ UE.plugins['fiximgclick'] = function() {
 UE.plugins['autoheight'] = function () {
     var me = this;
     //提供开关，就算加载也可以关闭
-    me.autoHeightEnabled = me.options.autoHeightEnabled !== false;
+    adjustHeight = me.options.autoHeightEnabled !== false;
     if (!me.autoHeightEnabled) {
         return;
     }
@@ -10292,7 +10301,7 @@ baidu.editor.ui = {};
             },
             onclick:function () {
                 if (editor.options.isLogin) {
-                    ik.qb.neweditor.showMap(editor);
+                    editor.fireEvent('showmap');
                 }
             },
             showText:true
@@ -10393,6 +10402,15 @@ baidu.editor.ui = {};
 
         ui.addListener("renderReady", function () {
             setAttachPop();
+            if (!editor.options.isLogin) {
+                var dom = ui.getDom(),
+                    label = $(dom.id + "_body").children[1],
+                    icon = $(dom.id + "_body").children[0];
+                label.style.color = "#999";
+                dom.setAttribute("title", hoverTitle);
+                domUtils.removeClasses(icon, ["edui-icon"]);
+                domUtils.addClass(icon, "edui_disableIcon");
+            }
         });
         return ui;
     };
