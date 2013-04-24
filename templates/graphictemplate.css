@@ -49,7 +49,7 @@ body {
 .wrapper {border: 1px dotted #d6d2b6;background-color: #fcfcf8;}
 .wrapper .title{margin-left:40px;font-size: 16px;font-weight: bold;font-family:microsoft Yahei;color: #333;}
 
-.wrapper .head{overflow: hidden;}
+.wrapper .head{overflow: hidden;height:23px;}
 .wrapper .head .drag{cursor: move;width: 50px;height: 20px;float:left;}
 .wrapper .head .close{width: 14px;height: 13px;margin:10px 10px 0 0;float:right;background: url(img/close.png)  -1px 0 no-repeat;cursor:pointer;}
 .wrapper .head .close:hover{background-position:-1px -18px}
