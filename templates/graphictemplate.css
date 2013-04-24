@@ -46,7 +46,7 @@ body {
 }
 
 
-.wrapper {border: 1px dotted #d6d2b6;background-color: #fcfcf8;}
+.wrapper {border: 1px dotted #d6d2b6;background-color: #FCFCF8;}
 .wrapper .title{margin-left:40px;font-size: 16px;font-weight: bold;font-family:microsoft Yahei;color: #333;}
 
 .wrapper .head{overflow: hidden;height:23px;}
