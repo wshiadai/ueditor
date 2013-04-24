@@ -20,7 +20,7 @@
             for (var i=0; i<this.items.length; i++) {
                 buff[i] = this.items[i].renderHtml();
             }
-            return '<div id="##" class="edui-toolbar %%" onselectstart="return false;">' +
+            return '<div id="##" class="edui-toolbar %%" onselectstart="return false;" >' +
                 buff.join('') +
                 '</div>'
         },
