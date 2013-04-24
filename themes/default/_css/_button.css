@@ -5,6 +5,8 @@
     height: 30px !important;
     width: 30px !important;
     background-image: url(../images/exp-icon.png);
+   +background-image: url(../images/exp-icon.gif);
+    _background-image: url(../images/exp-icon.png);
 }
 
 .edui-default .edui-toolbar .edui-button .edui-button-wrap {

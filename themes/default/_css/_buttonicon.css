@@ -111,10 +111,8 @@
     width:76px !important;
     background-position: -558px -2px;
 }
-.edui-default  .edui-for-graphictemplate .edui-state-hover .edui-icon {
-    background-position: -558px -42px;
-}
+.edui-default  .edui-for-graphictemplate .edui-state-hover .edui-icon,
 .edui-default .edui-for-graphictemplate .edui-state-active .edui-icon,
-.edui-default  .edui-for-graphictemplate .edui-state-checked .edui-icon {
-    background-position: -558px -82px;
+.edui-default  .edui-for-graphictemplate .edui-state-checked .edui-icon{
+    background-position: -558px -42px;
 }
