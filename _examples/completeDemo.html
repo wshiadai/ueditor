@@ -13,21 +13,22 @@
 </div>
 <script type="text/javascript">
     var ue = UE.getEditor("editor");
+    var domUtils=UE.dom.domUtils;
     ue.addListener("beforegetcontent",function(){
         var links = domUtils.getElementsByTagName(this.document,"a");
         for(var i= 0,link;link=links[i++];){
             UE.dom.domUtils.remove(link,true)
         }
     });
-//    ue.ready(function(){
-//       domUtils(ue.document,"mouseover",function(e){
-//           var tgt = e.target || e.srcElement;
-//
-//           var rng=ue.selection.getRange();
-//           rng.setStart();
-//           rng.setCursor(false,true);
-//       });
-//    });
+    ue.ready(function(){
+       domUtils.on(ue.document,"mouseover",function(e){
+           var tgt = e.target || e.srcElement;
+           var rng=ue.selection.getRange();
+           console.log(tgt);
+           rng.setStart(tgt,0);
+           rng.setCursor(false,true);
+       });
+    });
 //    ue.ready(function(){
 //        var str='<p>'+
 //                '<pre class="food-template" id="graphictemplate-1" >'+
