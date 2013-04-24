@@ -127,7 +127,7 @@ UE.plugins['graphictemplate'] = function () {
 
             switch (tgt.id) {
                 case "J_drag":
-                    doc.getElementById("J_mask").style.display = "";
+                    doc.getElementById("J_mask").style.cssText = "height:"+tpl.currentTemplate.height+"px;display:block";
                     me.graphictemplate.isSelect = true;
                     break;
                 case "J_close":
