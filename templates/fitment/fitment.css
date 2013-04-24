@@ -1,4 +1,4 @@
-.wrapper .section{margin: 15px 0;font-size: 14px;overflow: hidden;color: #666;line-height: 32px;}
+.wrapper .section{margin: 15px 0;font-size: 14px;overflow: hidden;color: #666;line-height: 32px;_height:32px;}
 
 .section .left{float: left;}
 .section .left .star{ color: red;margin-left: 40px;}
@@ -11,6 +11,7 @@
 .section .textbox{ text-align:center;width: 46px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;outline:0;_height:29px;}
 .section .textbox.focus{border-color:#77d068;color:#333;}
 .section .dropdownbox.focus{color:#333;}
+.wrapper .download{_height:84px;}
 
 .section .decorativetxt{float:left;margin:0 10px 0 40px;}
 .section .decorative{float:left;overflow: hidden;width: 510px;}
