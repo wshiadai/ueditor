@@ -9799,7 +9799,15 @@ baidu.editor.ui = {};
                 });
 
                 ui.addListener("postrender", function () {
-                    var div = document.createElement("div");
+                    var wealthHtml = "",
+                        wealthList = editor.options.wealthList,
+                        div = document.createElement("div");
+
+                    for (var i in wealthList) {
+                        var item = wealthList[i];
+                        wealthHtml += '<option value="'+item['key']+'">'+item['value']+'</option>';
+                    }
+
                     div.id = uploadProgressId;
                     div.innerHTML = '<div class="progressWrapper" style="display:none;">' +
                         '<div class="fileIcon icon_file_default"></div>' +
@@ -9817,9 +9825,7 @@ baidu.editor.ui = {};
                         '<div class="progressWealthWrapper">' +
                         '<span class="progressWealthText">定价:</span>' +
                         '<select name="wealth" class="progressWealth" id="' + wealthSelecterId + '">' +
-                        '<option value="0">免费</option>' +
-                        '<option value="1">1 财富值</option>' +
-                        '<option value="2">2 财富值</option>' +
+                        wealthHtml +
                         '</select>' +
                         '</div>' +
                         '<a class="progressCancel" href="#">取消</a>' +
