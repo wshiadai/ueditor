@@ -415,12 +415,10 @@ div.edui-box {
     width:76px !important;
     background-position: -558px -2px;
 }
-.edui-default  .edui-for-graphictemplate .edui-state-hover .edui-icon {
-    background-position: -558px -42px;
-}
+.edui-default  .edui-for-graphictemplate .edui-state-hover .edui-icon,
 .edui-default .edui-for-graphictemplate .edui-state-active .edui-icon,
-.edui-default  .edui-for-graphictemplate .edui-state-checked .edui-icon {
-    background-position: -558px -82px;
+.edui-default  .edui-for-graphictemplate .edui-state-checked .edui-icon{
+    background-position: -558px -42px;
 }
 /* 弹出菜单 */
 .edui-default .edui-popup {
@@ -839,7 +837,7 @@ div.edui-box {
     cursor: default;
     overflow-y: auto;
 }
-.edui-default .edui-graphictemplatepicker-item {
+.edui-default .edui-graphictemplatepicker-item .edui-label{
     text-align: center;
     cursor: pointer;
     height: 30px;
@@ -847,6 +845,6 @@ div.edui-box {
     overflow: hidden;
     border-bottom: 1px solid #ccc;
 }
-.edui-default .edui-graphictemplatepicker-body .edui-graphictemplatepicker-item.edui-state-hover {
-    background-color: #f9fdf8;
+.edui-default .edui-graphictemplatepicker-body .edui-graphictemplatepicker-item.edui-state-hover .edui-label{
+    background-color: #F9FDF8;
 }

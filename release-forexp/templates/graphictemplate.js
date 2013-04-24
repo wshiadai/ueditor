@@ -52,7 +52,7 @@
         domUtils.on(browser.ie ? frameElement : window, "blur", function () {
             GraphicTemplate.savePageData();
             //去掉选中状态
-            document.getElementById("J_mask").style.display="none";
+            G("J_mask").style.display="none";
         });
     }
 })();
