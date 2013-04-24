@@ -12265,7 +12265,7 @@ baidu.editor.ui = {};
         var editor = new baidu.editor.Editor(options);
         editor.options.editor = editor;
         utils.loadFile(document, {
-            href:editor.options.themePath + editor.options.theme + "/_css/ueditor.css",
+            href:editor.options.themePath + editor.options.theme + "/css/ueditor.css",
 //            for经验
 //            href:editor.options.themePath + editor.options.theme + "/ueditor_simple.css",
             tag:"link",
@@ -12337,7 +12337,7 @@ baidu.editor.ui = {};
                     editor.container.style.width = opt.initialFrameWidth+ 'px';
                     editor.container.style.zIndex = opt.zIndex;
                     oldRender.call(editor, editor.ui.getDom('iframeholder'));
-
+                    editor.fireEvent("afteruirender")
                 }
             })
         };
