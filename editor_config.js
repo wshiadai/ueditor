@@ -430,5 +430,17 @@
         ,swfUploadDir:'/apps/百度知道/'
         //发送文件的文件表单名称
         ,swfUploadPostName:'file'
+        //财富值列表
+        ,wealthList:[
+            {key:'0',value:'免费'},
+            {key:'1',value:'1 财富值'},
+            {key:'2',value:'2 财富值'},
+            {key:'3',value:'3 财富值'},
+            {key:'4',value:'4 财富值'},
+            {key:'5',value:'5 财富值'}
+        ]
     };
 })();
+
+
+
