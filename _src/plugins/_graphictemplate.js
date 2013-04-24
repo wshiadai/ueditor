@@ -9,7 +9,7 @@ UE.plugins['graphictemplate'] = function () {
         execCommand: function (cmd, value) {
             id = parseInt(id);
             id += 1;
-            var ifr = "<iframe  width='678' height='340' align='center' scroling='no' frameborder='0'  " +
+            var ifr = "<iframe  width='678' height='300' align='center' scroling='no' frameborder='0'  " +
                 "class=" + value + "-template " +
                 "id='graphictemplate-" + id + "'" +
                 "src=" + me.options["graphictemplateUrlMap"][value] +
@@ -97,7 +97,7 @@ UE.plugins['graphictemplate'] = function () {
             tmp = node.getAttribute("hasempty");
             attrs.hasemptyStorage.push(tmp);
 
-            node.setAttribute('height',340);
+            node.setAttribute('height',300);
             node.removeAttribute('hasempty');
         });
     });
