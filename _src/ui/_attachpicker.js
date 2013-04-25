@@ -158,17 +158,18 @@
                         upload_complete_handler:swfUploadSendComplete
                     });
                     editor.setUploadFile = function (data, isWangPan) {
-                        editorSetUploadFile(data, isWangPan, editor);var wealthList = [
-                            {key:'0',value:'免费'},
-                            {key:'1',value:'1 财富值'},
-                            {key:'2',value:'2 财富值'},
-                            {key:'3',value:'3 财富值'},
-                            {key:'4',value:'4 财富值'},
-                            {key:'5',value:'5 财富值'}
-                        ],index = -1, wealth = 5;
-                        var wealth = data['fileInfo']['wealth'] || 0, index = -1;
-                        while( wealthList[++index].key!=wealth ){}
-                        document.getElementById(wealthSelecterId).selectedIndex = index;
+                        editorSetUploadFile(data, isWangPan, editor);
+                        document.getElementById(wealthSelecterId).selectedIndex = getIndex();
+                        function getIndex(){
+                            var wealth = data['fileInfo']['wealth'] || 0, index = -1, count = -1;
+                            for(var i in wealthList){
+                                ++count;
+                                if(wealthList[i].key==wealth) {
+                                    index = count;
+                                }
+                            }
+                            return index!=-1 ? index:0;
+                        }
                     };
                     editor.getUploadFile = function () {
                         var result = {};
