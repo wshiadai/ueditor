@@ -42,13 +42,13 @@ table {
 body {
     background-color: #fff;
     font: 12px/1.5 "宋体", "Arial Narrow", HELVETICA;
-    color: #646464;
+    color: #333;
     padding: 10px 0 0 10px;
 }
 
 
 .wrapper {border: 1px dotted #d6d2b6;background-color: #FCFCF8;}
-.wrapper .title{margin-left:40px;font-size: 16px;font-weight: bold;font-family:microsoft Yahei;color: #333;}
+.wrapper .title{margin-left:40px;font-size: 16px;font-weight: bold;font-family:microsoft Yahei;}
 
 .wrapper .head{height:23px;}
 .wrapper .head .drag{cursor:pointer;width: 20px;height: 20px;background:url(img/close.png)  -29px 0 no-repeat;float: left;margin: -10px 0 0 -10px;}
