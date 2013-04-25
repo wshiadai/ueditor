@@ -4,7 +4,7 @@ UE.plugins['graphictemplate'] = function () {
 
     me["graphictemplate"] = {};
     var tpl = me["graphictemplate"];
-    tpl.dataList={};
+    tpl.dataList = {};
 
     me.commands['graphictemplate'] = {
         execCommand: function (cmd, value) {
@@ -142,7 +142,7 @@ UE.plugins['graphictemplate'] = function () {
     };
     me.addListener("click", function () {
         var ifr = tpl.currentTemplate;
-        if (me.graphictemplate.isSelect && ifr) {
+        if (tpl.isSelect && ifr) {
             var rng = me.selection.getRange();
             var node = domUtils.findParentByTagName(rng.startContainer, "li");
             if (node) {
@@ -155,6 +155,7 @@ UE.plugins['graphictemplate'] = function () {
         } else {
             me.body.style.cursor = "default";
         }
+        autoClearData();
     });
 
     /*
@@ -170,9 +171,16 @@ UE.plugins['graphictemplate'] = function () {
     };
 
     /*
-    *click时自动清楚无效数据
-    * */
-    function autoClearData(){
-        var list=domUtils.getElementsByTagName(me.document,"iframe","-template");
+     *click时自动清楚无效数据
+     * */
+    function autoClearData() {
+        var dataList = tpl.dataList;
+        var doc = me.document;
+        for (var pro in dataList) {
+            var node = doc.getElementById(pro);
+            if (!node) {
+                delete tpl.dataList[pro];
+            }
+        }
     }
- };
+};
