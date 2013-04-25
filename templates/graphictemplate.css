@@ -51,11 +51,11 @@ body {
 .wrapper .title{margin-left:40px;font-size: 16px;font-weight: bold;font-family:microsoft Yahei;}
 
 .wrapper .head{height:23px;}
-.wrapper .head .drag{cursor:pointer;width: 20px;height: 20px;background:url(img/close.png)  -29px 0 no-repeat;float: left;margin: -10px 0 0 -10px;}
 .wrapper .head .close{float:right;margin:10px 10px 0 0;width: 14px;height: 13px;background: url(img/close.png)  -1px 0 no-repeat;cursor:pointer;}
 .wrapper .head .close:hover{background-position:-1px -18px}
 .wrapper .head .close:active{background-position:-1px -36px }
 
 
+.drag{cursor:pointer;width: 20px;height: 20px;background:url(img/close.png)  -29px 0 no-repeat;position: relative;left:-10px;top:10px;}
 .mask{width:100%;position: absolute;top:0;left:0;z-index: 1000;
     background-color:#085ea7;opacity: 0.7; filter: alpha(opacity = 70);}
