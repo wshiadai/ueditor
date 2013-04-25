@@ -97,7 +97,7 @@ UE.plugins['graphictemplate'] = function () {
             tmp = node.getAttribute("hasempty");
             attrs.hasemptyStorage.push(tmp);
 
-            node.setAttribute('height',300);
+            node.setAttribute('height', 300);
             node.removeAttribute('hasempty');
         });
     });
@@ -127,7 +127,9 @@ UE.plugins['graphictemplate'] = function () {
 
             switch (tgt.id) {
                 case "J_drag":
-                    doc.getElementById("J_mask").style.cssText = "height:"+tpl.currentTemplate.height+"px;display:block";
+                    doc.getElementById("J_mask").style.cssText = "height:" + tpl.currentTemplate.height
+                        + "px;display:block;width:" + tpl.currentTemplate.width + "px";
+
                     me.graphictemplate.isSelect = true;
                     break;
                 case "J_close":
