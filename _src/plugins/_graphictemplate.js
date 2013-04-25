@@ -4,6 +4,7 @@ UE.plugins['graphictemplate'] = function () {
 
     me["graphictemplate"] = {};
     var tpl = me["graphictemplate"];
+    tpl.dataList={};
 
     me.commands['graphictemplate'] = {
         execCommand: function (cmd, value) {
@@ -38,7 +39,7 @@ UE.plugins['graphictemplate'] = function () {
             var val = node.getAttr('class');
             if (val && /-template/.test(val)) {
                 var id = node.getAttr('id');
-                var str = utils.stringify(me['graphictemplate'][id]);
+                var str = utils.stringify(me['graphictemplate'].dataList[id]);
                 node.tagName = 'pre';
                 var attrs = {
                     'class': node.getAttr('class'),
@@ -59,7 +60,7 @@ UE.plugins['graphictemplate'] = function () {
             if ((val = pi.getAttr('class')) && /-template/.test(val)) {
                 var tmpDiv = me.document.createElement('div');
                 id = pi.getAttr("id");
-                me.graphictemplate[id] = (new Function("return (" + pi.innerHTML() + ")"))();
+                me.graphictemplate.dataList[id] = (new Function("return (" + pi.innerHTML() + ")"))();
                 tmpDiv.innerHTML = "<iframe  width='678' height='300'  align='center' scroling='no' frameborder='0'" +
                     "class='" + val + "'" +
                     "id='" + id + "'" +
@@ -167,4 +168,11 @@ UE.plugins['graphictemplate'] = function () {
         }
         me.fireEvent("autoHeight");
     };
-};
+
+    /*
+    *click时自动清楚无效数据
+    * */
+    function autoClearData(){
+        var list=domUtils.getElementsByTagName(me.document,"iframe","-template");
+    }
+ };

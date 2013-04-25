@@ -5,7 +5,7 @@
  * Time: 下午2:57
  * To change this template use File | Settings | File Templates.
  */
-var GraphicTemplate = {
+var Template = {
     tabIndex: 0,
     addPageListener: function () {
         var me = this;
@@ -56,15 +56,15 @@ var GraphicTemplate = {
         if (isTab0) {
             domUtils.addClass(list[0], "cur");
             domUtils.removeClasses(list[1], "cur");
-            GraphicTemplate.tabIndex = 0;
+            Template.tabIndex = 0;
         } else {
             domUtils.addClass(list[1], "cur");
             domUtils.removeClasses(list[0], "cur");
-            GraphicTemplate.tabIndex = 1;
+            Template.tabIndex = 1;
         }
         cur && (cur.checked = isTab0);
 
-        editor.graphictemplate.iframeAutoHeight(frameElement);
+        graphictemplate.iframeAutoHeight(frameElement);
     },
     _setBoxEdit: function (isEdit, cur) {
         var money = G("J_money");
@@ -114,29 +114,27 @@ var GraphicTemplate = {
         }
     },
     setPageData: function (data) {
-        if (data) {
-            var me = this;
-            //设置文本框值
-            me._setTextBox(data, ["J_name", "J_size", "J_version",
-                "J_lang", "J_money", "J_systemNeed", "J_downloadlink"]);
-            //设置复选框值
-            me._setCheckBox(data, "J_systemask");
-            //设置单选框值
-            me._setRadioValue(data, [
-                {
-                    id1: "J_free",
-                    id2: "J_pay",
-                    callBack: me._setBoxEdit
-                },
-                {
-                    id1: "J_pc",
-                    id2: "J_mobile",
-                    callBack: me._showTab
-                }
-            ]);
-            //设置下拉框值
-            me._setDrawdownBox(data, ["J_type"]);
-        }
+        var me = this;
+        //设置文本框值
+        me._setTextBox(data, ["J_name", "J_size", "J_version",
+            "J_lang", "J_money", "J_systemNeed", "J_downloadlink"]);
+        //设置复选框值
+        me._setCheckBox(data, "J_systemask");
+        //设置单选框值
+        me._setRadioValue(data, [
+            {
+                id1: "J_free",
+                id2: "J_pay",
+                callBack: me._setBoxEdit
+            },
+            {
+                id1: "J_pc",
+                id2: "J_mobile",
+                callBack: me._showTab
+            }
+        ]);
+        //设置下拉框值
+        me._setDrawdownBox(data, ["J_type"]);
     },
 
     _setHasEmpty: function (arr) {
@@ -192,10 +190,8 @@ var GraphicTemplate = {
             data[id] = txt;
         }
     },
-    savePageData: function () {
+    savePageData: function (data) {
         var me = this;
-        editor["graphictemplate"][frameElement.id] = {};
-        var data = editor["graphictemplate"][frameElement.id];
 
         //文本框保存值
         me._saveTextBox(data, [

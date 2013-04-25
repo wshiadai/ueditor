@@ -5,16 +5,16 @@
  * Time: 下午2:57
  * To change this template use File | Settings | File Templates.
  */
-GraphicTemplate = {
+Template = {
     tid: 0,
-    template: {
+    main: {
         title: ' <div class="title">美食食材</div>',
         section: '<div class="section">' +
             '<div class="subtitle">$$</div>' +
             '<div class="content">%%</div>' +
             '</div>',
         module: function () {
-            return '<div class="module" id="' + (GraphicTemplate.tid++) + '">' +
+            return '<div class="module" id="' + (Template.tid++) + '">' +
                 '<input type="text" class="name" maxlength="8" value="输入食材名称" />' +
                 '<input type="text" class="num"  maxlength="6" value="份量" />' +
                 '<a class="delete"></a>' +
@@ -27,7 +27,7 @@ GraphicTemplate = {
     initPage: function (data) {
         var me = this,
             arr = [],
-            tpl = me.template;
+            tpl = me.main;
 
         var mainNum = data ? data["main"].length : 4;
         var subNum = data ? data["other"].length : 4;
@@ -38,7 +38,7 @@ GraphicTemplate = {
         arr.push(tpl.section.replace("$$", "辅料").replace("%%", me._addModule(subNum)));
         arr.push(tpl.foot);
 
-        G("J_main").innerHTML = arr.join('');
+        G("J_content").innerHTML = arr.join('');
         //默认为false、不需要检查数据
         frameElement.setAttribute("hasempty","false");
     },
@@ -79,16 +79,16 @@ GraphicTemplate = {
 
         var len = sum % 2 ? 1 : 2;
         for (var i = 0; i < len; i++) {
-            tmpDiv.innerHTML = me.template.module();
+            tmpDiv.innerHTML = me.main.module();
             content.appendChild(tmpDiv.children[0]);
         }
 
-        editor.graphictemplate.iframeAutoHeight(frameElement)
+        graphictemplate.iframeAutoHeight(frameElement)
     },
     _addModule: function (num) {
         var me = this, str = "";
         for (var i = 0; i < num; i++) {
-            str += me.template.module();
+            str += me.main.module();
         }
         return str;
     },
@@ -102,22 +102,18 @@ GraphicTemplate = {
     },
 
     setPageData: function (data) {
-        if (data) {
-            var list = domUtils.getElementsByTagName(document, "div", "content");
+        var list = domUtils.getElementsByTagName(document, "div", "content");
 
-            for (var i = 0, len = list.length; i < len; i++) {
-                var arr = i == 0 ? data["main"] : data["other"];
-                var modules = domUtils.getElementsByTagName(list[i], "div", "module");
-                for (var j = 0, node; node = modules[j++];) {
-                    node.children[0].value = arr[j - 1].name;
-                    node.children[1].value = arr[j - 1].content;
-                }
+        for (var i = 0, len = list.length; i < len; i++) {
+            var arr = i == 0 ? data["main"] : data["other"];
+            var modules = domUtils.getElementsByTagName(list[i], "div", "module");
+            for (var j = 0, node; node = modules[j++];) {
+                node.children[0].value = arr[j - 1].name;
+                node.children[1].value = arr[j - 1].content;
             }
         }
     },
-    savePageData: function () {
-        editor["graphictemplate"][frameElement.id] = {};
-        var data = editor["graphictemplate"][frameElement.id];
+    savePageData: function (data) {
         data["main"] = [];
         data["other"] = [];
 

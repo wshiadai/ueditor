@@ -5,7 +5,7 @@
  * Time: 下午2:57
  * To change this template use File | Settings | File Templates.
  */
-GraphicTemplate = {
+Template = {
     addPageListener: function () {
         //复选框交互
         domUtils.on(G("J_decorative"), "click", function (e) {
@@ -56,15 +56,13 @@ GraphicTemplate = {
         }
     },
     setPageData: function (data) {
-        if (data) {
-            var me = this;
-            //设置文本框值
-            me._setTextBox(data, ["J_shi", "J_ting", "J_wei", "J_meter", "J_wan", "J_quanbao", "J_hunfang", "J_other"]);
-            //设置复选框值
-            me._setCheckBox(data, "J_decorative");
-            //设置下拉框值
-            me._setDrawdownBox(data, ["J_quanbao", 'J_hunfang']);
-        }
+        var me = this;
+        //设置文本框值
+        me._setTextBox(data, ["J_shi", "J_ting", "J_wei", "J_meter", "J_wan", "J_quanbao", "J_hunfang", "J_other"]);
+        //设置复选框值
+        me._setCheckBox(data, "J_decorative");
+        //设置下拉框值
+        me._setDrawdownBox(data, ["J_quanbao", 'J_hunfang']);
     },
 
     _setHasEmpty:function(arr){
@@ -100,10 +98,8 @@ GraphicTemplate = {
             data[id] = txt;
         }
     },
-    savePageData: function () {
+    savePageData: function (data) {
         var me = this;
-        editor["graphictemplate"][frameElement.id] = {};
-        var data = editor["graphictemplate"][frameElement.id];
 
         //文本框保存值
         me._saveTextBox(data, [
@@ -121,4 +117,5 @@ GraphicTemplate = {
         me._saveCheckBox(data, ["J_jianyue","J_tianyuan",'J_meishi',"J_zhongshi",,'J_rishi',
             "J_beiou", "J_dizhonghai", "J_dongnanya"]);
     }
+
 };
