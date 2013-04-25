@@ -44,7 +44,7 @@
             'ui/mask.js',
             'ui/popup.js',
             'ui/stateful.js',
-            'ui/button.js',
+            'ui/_button.js',
             'ui/_graphictemplatepicker.js',
             'ui/_toolbar.js',
             'ui/dialog.js',
