@@ -260,4 +260,5 @@
     };
     dialog.oncancel = function () {
     };
+    T(".pathRoot .nodeName").trigger("click");
 })();
