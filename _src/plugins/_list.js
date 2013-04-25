@@ -22,9 +22,9 @@
 UE.plugins['list'] = function () {
     var me = this,
         notExchange = {
-            'TD':1,
-            'PRE':1,
-            'BLOCKQUOTE':1
+            'TD': 1,
+            'PRE': 1,
+            'BLOCKQUOTE': 1
         };
     var customStyle = {
 //        'cn' : 'cn-1-',
@@ -35,34 +35,34 @@ UE.plugins['list'] = function () {
 //        'num2' : 'num-3-',
 //        'dash'  : 'dash',
 //        'dot':'dot',
-        'decimal':'exp-ol-',
-        'disc':'exp-ul'
+        'decimal': 'exp-ol-',
+        'disc': 'exp-ul'
     };
 
     me.setOpt({
-        'insertorderedlist':{
-            'num':'',
-            'num1':'',
-            'num2':'',
-            'cn':'',
-            'cn1':'',
-            'cn2':'',
-            'decimal':'',
-            'lower-alpha':'',
-            'lower-roman':'',
-            'upper-alpha':'',
-            'upper-roman':''
+        'insertorderedlist': {
+            'num': '',
+            'num1': '',
+            'num2': '',
+            'cn': '',
+            'cn1': '',
+            'cn2': '',
+            'decimal': '',
+            'lower-alpha': '',
+            'lower-roman': '',
+            'upper-alpha': '',
+            'upper-roman': ''
         },
-        'insertunorderedlist':{
-            'circle':'',
-            'disc':'',
-            'square':'',
-            'dash':'',
-            'dot':''
+        'insertunorderedlist': {
+            'circle': '',
+            'disc': '',
+            'square': '',
+            'dash': '',
+            'dot': ''
         },
-        listDefaultPaddingLeft:'30',
-        listiconpath:'http://bs.baidu.com/listicon/',
-        maxListLevel:1//-1不限制
+        listDefaultPaddingLeft: '30',
+        listiconpath: 'http://bs.baidu.com/listicon/',
+        maxListLevel: 1//-1不限制
     });
     var liiconpath = me.options.listiconpath;
 
@@ -573,8 +573,8 @@ UE.plugins['list'] = function () {
 
         var range = me.selection.getRange(),
             listStyle = {
-                'OL':listToArray(me.options.insertorderedlist),
-                'UL':listToArray(me.options.insertunorderedlist)
+                'OL': listToArray(me.options.insertorderedlist),
+                'UL': listToArray(me.options.insertunorderedlist)
             };
         //控制级数
         function checkLevel(li) {
@@ -673,7 +673,7 @@ UE.plugins['list'] = function () {
 
     me.commands['insertorderedlist'] =
         me.commands['insertunorderedlist'] = {
-            execCommand:function (command, style) {
+            execCommand: function (command, style) {
 
                 if (!style) {
                     style = command.toLowerCase() == 'insertorderedlist' ? 'decimal' : 'disc';
@@ -828,7 +828,7 @@ UE.plugins['list'] = function () {
                             start = tmp;
                         }
                         var tmpDiv = domUtils.createElement(me.document, 'div', {
-                            'tmpDiv':1
+                            'tmpDiv': 1
                         });
                         domUtils.moveChild(end, tmpDiv);
 
@@ -929,8 +929,8 @@ UE.plugins['list'] = function () {
                 range.moveToBookmark(bko).select();
 
             },
-            queryCommandState:function (command) {
-                var range = this.selection.getRange(), ps;
+            queryCommandState: function (command) {
+                var range = this.selection.getRange(), ps, tpl;
 
                 //标题
                 if (range.collapsed) {
@@ -943,19 +943,20 @@ UE.plugins['list'] = function () {
                 }
 
                 //图文模板
-                if(!range.collapsed){
-                   var tpl = domUtils.findTagNamesInSelection(range, ["iframe"], function (node) {
+                if (!range.collapsed) {
+                    tpl = domUtils.findTagNamesInSelection(range, ["iframe"], function (node) {
                         return /-template/.test(node.className);
                     });
-                    if (tpl) {
-                        return -1;
-                    }
+
+                }
+                if (tpl || this.graphictemplate.isSelect) {
+                    return -1;
                 }
 
 
                 return domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
             },
-            queryCommandValue:function (command) {
+            queryCommandValue: function (command) {
                 var node = domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul');
                 return node ? getStyle(node) || domUtils.getComputedStyle(node, 'list-style-type') : null;
             }
