@@ -10222,7 +10222,7 @@ UE.plugins['graphictemplate'] = function () {
             tmp = node.getAttribute("hasempty");
             attrs.hasemptyStorage.push(tmp);
 
-            node.setAttribute('height',300);
+            node.setAttribute('height', 300);
             node.removeAttribute('hasempty');
         });
     });
@@ -10252,7 +10252,9 @@ UE.plugins['graphictemplate'] = function () {
 
             switch (tgt.id) {
                 case "J_drag":
-                    doc.getElementById("J_mask").style.cssText = "height:"+tpl.currentTemplate.height+"px;display:block";
+                    doc.getElementById("J_mask").style.cssText = "height:" + tpl.currentTemplate.height
+                        + "px;display:block;width:" + tpl.currentTemplate.width + "px";
+
                     me.graphictemplate.isSelect = true;
                     break;
                 case "J_close":
@@ -11031,11 +11033,11 @@ baidu.editor.ui = {};
         getHtmlTpl: function (){
             return '<div id="##" class="edui-box %%">' +
                 '<div id="##_state" stateful>' +
-                 '<div class="%%-wrap"><div id="##_body" unselectable="on" ' + (this.title ? 'title="' + this.title + '"' : '') +
-                 ' class="%%-body" onmousedown="return false;" onclick="return $$._onClick();">' +
-                  (this.showIcon ? '<div class="edui-box edui-icon"></div>' : '') +
-                  (this.showText ? '<div class="edui-box edui-label">' + this.label + '</div>' : '') +
-                 '</div>' +
+                '<div class="%%-wrap"><div id="##_body" unselectable="on" ' + (this.title ? 'title="' + this.title + '"' : '') +
+                ' class="%%-body" onclick="return $$._onClick();">' +
+                (this.showIcon ? '<div class="edui-box edui-icon"></div>' : '') +
+                (this.showText ? '<div class="edui-box edui-label">' + this.label + '</div>' : '') +
+                '</div>' +
                 '</div>' +
                 '</div></div>';
         },
@@ -11135,7 +11137,7 @@ baidu.editor.ui = {};
             for (var i=0; i<this.items.length; i++) {
                 this.items[i].postRender();
             }
-            uiUtils.makeUnselectable(box);
+//            uiUtils.makeUnselectable(box);
         },
         _onMouseDown: function (){
             return false;
