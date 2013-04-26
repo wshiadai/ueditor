@@ -474,7 +474,7 @@
 //            } catch (e) {
 //            }
 
-            return  root.toHtml();
+            return  root.toHtml().replace(/'/g,"&#39;");
         },
         /**
          * 取得完整的html代码，可以直接显示成完整的html文档
