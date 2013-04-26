@@ -7981,9 +7981,9 @@ UE.plugins['paste'] = function() {
 UE.plugins['list'] = function () {
     var me = this,
         notExchange = {
-            'TD':1,
-            'PRE':1,
-            'BLOCKQUOTE':1
+            'TD': 1,
+            'PRE': 1,
+            'BLOCKQUOTE': 1
         };
     var customStyle = {
 //        'cn' : 'cn-1-',
@@ -7994,34 +7994,34 @@ UE.plugins['list'] = function () {
 //        'num2' : 'num-3-',
 //        'dash'  : 'dash',
 //        'dot':'dot',
-        'decimal':'exp-ol-',
-        'disc':'exp-ul'
+        'decimal': 'exp-ol-',
+        'disc': 'exp-ul'
     };
 
     me.setOpt({
-        'insertorderedlist':{
-            'num':'',
-            'num1':'',
-            'num2':'',
-            'cn':'',
-            'cn1':'',
-            'cn2':'',
-            'decimal':'',
-            'lower-alpha':'',
-            'lower-roman':'',
-            'upper-alpha':'',
-            'upper-roman':''
+        'insertorderedlist': {
+            'num': '',
+            'num1': '',
+            'num2': '',
+            'cn': '',
+            'cn1': '',
+            'cn2': '',
+            'decimal': '',
+            'lower-alpha': '',
+            'lower-roman': '',
+            'upper-alpha': '',
+            'upper-roman': ''
         },
-        'insertunorderedlist':{
-            'circle':'',
-            'disc':'',
-            'square':'',
-            'dash':'',
-            'dot':''
+        'insertunorderedlist': {
+            'circle': '',
+            'disc': '',
+            'square': '',
+            'dash': '',
+            'dot': ''
         },
-        listDefaultPaddingLeft:'30',
-        listiconpath:'http://bs.baidu.com/listicon/',
-        maxListLevel:1//-1不限制
+        listDefaultPaddingLeft: '30',
+        listiconpath: 'http://bs.baidu.com/listicon/',
+        maxListLevel: 1//-1不限制
     });
     var liiconpath = me.options.listiconpath;
 
@@ -8532,8 +8532,8 @@ UE.plugins['list'] = function () {
 
         var range = me.selection.getRange(),
             listStyle = {
-                'OL':listToArray(me.options.insertorderedlist),
-                'UL':listToArray(me.options.insertunorderedlist)
+                'OL': listToArray(me.options.insertorderedlist),
+                'UL': listToArray(me.options.insertunorderedlist)
             };
         //控制级数
         function checkLevel(li) {
@@ -8632,7 +8632,7 @@ UE.plugins['list'] = function () {
 
     me.commands['insertorderedlist'] =
         me.commands['insertunorderedlist'] = {
-            execCommand:function (command, style) {
+            execCommand: function (command, style) {
 
                 if (!style) {
                     style = command.toLowerCase() == 'insertorderedlist' ? 'decimal' : 'disc';
@@ -8787,7 +8787,7 @@ UE.plugins['list'] = function () {
                             start = tmp;
                         }
                         var tmpDiv = domUtils.createElement(me.document, 'div', {
-                            'tmpDiv':1
+                            'tmpDiv': 1
                         });
                         domUtils.moveChild(end, tmpDiv);
 
@@ -8888,8 +8888,8 @@ UE.plugins['list'] = function () {
                 range.moveToBookmark(bko).select();
 
             },
-            queryCommandState:function (command) {
-                var range = this.selection.getRange(), ps;
+            queryCommandState: function (command) {
+                var range = this.selection.getRange(), ps, tpl;
 
                 //标题
                 if (range.collapsed) {
@@ -8902,19 +8902,20 @@ UE.plugins['list'] = function () {
                 }
 
                 //图文模板
-                if(!range.collapsed){
-                   var tpl = domUtils.findTagNamesInSelection(range, ["iframe"], function (node) {
+                if (!range.collapsed) {
+                    tpl = domUtils.findTagNamesInSelection(range, ["iframe"], function (node) {
                         return /-template/.test(node.className);
                     });
-                    if (tpl) {
-                        return -1;
-                    }
+
+                }
+                if (tpl || this.graphictemplate.isSelect) {
+                    return -1;
                 }
 
 
                 return domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul') ? 1 : 0;
             },
-            queryCommandValue:function (command) {
+            queryCommandValue: function (command) {
                 var node = domUtils.filterNodeList(this.selection.getStartElementPath(), command.toLowerCase() == 'insertorderedlist' ? 'ol' : 'ul');
                 return node ? getStyle(node) || domUtils.getComputedStyle(node, 'list-style-type') : null;
             }
@@ -10125,20 +10126,28 @@ UE.plugins['heading'] = function () {
 
 UE.plugins['graphictemplate'] = function () {
     var me = this;
-    var id = 0;
-
     me["graphictemplate"] = {};
+
     var tpl = me["graphictemplate"];
+    tpl.id = "graphictemplate-0";
+    tpl.dataList = {};
+    tpl.template = "<iframe  width='678' height='300' align='center' scroling='no' frameborder='0'  " +
+        "class='%%' " +
+        "id='##' " +
+        "src='$$' " +
+        "></iframe>";
+
 
     me.commands['graphictemplate'] = {
         execCommand: function (cmd, value) {
-            id = parseInt(id);
-            id += 1;
-            var ifr = "<iframe  width='678' height='300' align='center' scroling='no' frameborder='0'  " +
-                "class=" + value + "-template " +
-                "id='graphictemplate-" + id + "'" +
-                "src=" + me.options["graphictemplateUrlMap"][value] +
-                "></iframe>";
+            tpl.id = tpl.id.replace(/\d/g, function (id) {
+                id = parseInt(id) + 1;
+                return id;
+            });
+
+            var ifr = tpl.template.replace("%%", value + "-template")
+                .replace("##", tpl.id)
+                .replace('$$', me.options["graphictemplateUrlMap"][value]);
 
             me.execCommand("inserthtml", '<p contenteditable="false">' + ifr + '</p>');
         },
@@ -10163,7 +10172,7 @@ UE.plugins['graphictemplate'] = function () {
             var val = node.getAttr('class');
             if (val && /-template/.test(val)) {
                 var id = node.getAttr('id');
-                var str = utils.stringify(me['graphictemplate'][id]);
+                var str = utils.stringify(me['graphictemplate'].dataList[id]);
                 node.tagName = 'pre';
                 var attrs = {
                     'class': node.getAttr('class'),
@@ -10178,20 +10187,20 @@ UE.plugins['graphictemplate'] = function () {
         })
     });
     me.addInputRule(function (root) {
-        var me = this;
-        utils.each(root.getNodesByTagName('pre'), function (pi) {
-            var val;
-            if ((val = pi.getAttr('class')) && /-template/.test(val)) {
-                var tmpDiv = me.document.createElement('div');
-                id = pi.getAttr("id");
-                me.graphictemplate[id] = (new Function("return (" + pi.innerHTML() + ")"))();
-                tmpDiv.innerHTML = "<iframe  width='678' height='300'  align='center' scroling='no' frameborder='0'" +
-                    "class='" + val + "'" +
-                    "id='" + id + "'" +
-                    "src=" + me.options.graphictemplateUrlMap[val.replace("-template", "")] +
-                    "></iframe>";
+        var me = this,
+            tpl = me.graphictemplate;
 
-                var node = UE.uNode.createElement(tmpDiv.innerHTML);
+        utils.each(root.getNodesByTagName('pre'), function (pi) {
+            var val = pi.getAttr('class');
+            if (val && /-template/.test(val)) {
+                tpl.id = pi.getAttr("id");
+                me.graphictemplate.dataList[tpl.id] = (new Function("return (" + pi.innerHTML() + ")"))();
+
+                var html = tpl.template.replace("%%", val)
+                    .replace("##", tpl.id)
+                    .replace('$$', me.options.graphictemplateUrlMap[val.replace("-template", "")]);
+
+                var node = UE.uNode.createElement(html);
                 pi.parentNode.replaceChild(node, pi);
 
             }
@@ -10266,7 +10275,7 @@ UE.plugins['graphictemplate'] = function () {
     };
     me.addListener("click", function () {
         var ifr = tpl.currentTemplate;
-        if (me.graphictemplate.isSelect && ifr) {
+        if (tpl.isSelect && ifr) {
             var rng = me.selection.getRange();
             var node = domUtils.findParentByTagName(rng.startContainer, "li");
             if (node) {
@@ -10279,6 +10288,7 @@ UE.plugins['graphictemplate'] = function () {
         } else {
             me.body.style.cursor = "default";
         }
+        autoClearData();
     });
 
     /*
@@ -10292,6 +10302,20 @@ UE.plugins['graphictemplate'] = function () {
         }
         me.fireEvent("autoHeight");
     };
+
+    /*
+     *click时自动清楚无效数据
+     * */
+    function autoClearData() {
+        var dataList = tpl.dataList;
+        var doc = me.document;
+        for (var pro in dataList) {
+            var node = doc.getElementById(pro);
+            if (!node) {
+                delete tpl.dataList[pro];
+            }
+        }
+    }
 };
 
 var baidu = baidu || {};

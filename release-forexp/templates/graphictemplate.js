@@ -33,26 +33,36 @@
             return document.getElementById(id)
         };
 
+        graphictemplate = editor["graphictemplate"];
+
         /*
          * 页面数据加载
          * */
         domUtils.on(window, 'load', function () {
-            var data = editor["graphictemplate"][frameElement.id];
+            var data = graphictemplate.dataList[frameElement.id];
 
-            GraphicTemplate.initPage && GraphicTemplate.initPage(data);
-            GraphicTemplate.addPageListener();
-            GraphicTemplate.setPageData(data);
-            GraphicTemplate.savePageData();
-            editor.graphictemplate.templateAction(window);
-            editor.graphictemplate.iframeAutoHeight(frameElement)
+            Template.initPage && Template.initPage(data);
+            Template.addPageListener();
+            data && Template.setPageData(data);
+
+            if (!data) {
+                graphictemplate.dataList[frameElement.id] = {};
+                Template.savePageData(graphictemplate.dataList[frameElement.id]);
+            }
+
+            graphictemplate.templateAction(window);
+            graphictemplate.iframeAutoHeight(frameElement)
         });
+
         /*
          * 页面数据保存
          * */
         domUtils.on(browser.ie ? frameElement : window, "blur", function () {
-            GraphicTemplate.savePageData();
+            var data = graphictemplate.dataList[frameElement.id] = {};
+
+            Template.savePageData(data);
             //去掉选中状态
-            G("J_mask").style.display="none";
+            G("J_mask").style.display = "none";
         });
     }
 })();

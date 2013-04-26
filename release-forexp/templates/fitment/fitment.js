@@ -5,7 +5,7 @@
  * Time: 下午2:57
  * To change this template use File | Settings | File Templates.
  */
-GraphicTemplate = {
+Template = {
     addPageListener: function () {
         //复选框交互
         domUtils.on(G("J_decorative"), "click", function (e) {
@@ -117,4 +117,5 @@ GraphicTemplate = {
         me._saveCheckBox(data, ["J_jianyue","J_tianyuan",'J_meishi',"J_zhongshi",,'J_rishi',
             "J_beiou", "J_dizhonghai", "J_dongnanya"]);
     }
+
 };
