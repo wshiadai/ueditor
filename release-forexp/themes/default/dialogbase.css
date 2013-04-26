@@ -5,7 +5,7 @@
 */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
+a, abbr, acronym, address, big, cite, code,input,
 del, dfn, em, font, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
 b, u, i, center,
@@ -42,14 +42,12 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
-
-/*module
-*/
 body {
     background-color: #fff;
     font: 12px/1.5 "宋体", "Arial Narrow", HELVETICA;
     color: #646464;
 }
+
 
 /*tab*/
 .tabhead {
@@ -80,21 +78,4 @@ body {
     top: -1px;
     margin: 0 auto;
     border: 1px solid #ccc;
-}
-
-/*button*/
-a.button {
-    display: block;
-    text-align: center;
-    line-height: 24px;
-    text-decoration: none;
-    height: 24px;
-    width: 95px;
-    border: 0;
-    color: #838383;
-    background: url(../../themes/default/images/icons-all.gif) no-repeat;
-}
-
-a.button:hover {
-    background-position: 0 -30px;
 }
