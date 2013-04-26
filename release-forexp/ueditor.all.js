@@ -395,7 +395,7 @@ var utils = UE.utils = {
      * UE.utils.unhtml(html,/[<>]/g)  ==>  &lt;body&gt;You say:"你好！Baidu & UEditor!"&lt;/body&gt;
      */
     unhtml:function (str, reg) {
-        return str ? str.replace(reg || /[&<">'](?:(amp|lt|quot|gt|#39);)?/g, function (a, b) {
+        return str ? str.replace(reg || /[&<">](?:(amp|lt|quot|gt);)?/g, function (a, b) {
             if (b) {
                 return a;
             } else {
@@ -403,8 +403,7 @@ var utils = UE.utils = {
                     '<':'&lt;',
                     '&':'&amp;',
                     '"':'&quot;',
-                    '>':'&gt;',
-                    "'":'&#39;'
+                    '>':'&gt;'
                 }[a]
             }
 
@@ -416,13 +415,12 @@ var utils = UE.utils = {
      * @grammar UE.utils.html(str)  => String   //详细参见<code><a href = '#unhtml'>unhtml</a></code>
      */
     html:function (str) {
-        return str ? str.replace(/&((g|l|quo)t|amp|#39);/g, function (m) {
+        return str ? str.replace(/&((g|l|quo)t|amp);/g, function (m) {
             return {
                 '&lt;':'<',
                 '&amp;':'&',
                 '&quot;':'"',
-                '&gt;':'>',
-                '&#39':"'"
+                '&gt;':'>'
             }[m]
         }) : '';
     },
@@ -4695,7 +4693,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
 //            } catch (e) {
 //            }
 
-            return  root.toHtml();
+            return  root.toHtml().replace(/'/g,"&#39;");
         },
         /**
          * 取得完整的html代码，可以直接显示成完整的html文档
@@ -5656,7 +5654,7 @@ var filterWord = UE.filterWord = function () {
     uNode.createText = function (data) {
         return new UE.uNode({
             type:'text',
-            'data':utils.unhtml(data || '')
+            'data':data || ''
         })
     };
     function nodeToHtml(node, arr, formatter, current) {
@@ -5664,7 +5662,7 @@ var filterWord = UE.filterWord = function () {
             case 'root':
                 for (var i = 0, ci; ci = node.children[i++];) {
                     //插入新行
-                    if (formatter && ci.type == 'element' && !dtd.$inlineWithA[ci.tagName] && i > 1) {
+                    if (formatter && ci.type == 'element' && !dtd.$inline[ci.tagName] && i > 1) {
                         insertLine(arr, current, true);
                         insertIndent(arr, current)
                     }
@@ -5684,7 +5682,7 @@ var filterWord = UE.filterWord = function () {
     }
 
     function isText(node, arr) {
-        arr.push(node.parentNode.tagName == 'pre' ? node.data : node.data.replace(/[ ]{2}/g,' &nbsp;'))
+        arr.push(node.data)
     }
 
     function isElement(node, arr, formatter, current) {
@@ -5702,13 +5700,13 @@ var filterWord = UE.filterWord = function () {
             (dtd.$empty[node.tagName] ? '\/' : '' ) + '>'
         );
         //插入新行
-        if (formatter  &&  !dtd.$inlineWithA[node.tagName]) {
+        if (formatter &&  !dtd.$inline[node.tagName]) {
             current = insertLine(arr, current, true);
             insertIndent(arr, current)
         }
         if (node.children && node.children.length) {
             for (var i = 0, ci; ci = node.children[i++];) {
-                if (formatter && ci.type == 'element' &&  !dtd.$inlineWithA[ci.tagName] && i > 1) {
+                if (formatter && ci.type == 'element' &&  !dtd.$inline[ci.tagName] && i > 1) {
                     insertLine(arr, current);
                     insertIndent(arr, current)
                 }
@@ -5716,7 +5714,7 @@ var filterWord = UE.filterWord = function () {
             }
         }
         if (!dtd.$empty[node.tagName]) {
-            if (formatter && !dtd.$inlineWithA[node.tagName]) {
+            if (formatter && !dtd.$inline[node.tagName]) {
                 current = insertLine(arr, current);
                 insertIndent(arr, current)
             }
@@ -5780,7 +5778,7 @@ var filterWord = UE.filterWord = function () {
             if (this.type != 'element' || dtd.$empty[this.tagName]) {
                 return this;
             }
-            if (utils.isString(htmlstr)) {
+            if (htmlstr) {
                 if(this.children){
                     for (var i = 0, ci; ci = this.children[i++];) {
                         ci.parentNode = null;
@@ -5839,7 +5837,7 @@ var filterWord = UE.filterWord = function () {
             var parent = this.parentNode;
             for (var i = 0, ci; ci = parent.children[i]; i++) {
                 if (ci === this) {
-                   return i == 0 ? null : parent.children[i-1];
+                    return i == 0 ? null : parent.children[i-1];
                 }
             }
 
@@ -6033,7 +6031,7 @@ var filterWord = UE.filterWord = function () {
         traversal:function(fn){
             if(this.children && this.children.length){
                 nodeTraversal(this,fn);
-            }
+            };
             return this;
         }
     }
@@ -6041,24 +6039,17 @@ var filterWord = UE.filterWord = function () {
 
 //html字符串转换成uNode节点
 //by zhanyi
-var htmlparser = UE.htmlparser = function (htmlstr,ignoreBlank) {
-    var re_tag = /<(?:(?:\/([^>]+)>)|(?:!--([\S|\s]*?)-->)|(?:([^\s\/>]+)\s*((?:(?:"[^"]*")|(?:'[^']*')|[^"'<>])*)\/?>))/g,
-        re_attr = /([\w\-:.]+)(?:(?:\s*=\s*(?:(?:"([^"]*)")|(?:'([^']*)')|([^\s>]+)))|(?=\s|$))/g;
-
+var htmlparser = UE.htmlparser = function (htmlstr,coverBlank) {
     var reg = new RegExp(domUtils.fillChar, 'g');
     //ie下取得的html可能会有\n存在，要去掉，在处理replace(/[\t\r\n]*/g,'');代码高量的\n不能去除
+    htmlstr = htmlstr.replace(reg, '')
+        .replace(/(?:^[ \t\r\n]*?<)/, '<')
+        .replace(/(?:>[ \t\r\n]*?$)/, '>');
 
-    htmlstr = htmlstr.replace(reg, '');
-    if(!ignoreBlank){
-        htmlstr = htmlstr.replace(/\s*<\/?(\w+)\s*(?:[^>]*)>\s*/g, function(a,b){
-            //br暂时单独处理
-            if(!/^br$/i.test(b) && (dtd.$inlineWithA[b]|| dtd.$empty[b])){
-                return a.replace(/[\t\r\n]+/,'');
-            }
-            return a.replace(/^\s+/,'').replace(/\s+$/,'');
-        });
-    }
+    !coverBlank && (htmlstr = htmlstr.replace(/>(?:[ \t\r\n]*)/g, '>').replace(/(?:[ \t\r\n]*)</g, '<'));
 
+    var re_tag = /<(?:(?:\/([^>]+)>)|(?:!--([\S|\s]*?)-->)|(?:([^\s\/>]+)\s*((?:(?:"[^"]*")|(?:'[^']*')|[^"'<>])*)\/?>))/g,
+        re_attr = /([\w\-:.]+)(?:(?:\s*=\s*(?:(?:"([^"]*)")|(?:'([^']*)')|([^\s>]+)))|(?=\s|$))/g;
 
     var uNode = UE.uNode,
         needParentNode = {
@@ -6121,7 +6112,7 @@ var htmlparser = UE.htmlparser = function (htmlstr,ignoreBlank) {
         if (htmlattr) {
             var attrs = {}, match;
             while (match = re_attr.exec(htmlattr)) {
-                attrs[match[1].toLowerCase()] = utils.unhtml(match[2] || match[3] || match[4])
+                attrs[match[1].toLowerCase()] = match[2] || match[3] || match[4]
             }
             elm.attrs = attrs;
         }
