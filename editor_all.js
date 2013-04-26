@@ -6994,6 +6994,7 @@ UE.plugins['paste'] = function() {
             }
             //执行默认的处理
             me.filterInputRule(root);
+
             //针对chrome的处理
             if(browser.webkit){
                 var br = root.lastChild();
@@ -7266,68 +7267,6 @@ UE.plugins['list'] = function () {
                 li.appendChild(tmpP);
             }
         });
-        var orderlisttype = {
-                'num1':/^\d+\)/,
-                'decimal':/^\d+\./,
-                'lower-alpha':/^[a-z]+\)/,
-                'upper-alpha':/^[A-Z]+\./,
-                'cn':/^[\u4E00\u4E8C\u4E09\u56DB\u516d\u4e94\u4e03\u516b\u4e5d]+[\u3001]/,
-                'cn2':/^\([\u4E00\u4E8C\u4E09\u56DB\u516d\u4e94\u4e03\u516b\u4e5d]+\)/
-            },
-            unorderlisttype = {
-                'square':'n'
-            };
-        function checkListType(content,container){
-            var span = container.firstChild();
-            if(span &&  span.type == 'element' && span.tagName == 'span' && /Wingdings/.test(span.getStyle('font-family'))){
-                for(var p in unorderlisttype){
-                    if(unorderlisttype[p] == span.data){
-                        return p
-                    }
-                }
-                return 'disc'
-            }
-            for(var p in orderlisttype){
-                if(orderlisttype[p].test(content)){
-                    return p;
-                }
-            }
-
-        }
-        utils.each(root.getNodesByTagName('p'),function(node){
-
-            function appendLi(list,p,type){
-                if(list.tagName == 'ol'){
-                    p.innerHTML(p.innerHTML().replace(orderlisttype[type],''));
-                }else{
-                    p.removeChild(p.firstChild())
-                }
-
-                var li = UE.uNode.createElement('li');
-                li.appendChild(p);
-                list.appendChild(li);
-            }
-            var tmp = node,type;
-
-            if(node.parentNode.tagName != 'li' && (type = checkListType(node.innerText(),node))){
-
-                var list = UE.uNode.createElement(me.options.insertorderedlist.hasOwnProperty(type) ? 'ol' : 'ul');
-                if(customStyle[type]){
-                    list.setAttr('class','custom_'+type)
-                }else{
-                    list.setStyle('list-style-type',type)
-                }
-                while(node && node.parentNode.tagName != 'li' && checkListType(node.innerText(),node)){
-                    tmp = node.nextSibling();
-                    if(!tmp){
-                        node.parentNode.insertBefore(list,node)
-                    }
-                    appendLi(list,node,type);
-                    node = tmp;
-                }
-
-            }
-        })
     });
 
     //调整索引标签
@@ -7837,7 +7776,7 @@ UE.plugins['list'] = function () {
     });
 
     me.commands['insertorderedlist'] =
-    me.commands['insertunorderedlist'] = {
+        me.commands['insertunorderedlist'] = {
             execCommand:function (command, style) {
 
                 if (!style) {
@@ -9915,6 +9854,7 @@ baidu.editor.ui = {};
                         upload_complete_handler:swfUploadSendComplete
                     });
                     editor.setUploadFile = function (data, isWangPan) {
+                        if(!isWangPan) isWangPan= false;
                         editorSetUploadFile(data, isWangPan, editor);
                         document.getElementById(wealthSelecterId).selectedIndex = getIndex();
                         function getIndex(){
@@ -9991,12 +9931,15 @@ baidu.editor.ui = {};
                     label:title,
                     onclick:function () {
                         Popup.postHide(evt);
-                        if (editor.swfupload && editor.swfupload.customSettings.successCount>0 && !confirm('即将删除上一个附件,确定吗？')) {
-                            return false;
+                        if (editor.swfupload && editor.swfupload.customSettings.successCount>0) {
+                            if(confirm('即将删除上一个附件,确定吗？')){
+                                wangpanDialog.showAtCenter();
+                            }else{
+                                return false;
+                            }
                         } else {
-                            return true;
+                            wangpanDialog.showAtCenter();
                         }
-                        wangpanDialog.showAtCenter();
                     },
                     getHtmlTpl:function(){
                         return '<div id="##" onclick="$$._onClickWangpan(event);">' + this.label + '</div>';
@@ -10038,6 +9981,7 @@ baidu.editor.ui = {};
             }
         },
         _onMouseOut:function (evt) {
+            Popup.postHide(evt);
             if (!this.isDisabled()) {
                 this.fireEvent('mouseout');
             }
@@ -10377,6 +10321,9 @@ baidu.editor.ui = {};
                     UE.ui.Popup.postHide(evt);
                     attachPop.showAnchor(this.getDom());
                 }
+            },
+            onmouseout: function (evt) {
+                UE.ui.Popup.postHide(evt);
             },
             onclick:function (evt) {
                 if(!attachPop) setAttachPop();

@@ -324,6 +324,9 @@
                     attachPop.showAnchor(this.getDom());
                 }
             },
+            onmouseout: function (evt) {
+                UE.ui.Popup.postHide(evt);
+            },
             onclick:function (evt) {
                 if(!attachPop) setAttachPop();
                 if(editor.options.isLogin && editor._uploadFile.status!="uploading"&&editor._uploadFile.status!="finish"){

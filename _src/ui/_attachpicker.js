@@ -158,6 +158,7 @@
                         upload_complete_handler:swfUploadSendComplete
                     });
                     editor.setUploadFile = function (data, isWangPan) {
+                        if(!isWangPan) isWangPan= false;
                         editorSetUploadFile(data, isWangPan, editor);
                         document.getElementById(wealthSelecterId).selectedIndex = getIndex();
                         function getIndex(){
@@ -234,12 +235,15 @@
                     label:title,
                     onclick:function () {
                         Popup.postHide(evt);
-                        if (editor.swfupload && editor.swfupload.customSettings.successCount>0 && !confirm('即将删除上一个附件,确定吗？')) {
-                            return false;
+                        if (editor.swfupload && editor.swfupload.customSettings.successCount>0) {
+                            if(confirm('即将删除上一个附件,确定吗？')){
+                                wangpanDialog.showAtCenter();
+                            }else{
+                                return false;
+                            }
                         } else {
-                            return true;
+                            wangpanDialog.showAtCenter();
                         }
-                        wangpanDialog.showAtCenter();
                     },
                     getHtmlTpl:function(){
                         return '<div id="##" onclick="$$._onClickWangpan(event);">' + this.label + '</div>';
@@ -281,6 +285,7 @@
             }
         },
         _onMouseOut:function (evt) {
+            Popup.postHide(evt);
             if (!this.isDisabled()) {
                 this.fireEvent('mouseout');
             }
