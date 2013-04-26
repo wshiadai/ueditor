@@ -1,5 +1,5 @@
 .wrapper .section{margin: 10px 0;font-size: 14px;overflow: hidden;}
-.section .subtitle{float:left;font-weight: bold;font-family:microsoft Yahei;color: #333;margin-left: 40px;_margin-left:20px;
+.section .subtitle{float:left;font-weight: bold;font-family:microsoft Yahei;color: #333;margin:7px 0 0 40px;_margin-left:20px;
     width: 30px;height: 34px;line-height:34px;}
 .section .content{float: left;overflow: hidden;;width: 596px;}
 .content .module{float: left;margin:10px 0 0 20px;+margin-left:10px;}
