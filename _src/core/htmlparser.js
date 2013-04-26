@@ -1,23 +1,16 @@
 //html字符串转换成uNode节点
 //by zhanyi
-var htmlparser = UE.htmlparser = function (htmlstr,ignoreBlank) {
-    var re_tag = /<(?:(?:\/([^>]+)>)|(?:!--([\S|\s]*?)-->)|(?:([^\s\/>]+)\s*((?:(?:"[^"]*")|(?:'[^']*')|[^"'<>])*)\/?>))/g,
-        re_attr = /([\w\-:.]+)(?:(?:\s*=\s*(?:(?:"([^"]*)")|(?:'([^']*)')|([^\s>]+)))|(?=\s|$))/g;
-
+var htmlparser = UE.htmlparser = function (htmlstr,coverBlank) {
     var reg = new RegExp(domUtils.fillChar, 'g');
     //ie下取得的html可能会有\n存在，要去掉，在处理replace(/[\t\r\n]*/g,'');代码高量的\n不能去除
+    htmlstr = htmlstr.replace(reg, '')
+        .replace(/(?:^[ \t\r\n]*?<)/, '<')
+        .replace(/(?:>[ \t\r\n]*?$)/, '>');
 
-    htmlstr = htmlstr.replace(reg, '');
-    if(!ignoreBlank){
-        htmlstr = htmlstr.replace(/\s*<\/?(\w+)\s*(?:[^>]*)>\s*/g, function(a,b){
-            //br暂时单独处理
-            if(!/^br$/i.test(b) && (dtd.$inlineWithA[b]|| dtd.$empty[b])){
-                return a.replace(/[\t\r\n]+/,'');
-            }
-            return a.replace(/^\s+/,'').replace(/\s+$/,'');
-        });
-    }
+    !coverBlank && (htmlstr = htmlstr.replace(/>(?:[ \t\r\n]*)/g, '>').replace(/(?:[ \t\r\n]*)</g, '<'));
 
+    var re_tag = /<(?:(?:\/([^>]+)>)|(?:!--([\S|\s]*?)-->)|(?:([^\s\/>]+)\s*((?:(?:"[^"]*")|(?:'[^']*')|[^"'<>])*)\/?>))/g,
+        re_attr = /([\w\-:.]+)(?:(?:\s*=\s*(?:(?:"([^"]*)")|(?:'([^']*)')|([^\s>]+)))|(?=\s|$))/g;
 
     var uNode = UE.uNode,
         needParentNode = {
@@ -80,7 +73,7 @@ var htmlparser = UE.htmlparser = function (htmlstr,ignoreBlank) {
         if (htmlattr) {
             var attrs = {}, match;
             while (match = re_attr.exec(htmlattr)) {
-                attrs[match[1].toLowerCase()] = utils.unhtml(match[2] || match[3] || match[4])
+                attrs[match[1].toLowerCase()] = match[2] || match[3] || match[4]
             }
             elm.attrs = attrs;
         }

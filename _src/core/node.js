@@ -45,7 +45,7 @@
     uNode.createText = function (data) {
         return new UE.uNode({
             type:'text',
-            'data':utils.unhtml(data || '')
+            'data':data || ''
         })
     };
     function nodeToHtml(node, arr, formatter, current) {
@@ -53,7 +53,7 @@
             case 'root':
                 for (var i = 0, ci; ci = node.children[i++];) {
                     //插入新行
-                    if (formatter && ci.type == 'element' && !dtd.$inlineWithA[ci.tagName] && i > 1) {
+                    if (formatter && ci.type == 'element' && !dtd.$inline[ci.tagName] && i > 1) {
                         insertLine(arr, current, true);
                         insertIndent(arr, current)
                     }
@@ -73,7 +73,7 @@
     }
 
     function isText(node, arr) {
-        arr.push(node.parentNode.tagName == 'pre' ? node.data : node.data.replace(/[ ]{2}/g,' &nbsp;'))
+        arr.push(node.data)
     }
 
     function isElement(node, arr, formatter, current) {
@@ -91,13 +91,13 @@
             (dtd.$empty[node.tagName] ? '\/' : '' ) + '>'
         );
         //插入新行
-        if (formatter  &&  !dtd.$inlineWithA[node.tagName]) {
+        if (formatter &&  !dtd.$inline[node.tagName]) {
             current = insertLine(arr, current, true);
             insertIndent(arr, current)
         }
         if (node.children && node.children.length) {
             for (var i = 0, ci; ci = node.children[i++];) {
-                if (formatter && ci.type == 'element' &&  !dtd.$inlineWithA[ci.tagName] && i > 1) {
+                if (formatter && ci.type == 'element' &&  !dtd.$inline[ci.tagName] && i > 1) {
                     insertLine(arr, current);
                     insertIndent(arr, current)
                 }
@@ -105,7 +105,7 @@
             }
         }
         if (!dtd.$empty[node.tagName]) {
-            if (formatter && !dtd.$inlineWithA[node.tagName]) {
+            if (formatter && !dtd.$inline[node.tagName]) {
                 current = insertLine(arr, current);
                 insertIndent(arr, current)
             }
@@ -169,7 +169,7 @@
             if (this.type != 'element' || dtd.$empty[this.tagName]) {
                 return this;
             }
-            if (utils.isString(htmlstr)) {
+            if (htmlstr) {
                 if(this.children){
                     for (var i = 0, ci; ci = this.children[i++];) {
                         ci.parentNode = null;
@@ -228,7 +228,7 @@
             var parent = this.parentNode;
             for (var i = 0, ci; ci = parent.children[i]; i++) {
                 if (ci === this) {
-                   return i == 0 ? null : parent.children[i-1];
+                    return i == 0 ? null : parent.children[i-1];
                 }
             }
 
@@ -422,7 +422,7 @@
         traversal:function(fn){
             if(this.children && this.children.length){
                 nodeTraversal(this,fn);
-            }
+            };
             return this;
         }
     }
