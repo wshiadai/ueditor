@@ -1,20 +1,27 @@
 UE.plugins['graphictemplate'] = function () {
     var me = this;
-    var id = 0;
-
     me["graphictemplate"] = {};
+
     var tpl = me["graphictemplate"];
+    tpl.id = "graphictemplate-0";
     tpl.dataList = {};
+    tpl.template = "<iframe  width='678' height='300' align='center' scroling='no' frameborder='0'  " +
+        "class='%%' " +
+        "id='##' " +
+        "src='$$' " +
+        "></iframe>";
+
 
     me.commands['graphictemplate'] = {
         execCommand: function (cmd, value) {
-            id = parseInt(id);
-            id += 1;
-            var ifr = "<iframe  width='678' height='300' align='center' scroling='no' frameborder='0'  " +
-                "class=" + value + "-template " +
-                "id='graphictemplate-" + id + "'" +
-                "src=" + me.options["graphictemplateUrlMap"][value] +
-                "></iframe>";
+            tpl.id = tpl.id.replace(/\d/g, function (id) {
+                id = parseInt(id) + 1;
+                return id;
+            });
+
+            var ifr = tpl.template.replace("%%", value + "-template")
+                .replace("##", tpl.id)
+                .replace('$$', me.options["graphictemplateUrlMap"][value]);
 
             me.execCommand("inserthtml", '<p contenteditable="false">' + ifr + '</p>');
         },
@@ -54,20 +61,20 @@ UE.plugins['graphictemplate'] = function () {
         })
     });
     me.addInputRule(function (root) {
-        var me = this;
-        utils.each(root.getNodesByTagName('pre'), function (pi) {
-            var val;
-            if ((val = pi.getAttr('class')) && /-template/.test(val)) {
-                var tmpDiv = me.document.createElement('div');
-                id = pi.getAttr("id");
-                me.graphictemplate.dataList[id] = (new Function("return (" + pi.innerHTML() + ")"))();
-                tmpDiv.innerHTML = "<iframe  width='678' height='300'  align='center' scroling='no' frameborder='0'" +
-                    "class='" + val + "'" +
-                    "id='" + id + "'" +
-                    "src=" + me.options.graphictemplateUrlMap[val.replace("-template", "")] +
-                    "></iframe>";
+        var me = this,
+            tpl = me.graphictemplate;
 
-                var node = UE.uNode.createElement(tmpDiv.innerHTML);
+        utils.each(root.getNodesByTagName('pre'), function (pi) {
+            var val = pi.getAttr('class');
+            if (val && /-template/.test(val)) {
+                tpl.id = pi.getAttr("id");
+                me.graphictemplate.dataList[tpl.id] = (new Function("return (" + pi.innerHTML() + ")"))();
+
+                var html = tpl.template.replace("%%", val)
+                    .replace("##", tpl.id)
+                    .replace('$$', me.options.graphictemplateUrlMap[val.replace("-template", "")]);
+
+                var node = UE.uNode.createElement(html);
                 pi.parentNode.replaceChild(node, pi);
 
             }
