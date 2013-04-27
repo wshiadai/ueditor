@@ -10182,7 +10182,9 @@ UE.plugins['graphictemplate'] = function () {
                 node.setAttr();
                 node.setAttr(attrs);
                 node.children = [];
-                node.appendChild(UE.uNode.createText(str))
+                node.appendChild(UE.uNode.createText(str));
+                var parent=node.parentNode;
+                parent.parentNode.replaceChild(node,parent);
             }
         })
     });
@@ -10200,7 +10202,7 @@ UE.plugins['graphictemplate'] = function () {
                     .replace("##", tpl.id)
                     .replace('$$', me.options.graphictemplateUrlMap[val.replace("-template", "")]);
 
-                var node = UE.uNode.createElement(html);
+                var node = UE.uNode.createElement('<p contenteditable="false">'+html+'</p>');
                 pi.parentNode.replaceChild(node, pi);
 
             }
