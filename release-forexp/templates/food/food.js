@@ -7,6 +7,7 @@
  */
 Template = {
     tid: 0,
+    moduleNum: 0,
     main: {
         title: ' <div class="title">美食食材</div>',
         section: '<div class="section">' +
@@ -81,6 +82,7 @@ Template = {
             content.appendChild(tmpDiv.children[0]);
         }
 
+        me.moduleNum += len;
         graphictemplate.iframeAutoHeight(frameElement)
     },
     _addModule: function (num) {
@@ -88,19 +90,27 @@ Template = {
         for (var i = 0; i < num; i++) {
             str += me.main.module();
         }
+        me.moduleNum += num;
         return str;
     },
     _deleteModule: function (tgt) {
+        var me = this;
         var node = tgt.parentNode;
         var content = node.parentNode;
         var list = domUtils.getElementsByTagName(content, "div", "module");
         if (list.length > 1) {
+            me.moduleNum -= 1;
             content.removeChild(node);
         }
     },
-    _setHasEmpty: function (arr) {
+    _setHasEmpty: function (arr, sum) {
+        var me = this;
         var str = /true/g.test(arr.join('')).toString();
-        frameElement.setAttribute("hasempty", str);
+        if (sum / 2 == me.moduleNum || str == "true") {
+            frameElement.setAttribute("hasempty", "true");
+        } else {
+            frameElement.setAttribute("hasempty", "false");
+        }
     },
     setPageData: function (data) {
         var list = domUtils.getElementsByTagName(document, "div", "content");
@@ -121,6 +131,7 @@ Template = {
         data["main"] = [];
         data["other"] = [];
         var arr = [];
+        var sum = 0;
 
         var list = domUtils.getElementsByTagName(document, "div", "content");
         for (var i = 0, len = list.length; i < len; i++) {
@@ -140,15 +151,18 @@ Template = {
                 }
 
                 //存储替换数据
-                if (obj.name == "输入食材名称") {
+                if (obj.name == "输入食材名称" || obj.name == "") {
                     obj.name = "";
+                    sum += 1;
                 }
-                if (obj.content == "份量") {
+                if (obj.content == "份量" || obj.content == "") {
                     obj.content = "";
+                    sum += 1;
                 }
                 data[key].push(obj);
             }
         }
-        this._setHasEmpty(arr);
+        //全部都为空或有一个模块中的一个为空时设置为true
+        this._setHasEmpty(arr, sum);
     }
 };
