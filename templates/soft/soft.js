@@ -117,7 +117,7 @@ var Template = {
         var me = this;
         //设置文本框值
         me._setTextBox(data, ["J_name", "J_size", "J_version",
-            "J_lang", "J_money", "J_systemNeed", "J_downloadlink"]);
+            "J_pcLang","J_mobileLang", "J_money", "J_systemNeed", "J_downloadlink"]);
         //设置复选框值
         me._setCheckBox(data, "J_systemask");
         //设置单选框值
@@ -134,7 +134,7 @@ var Template = {
             }
         ]);
         //设置下拉框值
-        me._setDrawdownBox(data, ["J_type"]);
+        me._setDrawdownBox(data, ["J_pcType","J_mobileType"]);
     },
 
     _setHasEmpty: function (arr) {
@@ -146,7 +146,7 @@ var Template = {
         var arr = [], txt, res, id;
         for (var i = 0, tmp; tmp = list[i++];) {
             if (utils.isString(tmp)) {
-                data[tmp] = (G(tmp).value);
+                data[tmp] = G(tmp).value;
             } else {
                 id = tmp['id'];
                 txt = G(id).value;
@@ -198,11 +198,13 @@ var Template = {
             {id: "J_name", "tabIndex": 0},
             {id: "J_size"},
             {id: "J_version"},
-            {id: "J_lang"},
+            {id: "J_pcLang","tabIndex":0},
+            {id: "J_mobileLang","tabIndex":1},
             {id: "J_systemNeed"},
             {id: "J_money", 'tabIndex': 1},
             {id: "J_downloadlink"},
-            "J_type"
+            "J_pcType",
+            "J_mobileType"
         ]);
 
         //复选狂保存值
