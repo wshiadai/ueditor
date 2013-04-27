@@ -39,8 +39,6 @@ Template = {
         arr.push(tpl.foot);
 
         G("J_content").innerHTML = arr.join('');
-        //默认为false、不需要检查数据
-        frameElement.setAttribute("hasempty","false");
     },
     addPageListener: function () {
         var me = this;
@@ -100,7 +98,10 @@ Template = {
             content.removeChild(node);
         }
     },
-
+    _setHasEmpty: function (arr) {
+        var str = /true/g.test(arr.join('')).toString();
+        frameElement.setAttribute("hasempty", str);
+    },
     setPageData: function (data) {
         var list = domUtils.getElementsByTagName(document, "div", "content");
 
@@ -116,6 +117,7 @@ Template = {
     savePageData: function (data) {
         data["main"] = [];
         data["other"] = [];
+        var arr=[];
 
         var list = domUtils.getElementsByTagName(document, "div", "content");
         for (var i = 0, len = list.length; i < len; i++) {
@@ -126,7 +128,16 @@ Template = {
                 obj.name = node.children[0].value;
                 obj.content = node.children[1].value;
                 data[key].push(obj);
+
+                //数据验证
+                if ((obj.name == "输入食材名称" && obj.content != "份量")
+                    || (obj.name != "输入食材名称" && obj.content == "份量")) {
+                    arr.push(true);
+                } else {
+                    arr.push(false);
+                }
             }
         }
+        this._setHasEmpty(arr);
     }
 };
