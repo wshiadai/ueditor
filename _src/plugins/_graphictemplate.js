@@ -5,11 +5,11 @@ UE.plugins['graphictemplate'] = function () {
     var tpl = me["graphictemplate"];
     tpl.id = "graphictemplate-0";
     tpl.dataList = {};
-    tpl.template = "<iframe  width='678' height='300' align='center' scroling='no' frameborder='0'  " +
+    tpl.template = "<p contenteditable='false'><iframe  width='678' height='300' align='center' scroling='no' frameborder='0'  " +
         "class='%%' " +
         "id='##' " +
         "src='$$' " +
-        "></iframe>";
+        "></iframe></p>";
 
 
     me.commands['graphictemplate'] = {
@@ -23,7 +23,7 @@ UE.plugins['graphictemplate'] = function () {
                 .replace("##", tpl.id)
                 .replace('$$', me.options["graphictemplateUrlMap"][value]);
 
-            me.execCommand("inserthtml", '<p contenteditable="false">' + ifr + '</p>');
+            me.execCommand("inserthtml", ifr);
         },
         queryCommandState: function () {
             var rng = this.selection.getRange().cloneRange();
@@ -57,8 +57,8 @@ UE.plugins['graphictemplate'] = function () {
                 node.setAttr(attrs);
                 node.children = [];
                 node.appendChild(UE.uNode.createText(str));
-                var parent=node.parentNode;
-                parent.parentNode.replaceChild(node,parent);
+                var parent = node.parentNode;
+                parent.parentNode.replaceChild(node, parent);
             }
         })
     });
@@ -76,7 +76,7 @@ UE.plugins['graphictemplate'] = function () {
                     .replace("##", tpl.id)
                     .replace('$$', me.options.graphictemplateUrlMap[val.replace("-template", "")]);
 
-                var node = UE.uNode.createElement('<p contenteditable="false">'+html+'</p>');
+                var node = UE.uNode.createElement(html);
                 pi.parentNode.replaceChild(node, pi);
 
             }
