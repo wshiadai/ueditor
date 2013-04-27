@@ -102,6 +102,7 @@ Template = {
             me.moduleNum -= 1;
             content.removeChild(node);
         }
+        graphictemplate.iframeAutoHeight(frameElement);
     },
     _setHasEmpty: function (arr, sum) {
         var me = this;
