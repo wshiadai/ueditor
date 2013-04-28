@@ -9952,7 +9952,7 @@ baidu.editor.ui = {};
         getHtmlTpl:function () {
             return '<div id="##" class="edui-attachpicker %%">' +
                 '<div class="edui-attachpicker-top"></div>' +
-                '<div class="edui-attachpicker-body">' +
+                '<div class="edui-attachpicker-body" onmouseover="$$._onMouseOver(event);">' +
                 '<div class="edui-attachpicker-item edui-attachpicker-uploadfile" stateful _title="上传文件到网盘">' +
                 uploadfileButton.getHtmlTpl() +
                 '</div>' +
@@ -10309,13 +10309,15 @@ baidu.editor.ui = {};
             buttonConfig = editor.options.buttonConfig[cmd],
             title = buttonConfig["title"],
             hoverTitle = buttonConfig["hoverTitle"],
-            attachPop;
+            attachPop,
+            timer;
 
         var ui = new editorui.Button({
             className:'edui-for-'+cmd,
             title:hoverTitle,
             label:title || '',
             onmouseover: function (evt) {
+                clearTimeout(timer);
                 if(!attachPop) setAttachPop();
                 if(editor.options.isLogin && editor._uploadFile.status!="uploading"&&editor._uploadFile.status!="finish"){
                     UE.ui.Popup.postHide(evt);
@@ -10323,7 +10325,9 @@ baidu.editor.ui = {};
                 }
             },
             onmouseout: function (evt) {
-                UE.ui.Popup.postHide(evt);
+                timer = setTimeout(function(){
+                    UE.ui.Popup.postHide(evt);
+                },500);
             },
             onclick:function (evt) {
                 if(!attachPop) setAttachPop();
@@ -10338,7 +10342,12 @@ baidu.editor.ui = {};
 
         function setAttachPop(){
             attachPop = new baidu.editor.ui.Popup({
-                content:new baidu.editor.ui.AttachPicker({editor:editor}),
+                content:new baidu.editor.ui.AttachPicker({
+                    editor:editor,
+                    onmouseover:function(){
+                        clearTimeout(timer);
+                    }
+                }),
                 editor:editor,
                 className:'edui-attachPop',
                 hide: function (notNofity){
