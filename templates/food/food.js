@@ -45,13 +45,12 @@ Template = {
         var me = this;
         domUtils.on(document, "click", function (e) {
             var tgt = e.target || e.srcElement;
-            //添加食材处理函数
+
             if (domUtils.hasClass(tgt, "add")) {
                 me._addSection(tgt);
             } else if (domUtils.hasClass(tgt, "delete")) {
                 me._deleteModule(tgt);
             }
-
         });
 
         me._addFocusHandler(G("J_content"))
@@ -72,10 +71,21 @@ Template = {
                 });
                 domUtils.addClass(cur, "focus");
 
-                //第一次删除文字、此后不删除
-                if (!domUtils.hasClass(tgt, "hasClick")) {
-                    domUtils.addClass(tgt, "hasClick");
+                //原始文字删除
+                if (tgt.value == "输入食材名称" || tgt.value == "份量") {
                     tgt.value = "";
+                }
+            });
+
+            domUtils.on(node, "blur", function (e) {
+                var tgt = e.target || e.srcElement;
+
+                if (utils.trim(tgt.value) == "") {
+                    if (domUtils.hasClass(tgt, "name")) {
+                        tgt.value = "输入食材名称"
+                    } else {
+                        tgt.value = "份量"
+                    }
                 }
             });
         }

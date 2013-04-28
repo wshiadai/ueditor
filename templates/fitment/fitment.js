@@ -27,11 +27,20 @@ Template = {
                 domUtils.removeClasses(node, ['focus']);
             }
             if (/input|select/ig.test(tgt.tagName)) {
-                if (/J_other/.test(tgt.id)&&!domUtils.hasClass(tgt, "hasClick")) {
-                    domUtils.addClass(tgt, "hasClick");
+                domUtils.addClass(tgt, "focus")
+            }
+        });
+
+        domUtils.on(G("J_other"), ["focus", "blur"], function (e) {
+            var tgt = e.target || e.srcElement;
+            if (e.type == "focus") {
+                if (tgt.value == "其他风格") {
                     tgt.value = "";
                 }
-                domUtils.addClass(tgt, "focus")
+            } else {
+                if (utils.trim(tgt.value) == "") {
+                    tgt.value = "其他风格";
+                }
             }
         });
     },
@@ -69,12 +78,12 @@ Template = {
         me._setDrawdownBox(data, ["J_quanbao", 'J_hunfang']);
     },
 
-    _setHasEmpty:function(arr){
+    _setHasEmpty: function (arr) {
         var str = /true/g.test(arr.join('')).toString();
         frameElement.setAttribute("hasempty", str);
     },
     _saveTextBox: function (data, list) {
-        var me=this,
+        var me = this,
             arr = [], txt, res, id;
         for (var i = 0, tmp; tmp = list[i++];) {
             if (utils.isString(tmp)) {
@@ -89,7 +98,7 @@ Template = {
                 arr.push(res)
             }
         }
-       me._setHasEmpty(arr);
+        me._setHasEmpty(arr);
     },
     _saveCheckBox: function (data, list) {
         var node, txt;
@@ -118,7 +127,7 @@ Template = {
         ]);
 
         //复选狂保存值
-        me._saveCheckBox(data, ["J_jianyue","J_tianyuan",'J_meishi',"J_zhongshi",,'J_rishi',
+        me._saveCheckBox(data, ["J_jianyue", "J_tianyuan", 'J_meishi', "J_zhongshi", , 'J_rishi',
             "J_beiou", "J_dizhonghai", "J_dongnanya"]);
     }
 
