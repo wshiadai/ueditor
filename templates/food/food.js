@@ -73,7 +73,7 @@ Template = {
                 domUtils.addClass(cur, "focus");
 
                 //第一次删除文字、此后不删除
-                if (tgt.tagName.toLowerCase() == "input" && !domUtils.hasClass(tgt, "hasClick")) {
+                if (!domUtils.hasClass(tgt, "hasClick")) {
                     domUtils.addClass(tgt, "hasClick");
                     tgt.value = "";
                 }
