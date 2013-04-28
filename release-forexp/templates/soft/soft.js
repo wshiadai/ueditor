@@ -46,7 +46,11 @@ var Template = {
                 domUtils.removeClasses(node, ['focus']);
             }
             if (/input|select/ig.test(tgt.tagName)) {
-                domUtils.addClass(tgt, "focus")
+                if (tgt.id == "J_money" && G("J_free").checked) {
+
+                } else {
+                    domUtils.addClass(tgt, "focus")
+                }
             }
         });
 
