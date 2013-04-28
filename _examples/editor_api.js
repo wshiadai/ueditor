@@ -20,7 +20,7 @@
             'plugins/defaultfilter.js',
             'plugins/inserthtml.js',
             'plugins/_autotypeset.js',
-            'plugins/image.js',
+            'plugins/_image.js',
             'plugins/selectall.js',
             'plugins/source.js',
             'plugins/wordcount.js',
