@@ -52,22 +52,34 @@ Template = {
                 me._deleteModule(tgt);
             }
 
-            //focus时文本框交互
-            var list = domUtils.getElementsByTagName(document, "div", "module");
-            for (var i = 0, node; node = list[i++];) {
-                domUtils.removeClasses(node, ["focus"]);
-            }
-            var cur = domUtils.findParent(tgt, function (node) {
-                return domUtils.hasClass(node, "module");
-            });
-            domUtils.addClass(cur, "focus");
-
-            //第一次删除文字、此后不删除
-            if (tgt.tagName.toLowerCase() == "input" && !domUtils.hasClass(tgt, "hasClick")) {
-                domUtils.addClass(tgt, "hasClick");
-                tgt.value = "";
-            }
         });
+
+        me._addFocusHandler(G("J_content"))
+    },
+    _addFocusHandler: function (container) {
+        var list = domUtils.getElementsByTagName(container, "input");
+        for (var i = 0, node; node = list[i++];) {
+            domUtils.on(node, "focus", function (e) {
+                var tgt = e.target || e.srcElement;
+
+                //focus时文本框交互
+                var list = domUtils.getElementsByTagName(document, "div", "module");
+                for (var i = 0, node; node = list[i++];) {
+                    domUtils.removeClasses(node, ["focus"]);
+                }
+                var cur = domUtils.findParent(tgt, function (node) {
+                    return domUtils.hasClass(node, "module");
+                });
+                domUtils.addClass(cur, "focus");
+
+                //第一次删除文字、此后不删除
+                if (!domUtils.hasClass(tgt, "hasClick")) {
+                    domUtils.addClass(tgt, "hasClick");
+                    tgt.value = "";
+                }
+            });
+        }
+
     },
     _addSection: function (tgt) {
         var me = this,
@@ -79,6 +91,8 @@ Template = {
         var len = sum % 2 ? 1 : 2;
         for (var i = 0; i < len; i++) {
             tmpDiv.innerHTML = me.main.module();
+            me._addFocusHandler(tmpDiv);
+
             content.appendChild(tmpDiv.children[0]);
         }
 

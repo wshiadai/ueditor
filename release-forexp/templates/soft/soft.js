@@ -46,6 +46,10 @@ var Template = {
                 domUtils.removeClasses(node, ['focus']);
             }
             if (/input|select/ig.test(tgt.tagName)) {
+                if (/J_name/.test(tgt.id)&&!domUtils.hasClass(tgt, "hasClick")) {
+                    domUtils.addClass(tgt, "hasClick");
+                    tgt.value = "";
+                }
                 domUtils.addClass(tgt, "focus")
             }
         });
