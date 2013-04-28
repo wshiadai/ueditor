@@ -10307,7 +10307,7 @@ UE.plugins['graphictemplate'] = function () {
 
         });
     };
-    me.addListener("focus", function () {
+    me.addListener("click", function () {
         var ifr = tpl.currentTemplate;
         if (tpl.isSelect && ifr) {
             var rng = me.selection.getRange();
