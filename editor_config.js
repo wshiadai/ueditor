@@ -393,7 +393,7 @@
                     "wangpan": "从网盘添加"
                 },
                 title:"附件",
-                hoverTitle:"登录后才能使功能"
+                hoverTitle:""
             }
         }
         //单位M

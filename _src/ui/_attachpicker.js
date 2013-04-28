@@ -256,7 +256,7 @@
         getHtmlTpl:function () {
             return '<div id="##" class="edui-attachpicker %%">' +
                 '<div class="edui-attachpicker-top"></div>' +
-                '<div class="edui-attachpicker-body">' +
+                '<div class="edui-attachpicker-body" onmouseover="$$._onMouseOver(event);">' +
                 '<div class="edui-attachpicker-item edui-attachpicker-uploadfile" stateful _title="上传文件到网盘">' +
                 uploadfileButton.getHtmlTpl() +
                 '</div>' +

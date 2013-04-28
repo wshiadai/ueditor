@@ -311,13 +311,15 @@
             buttonConfig = editor.options.buttonConfig[cmd],
             title = buttonConfig["title"],
             hoverTitle = buttonConfig["hoverTitle"],
-            attachPop;
+            attachPop,
+            timer;
 
         var ui = new editorui.Button({
             className:'edui-for-'+cmd,
             title:hoverTitle,
             label:title || '',
             onmouseover: function (evt) {
+                clearTimeout(timer);
                 if(!attachPop) setAttachPop();
                 if(editor.options.isLogin && editor._uploadFile.status!="uploading"&&editor._uploadFile.status!="finish"){
                     UE.ui.Popup.postHide(evt);
@@ -325,7 +327,9 @@
                 }
             },
             onmouseout: function (evt) {
-                UE.ui.Popup.postHide(evt);
+                timer = setTimeout(function(){
+                    UE.ui.Popup.postHide(evt);
+                },500);
             },
             onclick:function (evt) {
                 if(!attachPop) setAttachPop();
@@ -340,7 +344,12 @@
 
         function setAttachPop(){
             attachPop = new baidu.editor.ui.Popup({
-                content:new baidu.editor.ui.AttachPicker({editor:editor}),
+                content:new baidu.editor.ui.AttachPicker({
+                    editor:editor,
+                    onmouseover:function(){
+                        clearTimeout(timer);
+                    }
+                }),
                 editor:editor,
                 className:'edui-attachPop',
                 hide: function (notNofity){
