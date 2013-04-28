@@ -64,5 +64,9 @@
             //去掉选中状态
             G("J_mask").style.display = "none";
         });
+
+        domUtils.on(document, ["mouseover", "mouseout"], function (e) {
+            G("J_drag").style.visibility = e.type == "mouseover" ? "visible" : "hidden";
+        });
     }
 })();
