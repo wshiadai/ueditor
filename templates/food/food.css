@@ -1,7 +1,7 @@
 .wrapper .section{margin: 10px 0;font-size: 14px;overflow: hidden;}
 .section .subtitle{float:left;font-weight: bold;font-family:microsoft Yahei;color: #333;margin:7px 0 0 40px;_margin-left:20px;
     width: 30px;height: 34px;line-height:34px;}
-.section .content{overflow: hidden;}
+.section .content{overflow: hidden;_float: left;}
 .content .module{float: left;margin:10px 0 0 20px;+margin-left:10px;}
 .content .module input{float:left;color:#ccc;border: 1px solid #e1e1e1;padding: 6px 0 6px 10px; vertical-align: middle;outline:0;}
 .content .module.focus input{border-color:#77d068;color:#333;}
