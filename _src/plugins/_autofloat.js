@@ -79,8 +79,10 @@ UE.plugins['autofloat'] = function() {
         var offset= me.options.toolbarTopOffset||0;
         if (rect3.top < 0 && rect3.bottom - toolbarBox.offsetHeight > offset) {
             setFloating();
+            me.fireEvent("setfloat");
         }else{
             unsetFloating();
+            me.fireEvent("unsetfloat");
         }
     }
     var defer_updateFloating = utils.defer(function(){
