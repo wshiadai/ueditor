@@ -441,5 +441,7 @@
             'fitment': URL + 'templates/fitment/fitment.html',
             'soft': URL + 'templates/soft/soft.html'
         }
+        //编辑器底部距离工具栏高度(如果参数大于等于编辑器高度，则设置无效)
+        ,toolbarTopOffset:400
     };
 })();
