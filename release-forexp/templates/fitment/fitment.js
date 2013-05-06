@@ -19,15 +19,27 @@ Template = {
             }
         });
 
-        //文本框单击交互
+        //文本框下拉框单击交互
         domUtils.on(document, "click", function (e) {
             var tgt = e.target || e.srcElement;
-            var list = domUtils.getElementsByTagName(document, "input select");
+            var list = domUtils.getElementsByTagName(document, "input");
             for (var i = 0, node; node = list[i++];) {
-                domUtils.removeClasses(node, ['focus']);
+                if (node.id == "J_other")  continue;
+                
+                if (utils.trim(node.value) == "") {
+                    node.style.borderColor = "";
+                    node.style.color = ""
+                } else {
+                    node.style.borderColor = "";
+                }
             }
-            if (/input|select/ig.test(tgt.tagName)) {
-                domUtils.addClass(tgt, "focus")
+
+            if (/input/i.test(tgt.tagName)) {
+                tgt.style.color = "#333";
+                tgt.style.borderColor = "#77d068";
+            }
+            if (/select/i.test(tgt.tagName)) {
+                tgt.style.color = "#333";
             }
         });
 
@@ -40,6 +52,10 @@ Template = {
             } else {
                 if (utils.trim(tgt.value) == "") {
                     tgt.value = "其他风格";
+                    tgt.style.color = "";
+                    tgt.style.borderColor = "";
+                } else {
+                    tgt.style.borderColor = "";
                 }
             }
         });
