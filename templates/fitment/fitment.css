@@ -9,8 +9,6 @@
 .section .rightarea{float:left;width: 300px;overflow: hidden;margin-left: 90px;}
 .section .dropdownbox{padding-left: 2px;width: 80px;height: 30px;vertical-align:middle;border: #ddd 1px solid;color: #ddd;outline: 0;}
 .section .textbox{ text-align:center;width: 46px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;outline:0;}
-.section .textbox.focus{border-color:#77d068;color:#333;}
-.section .dropdownbox.focus{color:#333;}
 .wrapper .download{_height:84px;}
 
 .section .decorativetxt{float:left;margin:0 10px 0 40px;}
