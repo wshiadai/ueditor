@@ -21,6 +21,7 @@ var Template = {
             }
             e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
         });
+
         domUtils.on(document, "click", function (e) {
             var tgt = e.target || e.srcElement;
             switch (tgt.id) {
@@ -43,7 +44,7 @@ var Template = {
             //文本框下拉框交互
             var list = domUtils.getElementsByTagName(document, "input");
             for (var i = 0, node; node = list[i++];) {
-                if (node.id == "J_name")  continue;
+                if (/J_name|J_downloadlink/.test(node.id))  continue;
 
                 if (utils.trim(node.value) == "") {
                     node.style.borderColor = "";
@@ -67,15 +68,20 @@ var Template = {
 
         });
 
-        domUtils.on(G("J_name"), ["focus", "blur"], function (e) {
+        me._sTxtBoxHandler("J_name", "例:百度拼音输入法");
+        me._sTxtBoxHandler("J_downloadlink", "http://");
+    },
+
+    _sTxtBoxHandler: function (id, value) {
+        domUtils.on(G(id), ["focus", "blur"], function (e) {
             var tgt = e.target || e.srcElement;
             if (e.type == "focus") {
-                if (tgt.value == "例:百度拼音输入法") {
+                if (tgt.value == value) {
                     tgt.value = "";
                 }
             } else {
                 if (utils.trim(tgt.value) == "") {
-                    tgt.value = "例:百度拼音输入法";
+                    tgt.value = value;
                     tgt.style.color = "";
                     tgt.style.borderColor = "";
                 } else {
@@ -84,7 +90,6 @@ var Template = {
             }
         });
     },
-
     _showTab: function (isTab0, cur) {
         var list = domUtils.getElementsByTagName(document, "div", "tab");
         if (isTab0) {
