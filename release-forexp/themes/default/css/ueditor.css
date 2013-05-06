@@ -277,7 +277,6 @@ div.edui-box {
     height: 30px !important;
     width: 30px !important;
     background-image: url(../images/exp-icon.png);
-    background-image: url(../images/exp-icon.gif) \9;
 }
 
 .edui-default .edui-toolbar .edui-button .edui-button-wrap {
@@ -756,7 +755,6 @@ div.edui-box {
     height: 29px;
     margin: 0 4px;
     background: url(../images/exp-icon.png) -73px  0;
-    background: url(../images/exp-icon.gif) -73px 0 \9;
 }
 
 /*粘贴弹出菜单*/
