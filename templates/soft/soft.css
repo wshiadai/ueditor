@@ -9,11 +9,10 @@
 
 .section .leftarea{float:left;width: 275px;overflow: hidden;}
 .section .rightarea{float:left;width: 300px;overflow: hidden;}
-.section .dropdownbox{padding-left: 10px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;width: 130px;outline: 0;}
+.section .dropdownbox{height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;width: 130px;outline: 0;padding:5px 0 5px 10px;}
+.section .dropdownbox option{padding-left: 10px;}
 .section .textbox{ padding-left: 10px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;outline: 0;}
 .section .radiobox{ margin-right: 10px;}
-/*.section .textbox.focus{ border-color: #77d068;color:#333;}*/
-/*.section .dropdownbox.focus{color:#333;}*/
 .section .wt1{ width: 398px;}
 .section .wt2{width: 118px;}
 .section .type{margin:0 15px 0 60px}
