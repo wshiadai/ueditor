@@ -58,27 +58,21 @@ Template = {
     _addFocusHandler: function (container) {
         var list = domUtils.getElementsByTagName(container, "input");
         for (var i = 0, node; node = list[i++];) {
+
             domUtils.on(node, "focus", function (e) {
                 var tgt = e.target || e.srcElement;
-
-                //focus时文本框交互
-                var list = domUtils.getElementsByTagName(document, "div", "module");
-                for (var i = 0, node; node = list[i++];) {
-                    domUtils.removeClasses(node, ["focus"]);
-                }
-                var cur = domUtils.findParent(tgt, function (node) {
-                    return domUtils.hasClass(node, "module");
-                });
-                domUtils.addClass(cur, "focus");
-
-                //原始文字删除
                 if (tgt.value == "输入食材名称" || tgt.value == "份量") {
                     tgt.value = "";
                 }
+
+                domUtils.addClass(tgt.parentNode, "focus");
+                domUtils.addClass(tgt,"focus");
             });
 
             domUtils.on(node, "blur", function (e) {
                 var tgt = e.target || e.srcElement;
+
+                domUtils.removeClasses(tgt, ["focus"]);
 
                 if (utils.trim(tgt.value) == "") {
                     if (domUtils.hasClass(tgt, "name")) {
@@ -86,7 +80,11 @@ Template = {
                     } else {
                         tgt.value = "份量"
                     }
+                    domUtils.removeClasses(tgt, ["focus"]);
+                }else{
+                    domUtils.addClass(tgt,"focus");
                 }
+                domUtils.removeClasses(tgt.parentNode, ["focus"]);
             });
         }
 
