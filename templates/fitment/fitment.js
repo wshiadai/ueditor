@@ -24,13 +24,13 @@ Template = {
             var tgt = e.target || e.srcElement;
             var list = domUtils.getElementsByTagName(document, "input");
             for (var i = 0, node; node = list[i++];) {
+                if (node.id == "J_other")  continue;
+                
                 if (utils.trim(node.value) == "") {
                     node.style.borderColor = "";
                     node.style.color = ""
                 } else {
-                    if (node.id != "J_other") {
-                        node.style.borderColor = "";
-                    }
+                    node.style.borderColor = "";
                 }
             }
 
@@ -54,7 +54,7 @@ Template = {
                     tgt.value = "其他风格";
                     tgt.style.color = "";
                     tgt.style.borderColor = "";
-                }else{
+                } else {
                     tgt.style.borderColor = "";
                 }
             }
