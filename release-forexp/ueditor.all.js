@@ -10169,7 +10169,7 @@ UE.plugins['graphictemplate'] = function () {
     tpl.template = "<p contenteditable='false'><iframe  width='678' height='300' align='center' scroling='no' frameborder='0'  " +
         "class='%%' " +
         "id='##' " +
-        "src='$$' " +
+        "src='$$?q='" + Math.random() + ' ' +
         "></iframe></p>";
 
 
