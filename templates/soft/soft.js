@@ -40,18 +40,31 @@ var Template = {
                     break;
             }
 
-            //文本框单击交互
-            var list = domUtils.getElementsByTagName(document, "input select");
+            //文本框下拉框交互
+            var list = domUtils.getElementsByTagName(document, "input");
             for (var i = 0, node; node = list[i++];) {
-                domUtils.removeClasses(node, ['focus']);
+                if (node.id == "J_name")  continue;
+
+                if (utils.trim(node.value) == "") {
+                    node.style.borderColor = "";
+                    node.style.color = ""
+                } else {
+                    node.style.borderColor = "";
+                }
             }
-            if (/input|select/ig.test(tgt.tagName)) {
+            if (/input/i.test(tgt.tagName)) {
                 if (tgt.id == "J_money" && G("J_free").checked) {
 
                 } else {
-                    domUtils.addClass(tgt, "focus")
+                    tgt.style.color = "#333";
+                    tgt.style.borderColor = "#77d068";
                 }
             }
+
+            if (/select/i.test(tgt.tagName)) {
+                tgt.style.color = "#333";
+            }
+
         });
 
         domUtils.on(G("J_name"), ["focus", "blur"], function (e) {
@@ -63,6 +76,10 @@ var Template = {
             } else {
                 if (utils.trim(tgt.value) == "") {
                     tgt.value = "例:百度拼音输入法";
+                    tgt.style.color = "";
+                    tgt.style.borderColor = "";
+                } else {
+                    tgt.style.borderColor = "";
                 }
             }
         });
