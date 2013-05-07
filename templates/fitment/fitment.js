@@ -25,7 +25,7 @@ Template = {
             var list = domUtils.getElementsByTagName(document, "input");
             for (var i = 0, node; node = list[i++];) {
                 if (node.id == "J_other")  continue;
-                
+
                 if (utils.trim(node.value) == "") {
                     node.style.borderColor = "";
                     node.style.color = ""
@@ -64,6 +64,11 @@ Template = {
     _setTextBox: function (data, list) {
         for (var i = 0, id; id = list[i++];) {
             G(id).value = data[id];
+        }
+
+        //格式化数据
+        if (data["J_other"] == "") {
+            G("J_other").value = "其他风格";
         }
     },
     _setCheckBox: function (data, containerId) {
@@ -115,6 +120,11 @@ Template = {
             }
         }
         me._setHasEmpty(arr);
+
+        //格式化数据
+        if(data["J_other"]=="其他风格"){
+            data["J_other"] = "";
+        }
     },
     _saveCheckBox: function (data, list) {
         var node, txt;
