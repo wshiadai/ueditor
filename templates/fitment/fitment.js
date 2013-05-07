@@ -106,6 +106,9 @@ Template = {
     _saveTextBox: function (data, list) {
         var me = this,
             arr = [], txt, res, id;
+
+        var optional = "J_wan";//选填
+
         for (var i = 0, tmp; tmp = list[i++];) {
             if (utils.isString(tmp)) {
                 data[tmp] = (G(tmp).value);
@@ -115,14 +118,16 @@ Template = {
                 data[id] = txt;
 
                 //判断是否为空
-                res = !txt.replace(/'[ \t\r\n]*'/g, "").length;
-                arr.push(res)
+                if (optional.indexOf(id) == -1) {
+                    res = !txt.replace(/'[ \t\r\n]*'/g, "").length;
+                    arr.push(res)
+                }
             }
         }
         me._setHasEmpty(arr);
 
         //格式化数据
-        if(data["J_other"]=="其他风格"){
+        if (data["J_other"] == "其他风格") {
             data["J_other"] = "";
         }
     },
