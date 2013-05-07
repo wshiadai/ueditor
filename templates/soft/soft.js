@@ -165,7 +165,7 @@ var Template = {
         var me = this;
         //设置文本框值
         me._setTextBox(data, ["J_name", "J_size", "J_version",
-            "J_pcLang", "J_mobileLang", "J_money", "J_systemNeed", "J_downloadlink"]);
+             "J_mobileLang", "J_money", "J_systemNeed", "J_downloadlink"]);
         //设置复选框值
         me._setCheckBox(data, "J_systemask");
         //设置单选框值
@@ -182,7 +182,7 @@ var Template = {
             }
         ]);
         //设置下拉框值
-        me._setDrawdownBox(data, ["J_pcType", "J_mobileType"]);
+        me._setDrawdownBox(data, ["J_pcType", "J_mobileType","J_pcLang"]);
     },
 
     _setHasEmpty: function (arr) {
@@ -262,11 +262,11 @@ var Template = {
             {id: "J_name", "tabIndex": 0},
             {id: "J_size"},
             {id: "J_version"},
-            {id: "J_pcLang", "tabIndex": 0},
             {id: "J_mobileLang", "tabIndex": 1},
             {id: "J_systemNeed"},
             {id: "J_money", 'tabIndex': 1},
             {id: "J_downloadlink"},
+            "J_pcLang",
             "J_pcType",
             "J_mobileType"
         ]);

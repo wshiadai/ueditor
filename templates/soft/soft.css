@@ -7,15 +7,16 @@
 .section .left .key{margin:0 10px ;}
 .section .left .unit{margin: 0 10px;}
 
-.section .leftarea{float:left;width: 275px;overflow: hidden;}
+.section .leftarea{float:left;width: 280px;overflow: hidden;}
 .section .rightarea{float:left;width: 300px;overflow: hidden;}
-.section .dropdownbox{height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;width: 130px;outline: 0;padding:5px 0 5px 10px;}
+.section .dropdownbox{height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;width: 130px;outline: 0;padding:5px 2px 5px 10px;}
 .section .dropdownbox option{padding-left: 10px;}
 .section .textbox{ padding-left: 10px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;outline: 0;}
 .section .radiobox{ margin-right: 10px;}
 .section .wt1{ width: 398px;}
 .section .wt2{width: 118px;}
-.section .type{margin:0 15px 0 60px}
+.section .type{margin:0 10px 0 65px}
+.section .nostar{margin:0 10px 0 37px}
 
 .section .decorativetxt{float:left;margin:0 10px 0 40px;}
 .section .decorative{float:left;overflow: hidden;width: 415px;}

@@ -45,11 +45,10 @@
             </div>
             <div class="rightarea">
                 <div class="left">
-                    <span class="star">*</span>
-                    <span class="key">版本:</span>
+                    <span class="type">版本:</span>
                 </div>
                 <div class="left">
-                    <input type="text wt2" class="textbox" maxlength="10" id="J_version"/>
+                    <input type="text" class="textbox wt2" maxlength="10" id="J_version"/>
                 </div>
             </div>
         </div>
@@ -75,18 +74,22 @@
                 </div>
                 <div class="rightarea">
                     <div class="left">
-                        <span class="star">*</span>
-                        <span class="key">语言:</span>
+                        <span class="type">语言:</span>
                     </div>
                     <div class="left">
-                        <input type="text wt2" class="textbox" maxlength="10" id="J_pcLang" value="中文"/>
+                        <select class="dropdownbox" id="J_pcLang">
+                            <option value="中文">中文</option>
+                            <option value="英文">英文</option>
+                            <option value="日文">日文</option>
+                            <option value="多语言">多语言</option>
+                            <option value="其他">其他</option>
+                        </select>
                     </div>
                 </div>
             </div>
             <div class="section">
                 <div class="left">
-                    <span class="star">*</span>
-                    <span class="key">系统要求:</span>
+                    <span class="nostar">系统要求:</span>
                 </div>
                 <div class="left">
                     <input type="text" class="textbox wt1" id="J_systemNeed" maxlength="40"  value="windows / Mac OS X /  Linux"/>
@@ -116,7 +119,13 @@
                         <span class="key">语言:</span>
                     </div>
                     <div class="left">
-                        <input type="text wt2" class="textbox" maxlength="10" id="J_mobileLang" value="中文"/>
+                        <select class="dropdownbox" id="J_mobileLang">
+                            <option value="中文">中文</option>
+                            <option value="英文">英文</option>
+                            <option value="日文">日文</option>
+                            <option value="多语言">多语言</option>
+                            <option value="其他">其他</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -145,7 +154,7 @@
         </div>
         <div class="section">
             <div class="left">
-                <span class="type">下载地址:</span>
+                <span class="nostar">下载地址:</span>
             </div>
             <div class="left">
                 <input type="text" class="textbox wt1" maxlength="60" id="J_downloadlink" value="http://"/>
