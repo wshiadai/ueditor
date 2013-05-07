@@ -114,10 +114,19 @@ var Template = {
     _innerTxt: function (node) {
         return   node.innerText || node.textContent || node.nodeValue;
     },
+    _formatSetData: function (data, id, value) {
+        if (data[id] == "") {
+            G(id).value = value;
+        }
+    },
     _setTextBox: function (data, list) {
         for (var i = 0, id; id = list[i++];) {
             G(id).value = data[id];
         }
+
+        var me = this;
+        me._formatSetData(data, "J_name", "例:百度拼音输入法")
+        me._formatSetData(data, "J_downloadlink", "http://")
     },
     _setCheckBox: function (data, containerId) {
         var list = domUtils.getElementsByTagName(G(containerId), "span");
@@ -156,7 +165,7 @@ var Template = {
         var me = this;
         //设置文本框值
         me._setTextBox(data, ["J_name", "J_size", "J_version",
-            "J_pcLang", "J_mobileLang", "J_money", "J_systemNeed", "J_downloadlink"]);
+             "J_mobileLang", "J_money", "J_systemNeed", "J_downloadlink"]);
         //设置复选框值
         me._setCheckBox(data, "J_systemask");
         //设置单选框值
@@ -173,7 +182,7 @@ var Template = {
             }
         ]);
         //设置下拉框值
-        me._setDrawdownBox(data, ["J_pcType", "J_mobileType"]);
+        me._setDrawdownBox(data, ["J_pcType", "J_mobileType","J_pcLang"]);
     },
 
     _setHasEmpty: function (arr) {
@@ -183,6 +192,9 @@ var Template = {
     _saveTextBox: function (data, list) {
         var me = this;
         var arr = [], txt, res, id;
+
+        var optional = "J_version";//选填
+
         for (var i = 0, tmp; tmp = list[i++];) {
             if (utils.isString(tmp)) {
                 data[tmp] = G(tmp).value;
@@ -196,12 +208,28 @@ var Template = {
                 if (index == me.tabIndex || index === undefined) {
                     if (id == "J_money" && G('J_free').checked)    continue;
 
-                    res = !txt.replace(/'[ \t\r\n]*'/g, "").length;
-                    arr.push(res);
+                    if (optional.indexOf(id) == -1) {
+                        res = !txt.replace(/'[ \t\r\n]*'/g, "").length;
+                        arr.push(res);
+                    }
                 }
             }
         }
+
         me._setHasEmpty(arr);
+
+        //必填
+        me._formatSaveData(data, "J_name", "例:百度拼音输入法", true);
+        //非必填
+        me._formatSaveData(data, "J_downloadlink", "http://");
+    },
+    _formatSaveData: function (data, id, value, isRequire) {
+        if (data[id] == value) {
+            data[id] = "";
+            if (isRequire) {
+                frameElement.setAttribute("hasempty", "true");
+            }
+        }
     },
     _saveCheckBox: function (data, list) {
         var node, txt;
@@ -237,11 +265,11 @@ var Template = {
             {id: "J_name", "tabIndex": 0},
             {id: "J_size"},
             {id: "J_version"},
-            {id: "J_pcLang", "tabIndex": 0},
             {id: "J_mobileLang", "tabIndex": 1},
             {id: "J_systemNeed"},
             {id: "J_money", 'tabIndex': 1},
             {id: "J_downloadlink"},
+            "J_pcLang",
             "J_pcType",
             "J_mobileType"
         ]);

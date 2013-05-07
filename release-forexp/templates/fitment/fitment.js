@@ -25,7 +25,7 @@ Template = {
             var list = domUtils.getElementsByTagName(document, "input");
             for (var i = 0, node; node = list[i++];) {
                 if (node.id == "J_other")  continue;
-                
+
                 if (utils.trim(node.value) == "") {
                     node.style.borderColor = "";
                     node.style.color = ""
@@ -65,6 +65,11 @@ Template = {
         for (var i = 0, id; id = list[i++];) {
             G(id).value = data[id];
         }
+
+        //格式化数据
+        if (data["J_other"] == "") {
+            G("J_other").value = "其他风格";
+        }
     },
     _setCheckBox: function (data, containerId) {
         var list = domUtils.getElementsByTagName(G(containerId), "span");
@@ -101,6 +106,9 @@ Template = {
     _saveTextBox: function (data, list) {
         var me = this,
             arr = [], txt, res, id;
+
+        var optional = "J_wan";//选填
+
         for (var i = 0, tmp; tmp = list[i++];) {
             if (utils.isString(tmp)) {
                 data[tmp] = (G(tmp).value);
@@ -110,11 +118,18 @@ Template = {
                 data[id] = txt;
 
                 //判断是否为空
-                res = !txt.replace(/'[ \t\r\n]*'/g, "").length;
-                arr.push(res)
+                if (optional.indexOf(id) == -1) {
+                    res = !txt.replace(/'[ \t\r\n]*'/g, "").length;
+                    arr.push(res)
+                }
             }
         }
         me._setHasEmpty(arr);
+
+        //格式化数据
+        if (data["J_other"] == "其他风格") {
+            data["J_other"] = "";
+        }
     },
     _saveCheckBox: function (data, list) {
         var node, txt;
@@ -143,7 +158,7 @@ Template = {
         ]);
 
         //复选狂保存值
-        me._saveCheckBox(data, ["J_jianyue", "J_tianyuan", 'J_meishi', "J_zhongshi", , 'J_rishi',
+        me._saveCheckBox(data, ["J_jianyue", "J_tianyuan", 'J_meishi', "J_zhongshi", 'J_rishi',
             "J_beiou", "J_dizhonghai", "J_dongnanya"]);
     }
 
