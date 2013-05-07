@@ -114,10 +114,19 @@ var Template = {
     _innerTxt: function (node) {
         return   node.innerText || node.textContent || node.nodeValue;
     },
+    _formatSetData: function (data, id, value) {
+        if (data[id] == "") {
+            G(id).value = value;
+        }
+    },
     _setTextBox: function (data, list) {
         for (var i = 0, id; id = list[i++];) {
             G(id).value = data[id];
         }
+
+        var me = this;
+        me._formatSetData(data, "J_name", "例:百度拼音输入法")
+        me._formatSetData(data, "J_downloadlink", "http://")
     },
     _setCheckBox: function (data, containerId) {
         var list = domUtils.getElementsByTagName(G(containerId), "span");
@@ -183,6 +192,7 @@ var Template = {
     _saveTextBox: function (data, list) {
         var me = this;
         var arr = [], txt, res, id;
+
         for (var i = 0, tmp; tmp = list[i++];) {
             if (utils.isString(tmp)) {
                 data[tmp] = G(tmp).value;
@@ -201,7 +211,22 @@ var Template = {
                 }
             }
         }
+
         me._setHasEmpty(arr);
+
+        //必填
+        me._formatSaveData(data, "J_name", "例:百度拼音输入法", true);
+        //非必填
+        me._formatSaveData(data, "J_downloadlink", "http://");
+
+    },
+    _formatSaveData: function (data, id, value, isRequire) {
+        if (data[id] == value) {
+            data[id] = "";
+            if (isRequire) {
+                frameElement.setAttribute("hasempty", "true");
+            }
+        }
     },
     _saveCheckBox: function (data, list) {
         var node, txt;
