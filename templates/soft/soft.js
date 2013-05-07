@@ -193,6 +193,8 @@ var Template = {
         var me = this;
         var arr = [], txt, res, id;
 
+        var optional = "J_version";//选填
+
         for (var i = 0, tmp; tmp = list[i++];) {
             if (utils.isString(tmp)) {
                 data[tmp] = G(tmp).value;
@@ -206,8 +208,10 @@ var Template = {
                 if (index == me.tabIndex || index === undefined) {
                     if (id == "J_money" && G('J_free').checked)    continue;
 
-                    res = !txt.replace(/'[ \t\r\n]*'/g, "").length;
-                    arr.push(res);
+                    if (optional.indexOf(id) == -1) {
+                        res = !txt.replace(/'[ \t\r\n]*'/g, "").length;
+                        arr.push(res);
+                    }
                 }
             }
         }
@@ -218,7 +222,6 @@ var Template = {
         me._formatSaveData(data, "J_name", "例:百度拼音输入法", true);
         //非必填
         me._formatSaveData(data, "J_downloadlink", "http://");
-
     },
     _formatSaveData: function (data, id, value, isRequire) {
         if (data[id] == value) {
