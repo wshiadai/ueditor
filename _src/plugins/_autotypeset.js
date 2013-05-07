@@ -10,37 +10,37 @@
 
 UE.plugins['autotypeset'] = function () {
 
-    this.setOpt({'autotypeset':{
-        mergeEmptyline:true, //合并空行
-        removeClass:false, //去掉冗余的class
-        removeEmptyline:true, //去掉空行
-        textAlign:"left", //段落的排版方式，可以是 left,right,center,justify 去掉这个属性表示不执行排版
-        imageBlockLine:'center', //图片的浮动方式，独占一行剧中,左右浮动，默认: center,left,right,none 去掉这个属性表示不执行排版
-        pasteFilter:false, //根据规则过滤没事粘贴进来的内容
-        clearFontSize:true, //去掉所有的内嵌字号，使用编辑器默认的字号
-        clearFontFamily:true, //去掉所有的内嵌字体，使用编辑器默认的字体
-        removeEmptyNode:true, // 去掉空节点
+    this.setOpt({'autotypeset': {
+        mergeEmptyline: true, //合并空行
+        removeClass: false, //去掉冗余的class
+        removeEmptyline: true, //去掉空行
+        textAlign: "left", //段落的排版方式，可以是 left,right,center,justify 去掉这个属性表示不执行排版
+        imageBlockLine: 'center', //图片的浮动方式，独占一行剧中,左右浮动，默认: center,left,right,none 去掉这个属性表示不执行排版
+        pasteFilter: false, //根据规则过滤没事粘贴进来的内容
+        clearFontSize: true, //去掉所有的内嵌字号，使用编辑器默认的字号
+        clearFontFamily: true, //去掉所有的内嵌字体，使用编辑器默认的字体
+        removeEmptyNode: true, // 去掉空节点
         //可以去掉的标签
-        removeTagNames:utils.extend({div:1}, dtd.$removeEmpty),
-        indent:true, // 行首缩进
-        indentValue:'2em'             //行首缩进的大小
+        removeTagNames: utils.extend({div: 1}, dtd.$removeEmpty),
+        indent: true, // 行首缩进
+        indentValue: '2em'             //行首缩进的大小
     }});
     var me = this,
         opt = me.options.autotypeset,
         remainClass = {
-            'selectTdClass':1,
-            'pagebreak':1,
-            'anchorclass':1
+            'selectTdClass': 1,
+            'pagebreak': 1,
+            'anchorclass': 1
         },
         remainTag = {
-            'li':1
+            'li': 1
         },
         tags = {
-            div:1,
-            p:1,
+            div: 1,
+            p: 1,
             //trace:2183 这些也认为是行
-            blockquote:1, center:1, h1:1, h2:0, h3:1, h4:1, h5:1, h6:1,
-            span:1
+            blockquote: 1, center: 1, h1: 1, h2: 0, h3: 1, h4: 1, h5: 1, h6: 1,
+            span: 1
         },
         highlightCont;
     //升级了版本，但配置项目里没有autotypeset
@@ -103,10 +103,18 @@ UE.plugins['autotypeset'] = function () {
 
         // 行首缩进，段落方向，段间距，段内间距
         for (var i = 0, ci; ci = nodes[i++];) {
-
             if (me.fireEvent('excludeNodeinautotype', ci) === true) {
                 continue;
             }
+
+            //iframe
+            if (/p/i.test(ci.tagName)) {
+                var list = domUtils.getElementsByTagName(ci, "iframe", "-template");
+                if (list.length) {
+                    continue;
+                }
+            }
+
             //font-size
             if (opt.clearFontSize && ci.style.fontSize) {
                 domUtils.removeStyle(ci, 'font-size');
@@ -137,8 +145,8 @@ UE.plugins['autotypeset'] = function () {
                 //去掉空行，保留占位的空行
                 if (opt.removeEmptyline && domUtils.inDoc(ci, cont) && !remainTag[ci.parentNode.tagName.toLowerCase()]) {
                     if (domUtils.isBr(ci)) {
-                        var li = domUtils.findParentByTagName(ci,"li",true);
-                        if(li){
+                        var li = domUtils.findParentByTagName(ci, "li", true);
+                        if (li) {
                             continue;
                         }
                         next = ci.nextSibling;
@@ -154,7 +162,7 @@ UE.plugins['autotypeset'] = function () {
             }
             if (isLine(ci, true) && ci.tagName != 'SPAN') {
                 if (opt.indent) {
-                    if(domUtils.findParentByTagName(ci,"li",true)){
+                    if (domUtils.findParentByTagName(ci, "li", true)) {
                         //li里的不做操作
                         continue;
                     }
@@ -231,7 +239,7 @@ UE.plugins['autotypeset'] = function () {
                                 var pNode = me.document.createElement('p');
                                 domUtils.setAttributes(pNode, {
 
-                                    style:'text-align:center'
+                                    style: 'text-align:center'
                                 });
                                 tmpNode.parentNode.insertBefore(pNode, tmpNode);
                                 pNode.appendChild(tmpNode);
@@ -267,7 +275,7 @@ UE.plugins['autotypeset'] = function () {
     }
 
     me.commands['autotypeset'] = {
-        execCommand:function () {
+        execCommand: function () {
             me.removeListener('beforepaste', autotype);
             if (opt.pasteFilter) {
                 me.addListener('beforepaste', autotype);
