@@ -7128,6 +7128,9 @@ UE.commands['insertimage'] = {
                     (ci.title && ci.title != "" ? ' title="' + ci.title + '"' : '') +
                     (ci.border && ci.border != "0" ? ' border="' + ci.border + '"' : '') +
                     (ci.alt && ci.alt != "" ? ' alt="' + ci.alt + '"' : '') +
+
+                    (ci.style && ci.style != "" ? ' style="' + ci.style + '"' : '') +
+
                     (ci.hspace && ci.hspace != "0" ? ' hspace = "' + ci.hspace + '"' : '') +
                     (ci.vspace && ci.vspace != "0" ? ' vspace = "' + ci.vspace + '"' : '') + '/>';
                 if (ci['floatStyle'] == 'center') {

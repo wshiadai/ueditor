@@ -43,7 +43,7 @@ body {
     background-color: #fff;
     font: 12px/1.5 "宋体", "Arial Narrow", HELVETICA;
     color: #333;
-    padding-left:10px;
+    padding:0 0 16px 12px;
 }
 
 
@@ -56,7 +56,7 @@ body {
 .wrapper .head .close:active{background-position:-1px -36px }
 
 
-.drag{cursor:pointer;z-index:9999;width: 24px;height: 24px;background:url(img/move.png)  0 0 no-repeat;position: relative;left:-10px;top:10px;visibility: hidden;}
+.drag{cursor:pointer;z-index:9999;width: 24px;height: 24px;background:url(img/move.png)  0 0 no-repeat;position: relative;left:-12px;top:12px;visibility: hidden;}
 .mask{position: absolute;top:25px;left:10px;z-index: 1000;
     background:url(img/mask.png) no-repeat center center #333333 ;
     _background:url(img/mask.gif) no-repeat center center #333333 ;
