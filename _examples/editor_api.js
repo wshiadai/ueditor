@@ -22,6 +22,7 @@
             'plugins/_autotypeset.js',
             'plugins/_image.js',
             'plugins/selectall.js',
+            'plugins/source.js',
             'plugins/wordcount.js',
             'plugins/undo.js',
             'plugins/paste.js',           //粘贴时候的提示依赖了UI
