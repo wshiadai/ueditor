@@ -143,7 +143,7 @@ Template = {
         ]);
 
         //复选狂保存值
-        me._saveCheckBox(data, ["J_jianyue", "J_tianyuan", 'J_meishi', "J_zhongshi", , 'J_rishi',
+        me._saveCheckBox(data, ["J_jianyue", "J_tianyuan", 'J_meishi', "J_zhongshi", 'J_rishi',
             "J_beiou", "J_dizhonghai", "J_dongnanya"]);
     }
 
