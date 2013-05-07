@@ -137,8 +137,8 @@ UE.plugins['graphictemplate'] = function () {
 
             switch (tgt.id) {
                 case "J_drag":
-                    //此处写死，减去浮层偏移和边框的宽度
-                    doc.getElementById("J_mask").style.cssText = "height:" + (tpl.currentTemplate.height-27)
+                    //此处写死，减去浮层偏移\边框的宽度\body paddingbottom
+                    doc.getElementById("J_mask").style.cssText = "height:" + (tpl.currentTemplate.height-43)
                         + "px;display:block;width:" + (tpl.currentTemplate.width-12) + "px";
 
                     me.graphictemplate.isSelect = true;
