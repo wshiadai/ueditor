@@ -61,8 +61,10 @@
             var data = graphictemplate.dataList[frameElement.id] = {};
 
             Template.savePageData(data);
+
             //去掉选中状态
             G("J_mask").style.display = "none";
+            G("J_masktip").style.display = "none";
         });
 
         /*

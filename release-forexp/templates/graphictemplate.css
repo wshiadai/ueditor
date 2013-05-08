@@ -57,7 +57,11 @@ body {
 
 
 .drag{cursor:pointer;z-index:9999;width: 24px;height: 24px;background:url(img/move.png)  0 0 no-repeat;position: relative;left:-12px;top:12px;visibility: hidden;}
-.mask{position: absolute;top:25px;left:10px;z-index: 1000;
-    background:url(img/mask.png) no-repeat center center #333333 ;
-    _background:url(img/mask.gif) no-repeat center center #333333 ;
-    opacity: 0.4; filter: alpha(opacity = 40);border: 1px dotted #55C442;}
+
+.mask{position: absolute;top:25px;left:10px;z-index: 1000;opacity: 0.4; filter: alpha(opacity = 40);
+    border: 1px dotted #55C442;background-color: #333333;}
+
+.masktip{position: absolute;top:25px;left:10px;z-index: 1001;
+    background-position:center center ;background-repeat: no-repeat;
+    background-image: url(img/mask.png);_background-image: url(img/mask.gif);
+}
