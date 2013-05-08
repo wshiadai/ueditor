@@ -10,7 +10,7 @@
 .section .dropdownbox{width: 80px;height: 30px;vertical-align:middle;border: #ddd 1px solid;color: #ddd;outline: 0;padding:5px 2px 5px 2px;}
 .section .dropdownbox option{padding-left: 5px;}
 .section .textbox{ text-align:center;width: 46px;height: 30px;line-height: 30px;border: #ddd 1px solid;color: #ddd;outline:0;}
-.section .sp{margin-left:54px}
+.section .sp{margin-left:54px;_margin-left:27px;}
 .wrapper .download{_height:84px;}
 
 .section .decorative{float:left;overflow: hidden;width: 510px;}
