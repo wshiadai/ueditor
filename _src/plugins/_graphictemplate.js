@@ -140,6 +140,8 @@ UE.plugins['graphictemplate'] = function () {
                     //此处写死，减去浮层偏移\边框的宽度\body paddingbottom
                     doc.getElementById("J_mask").style.cssText = "height:" + (tpl.currentTemplate.height-43)
                         + "px;display:block;width:" + (tpl.currentTemplate.width-12) + "px";
+                    doc.getElementById("J_masktip").style.cssText = "height:" + (tpl.currentTemplate.height-43)
+                        + "px;display:block;width:" + (tpl.currentTemplate.width-12) + "px";
 
                     me.graphictemplate.isSelect = true;
                     break;
