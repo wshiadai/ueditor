@@ -18,7 +18,7 @@
             'core/htmlparser.js',
             'core/filternode.js',
             'plugins/defaultfilter.js',
-            'plugins/inserthtml.js',
+            'plugins/_inserthtml.js',
             'plugins/_autotypeset.js',
             'plugins/_image.js',
             'plugins/selectall.js',
