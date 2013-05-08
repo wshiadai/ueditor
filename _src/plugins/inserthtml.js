@@ -14,6 +14,9 @@ UE.commands['inserthtml'] = {
         if(!html){
             return;
         }
+        if(me.fireEvent('beforeinserthtml',html) === true){
+            return;
+        }
         range = me.selection.getRange();
         div = range.document.createElement( 'div' );
         div.style.display = 'inline';
@@ -92,10 +95,10 @@ UE.commands['inserthtml'] = {
         if(li){
             var next,last;
             while(child = div.firstChild){
-
-                while(child && (child.nodeType == 3 || !domUtils.isBlockElm(child))){
+                //针对hr单独处理一下先
+                while(child && (child.nodeType == 3 || !domUtils.isBlockElm(child) || child.tagName=='HR' )){
                     next = child.nextSibling;
-                    range.insertNode( child );
+                    range.insertNode( child).collapse();
                     last = child;
                     child = next;
 
@@ -203,12 +206,22 @@ UE.commands['inserthtml'] = {
                         range.setStart(nextNode,0).collapse(true).shrinkBoundary()
                     }
                 }else{
-                    child.innerHTML = browser.ie ? domUtils.fillChar : '<br/>';
+
+                    try{
+                        child.innerHTML = browser.ie ? domUtils.fillChar : '<br/>';
+                    }catch(e){
+                        range.setStartBefore(child);
+                        domUtils.remove(child)
+                    }
+
                 }
 
             }
             //加上true因为在删除表情等时会删两次，第一次是删的fillData
-            range.select(true);
+            try{
+                range.select(true);
+            }catch(e){}
+
         }
 
 
