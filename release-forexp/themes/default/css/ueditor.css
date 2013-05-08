@@ -118,7 +118,7 @@ div.edui-box {
     cursor: default;
     -webkit-user-select: none;
     -moz-user-select: none;
-    padding: 1px  1px 5px 40px;
+    padding: 1px  1px 5px 80px;
     overflow: hidden; /*全屏下单独一行不占位*/
     zoom: 1;
 }

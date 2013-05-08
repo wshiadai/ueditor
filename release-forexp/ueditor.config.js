@@ -127,7 +127,7 @@
 
         //,imagePopup:true      //图片操作的浮层开关，默认打开
 
-        , initialStyle: 'body{margin:0;font-size:14px;padding:14px 55px;line-height:24px;}'   //编辑器内部样式,可以用来改变字体等
+        , initialStyle: 'body{margin:0;font-size:14px;padding:14px 95px;line-height:24px;}'   //编辑器内部样式,可以用来改变字体等
 
 
         //,autoSyncData:true //自动同步编辑器要提交的数据
