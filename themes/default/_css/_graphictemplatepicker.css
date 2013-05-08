@@ -10,6 +10,9 @@
     height: 30px;
     line-height: 30px;
     overflow: hidden;
+    border-bottom: 1px solid #E4EDE2;
+}
+.edui-default .edui-graphictemplatepicker-item .edui-soft.edui-label{
     border-bottom: 1px solid #ccc;
 }
 .edui-default .edui-graphictemplatepicker-body .edui-graphictemplatepicker-item.edui-state-hover .edui-label{

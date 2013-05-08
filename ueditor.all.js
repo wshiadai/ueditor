@@ -10897,7 +10897,7 @@ baidu.editor.ui = {};
                 '<div class="edui-label" _type="fitment">家居装修</div>' +
                 '</div>' +
                 '<div onclick="$$._onClick(event);" class="edui-graphictemplatepicker-item" stateful>' +
-                '<div class="edui-label"  _type="soft">软件信息</div>' +
+                '<div class="edui-label edui-soft"  _type="soft">软件信息</div>' +
                 '</div>' +
                 '</div>' +
                 '</div>';
