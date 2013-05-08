@@ -70,6 +70,7 @@ var Template = {
 
         me._sTxtBoxHandler("J_name", "例:百度拼音输入法");
         me._sTxtBoxHandler("J_downloadlink", "http://");
+        me._priceHandler();
     },
 
     _sTxtBoxHandler: function (id, value) {
@@ -90,6 +91,15 @@ var Template = {
             }
         });
     },
+    _priceHandler: function () {
+        domUtils.on(G("J_money"), ["keyup", "afterpaste"], function () {
+            if (G("J_free").checked) return;
+            if (isNaN(this.value)){
+                this.value="";
+            }
+        });
+    },
+
     _showTab: function (isTab0, cur) {
         var list = domUtils.getElementsByTagName(document, "div", "tab");
         if (isTab0) {
@@ -165,7 +175,7 @@ var Template = {
         var me = this;
         //设置文本框值
         me._setTextBox(data, ["J_name", "J_size", "J_version",
-             "J_mobileLang", "J_money", "J_systemNeed", "J_downloadlink"]);
+            "J_mobileLang", "J_money", "J_systemNeed", "J_downloadlink"]);
         //设置复选框值
         me._setCheckBox(data, "J_systemask");
         //设置单选框值
@@ -182,7 +192,7 @@ var Template = {
             }
         ]);
         //设置下拉框值
-        me._setDrawdownBox(data, ["J_pcType", "J_mobileType","J_pcLang"]);
+        me._setDrawdownBox(data, ["J_pcType", "J_mobileType", "J_pcLang"]);
     },
 
     _setHasEmpty: function (arr) {
