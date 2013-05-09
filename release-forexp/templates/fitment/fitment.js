@@ -59,6 +59,20 @@ Template = {
                 }
             }
         });
+
+        this._checkNumber();
+    },
+    _checkNumber: function () {
+        domUtils.on(G("J_meter"), ["keyup", "afterpaste"], function () {
+            if (isNaN(this.value)){
+                this.value="";
+            }
+        });
+        domUtils.on(G("J_wan"), ["keyup", "afterpaste"], function () {
+            if (isNaN(this.value)){
+                this.value="";
+            }
+        });
     },
 
     _setTextBox: function (data, list) {
