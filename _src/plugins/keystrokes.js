@@ -3,13 +3,20 @@
  */
 UE.plugins['keystrokes'] = function() {
     var me = this;
-
+    var collapsed = true;
     me.addListener('keydown', function(type, evt) {
         var keyCode = evt.keyCode || evt.which,
             rng = me.selection.getRange();
 
         //处理全选的情况
-        if(!rng.collapsed && !(evt.ctrlKey || evt.metaKey || evt.shiftKey || evt.altKey || keyCode == 9 )){
+        if(!rng.collapsed && !(evt.ctrlKey || evt.shiftKey || evt.altKey || evt.metaKey) && (keyCode >= 65 && keyCode <=90
+            || keyCode >= 48 && keyCode <= 57 ||
+            keyCode >= 96 && keyCode <= 111 || {
+                    13:1,
+                    8:1,
+                    46:1
+                }[keyCode])
+            ){
 
             var tmpNode = rng.startContainer;
             if(domUtils.isFillChar(tmpNode)){
@@ -36,17 +43,18 @@ UE.plugins['keystrokes'] = function() {
                         me.fireEvent('saveScene');
                         me.body.innerHTML = '<p>'+(browser.ie ? '' : '<br/>')+'</p>';
                         rng.setStart(me.body.firstChild,0).setCursor(false,true);
-                        browser.ie && me._selectionChange();
-                        domUtils.preventDefault(evt);
+                        me._selectionChange();
                         return;
                     }
                 }
             }
         }
 
+        //处理backspace
+        if (keyCode == 8) {
+            rng = me.selection.getRange();
+            collapsed = rng.collapsed;
 
-        //处理backspace/del
-        if (keyCode == 8) {//|| keyCode == 46
             var start,end;
             //避免按两次删除才能生效的问题
             if(rng.collapsed && rng.inFillChar()){
@@ -81,7 +89,7 @@ UE.plugins['keystrokes'] = function() {
                     return;
                 }
             }
-            me.fireEvent("afterbackspace",evt);
+
         }
         //处理tab键的逻辑
         if (keyCode == 9) {
@@ -151,24 +159,55 @@ UE.plugins['keystrokes'] = function() {
     });
     me.addListener('keyup', function(type, evt) {
         var keyCode = evt.keyCode || evt.which,
-            rng;
+            rng,me = this;
         if(keyCode == 8){
-            rng = me.selection.getRange();
-            //处理当删除到body时，要重新给p标签展位
-            if(rng.collapsed && domUtils.isBody(rng.startContainer)){
-                var tmpNode = domUtils.createElement(me.document,'p',{
-                    'innerHTML' : browser.ie ? domUtils.fillChar : '<br/>'
-                });
-                rng.insertNode(tmpNode).setStart(tmpNode,0).setCursor(false,true);
+            if(me.fireEvent('delkeyup')){
+                return;
             }
-//            //chrome下如果删除了inline标签，浏览器会有记忆，在输入文字还是会套上刚才删除的标签，所以这里再选一次就不会了
-            if(browser.chrome && rng.collapsed && rng.startContainer.nodeType == 1 && domUtils.isEmptyBlock(rng.startContainer)){
-                //光标所在节点为textarea，执行select后光标会跳出来 by xuheng
-                var node=rng.startContainer.childNodes[rng.startOffset];
-                if(!/textarea/i.test(node)){
-                    rng.select(true);
+            rng = me.selection.getRange();
+            if(rng.collapsed){
+                var tmpNode,
+                    autoClearTagName = ['h1','h2','h3','h4','h5','h6'];
+                if(tmpNode = domUtils.findParentByTagName(rng.startContainer,autoClearTagName,true)){
+                    if(domUtils.isEmptyBlock(tmpNode)){
+                        var pre = tmpNode.previousSibling;
+                        if(pre && pre.nodeName != 'TABLE'){
+                            domUtils.remove(tmpNode);
+                            rng.setStartAtLast(pre).setCursor(false,true);
+                            return;
+                        }else{
+                            var next = tmpNode.nextSibling;
+                            if(next && next.nodeName != 'TABLE'){
+                                domUtils.remove(tmpNode);
+                                rng.setStartAtFirst(next).setCursor(false,true);
+                                return;
+                            }
+                        }
+                    }
+                }
+                //处理当删除到body时，要重新给p标签展位
+                if(domUtils.isBody(rng.startContainer)){
+                    var tmpNode = domUtils.createElement(me.document,'p',{
+                        'innerHTML' : browser.ie ? domUtils.fillChar : '<br/>'
+                    });
+                    rng.insertNode(tmpNode).setStart(tmpNode,0).setCursor(false,true);
                 }
             }
+
+
+            //chrome下如果删除了inline标签，浏览器会有记忆，在输入文字还是会套上刚才删除的标签，所以这里再选一次就不会了
+            if( !collapsed && (rng.startContainer.nodeType == 3 || rng.startContainer.nodeType == 1 && domUtils.isEmptyBlock(rng.startContainer))){
+                if(browser.ie){
+                    var span = rng.document.createElement('span');
+                    rng.insertNode(span).setStartBefore(span).collapse(true);
+                    rng.select();
+                    domUtils.remove(span)
+                }else{
+                    rng.select()
+                }
+
+            }
         }
+
     })
 };

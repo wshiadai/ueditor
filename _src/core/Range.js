@@ -784,11 +784,15 @@
         adjustmentBoundary:function () {
             if (!this.collapsed) {
                 while (!domUtils.isBody(this.startContainer) &&
-                    this.startOffset == this.startContainer[this.startContainer.nodeType == 3 ? 'nodeValue' : 'childNodes'].length
+                    this.startOffset == this.startContainer[this.startContainer.nodeType == 3 ? 'nodeValue' : 'childNodes'].length &&
+                    this.startContainer[this.startContainer.nodeType == 3 ? 'nodeValue' : 'childNodes'].length
                     ) {
+
                     this.setStartAfter(this.startContainer);
                 }
-                while (!domUtils.isBody(this.endContainer) && !this.endOffset) {
+                while (!domUtils.isBody(this.endContainer) && !this.endOffset &&
+                    this.endContainer[this.endContainer.nodeType == 3 ? 'nodeValue' : 'childNodes'].length
+                    ) {
                     this.setEndBefore(this.endContainer);
                 }
             }
@@ -1134,15 +1138,12 @@
 
                 if(ignoreTxt){
                     if(node.nodeType == 3){
-                        var tmpNode = node;
-                        while(tmpNode = tmpNode.previousSibling){
-                            if(tmpNode.nodeType == 3){
-                                firstIndex += tmpNode.nodeValue.replace(fillCharReg,'').length;
-                            }else{
-                                break;
-                            }
+                        var tmpNode = node.previousSibling;
+                        while(tmpNode && tmpNode.nodeType == 3){
+                            firstIndex += tmpNode.nodeValue.replace(fillCharReg,'').length;
+                            tmpNode = tmpNode.previousSibling;
                         }
-                        firstIndex +=  (isStart ? me.startOffset : me.endOffset) - (fillCharReg.test(node.nodeValue) ? 1 : 0 )
+                        firstIndex +=  (isStart ? me.startOffset : me.endOffset)// - (fillCharReg.test(node.nodeValue) ? 1 : 0 )
                     }else{
                         node =  node.childNodes[ isStart ? me.startOffset : me.endOffset];
                         if(node){
@@ -1168,7 +1169,7 @@
                     }
 
                 }else{
-                    firstIndex = isStart ? me.startOffset : me.endOffset
+                    firstIndex = isStart ? domUtils.isFillChar(node) ? 0 : me.startOffset  : me.endOffset
                 }
                 if(firstIndex < 0){
                     firstIndex = 0;
